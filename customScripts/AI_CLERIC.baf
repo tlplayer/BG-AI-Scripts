@@ -1,0 +1,483 @@
+// ------------------------
+// PRECOMBAT
+// ------------------------
+
+// ------------------------
+// PRECOMBAT:ITEMS
+// ------------------------
+
+
+IF
+    StateCheck(Myself,STATE_POISONED)
+    HasItem("POTN20",Myself)  // Antidote
+    HPPercentLT(Myself,50)
+    !GlobalTimerNotExpired("gh_SpellCastThisRound","LOCALS")
+    OR(2)
+        ActionListEmpty()
+        GlobalTimerNotExpired("gh_ActionIsInterruptable","LOCALS")
+THEN
+    RESPONSE #100
+        SetGlobalTimer("gh_SpellCastThisRound","LOCALS",ONE_ROUND)
+        UseItem("POTN20",Myself)  // Antidote
+        DisplayStringHead(Myself,7029)  // Antidote
+END
+
+IF
+    StateCheck(Myself,STATE_POISONED)
+    HPPercentLT(Myself,50)
+    !HasItem("POTN20",Myself)  // Antidote
+    PartyHasItem("POTN20")  // Antidote
+THEN
+    RESPONSE #100
+        Shout(POISONED)
+        DisplayStringHead(Myself,14662)  // Poisoned
+        Continue()
+END
+
+IF
+    Heard([PC],POISONED)
+    HasItem("POTN20",Myself)  // Antidote
+THEN
+    RESPONSE #100
+        GiveItem("POTN20",LastHeardBy(Myself))  // Antidote
+        DisplayStringHead(Myself,3675)  // [GARRICK 23] Give and spend, and the gods will send.
+        Continue()
+END
+
+
+// ------------------------
+// PRECOMBAT:THIEF
+// ------------------------
+
+IF
+    !ActuallyInCombat()
+    !StateCheck(Myself,STATE_INVISIBLE)
+    Delay(18)
+    OR(3)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,RANGER_ALL)
+        Class(Myself,MONK)
+    !Range(NearestEnemyOf(Myself),30)
+THEN
+    RESPONSE #100
+        Hide()
+END
+
+IF
+    ActionListEmpty()
+    Delay(18)
+    !ActuallyInCombat()
+    StateCheck(Myself,STATE_INVISIBLE)
+    !ModalState(DETECTTRAPS)
+    OR(2)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,MONK)
+THEN
+    RESPONSE #100
+        FindTraps()
+END
+
+
+// ------------------------
+// BUFF:WIZARD
+// ------------------------
+
+
+IF
+    ActionListEmpty()
+    !ActuallyInCombat()
+    HaveSpell(WIZARD_ARMOR)  // SPWI102.SPL (Armor)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_ARMOR)  // SPWI102.SPL (Armor)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_SHIELD)  // SPWI114.SPL (Shield)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SHIELD)  // SPWI114.SPL (Shield)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    StateCheck(Myself,STATE_SILENCED)
+    HaveSpell(WIZARD_VOCALIZE)  // SPWI219.SPL (Vocalize)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_VOCALIZE)  // SPWI219.SPL (Vocalize)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_MINOR_SPELL_DEFLECTION)  // SPWI318.SPL (Minor Spell Deflection)
+    OR(4)
+        See(NearestEnemyOfType([0.0.0.MAGE_ALL]))
+        See(NearestEnemyOfType([0.0.0.CLERIC_ALL]))
+        See(NearestEnemyOfType([0.0.0.BARD_ALL]))
+        See(NearestEnemyOfType([0.0.0.DRUID_ALL]))
+    !HasBounceEffects(Myself)
+    !HasImmunityEffects(Myself)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_MINOR_SPELL_DEFLECTION)  // SPWI318.SPL (Minor Spell Deflection)
+END
+
+IF
+    ActionListEmpty()
+    OR(4)
+        See(NearestEnemyOfType([0.0.0.MAGE_ALL]))
+        See(NearestEnemyOfType([0.0.0.CLERIC_ALL]))
+        See(NearestEnemyOfType([0.0.0.BARD_ALL]))
+        See(NearestEnemyOfType([0.0.0.DRUID_ALL]))
+    HaveSpell(WIZARD_MINOR_SPELL_TURNING)  // SPWI522.SPL (Minor Spell Turning)
+    !HasBounceEffects(Myself)
+    !HasImmunityEffects(Myself)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_MINOR_SPELL_TURNING)  // SPWI522.SPL (Minor Spell Turning)
+END
+
+IF
+    ActionListEmpty()
+    OR(4)
+        See(NearestEnemyOfType([0.0.0.MAGE_ALL]))
+        See(NearestEnemyOfType([0.0.0.CLERIC_ALL]))
+        See(NearestEnemyOfType([0.0.0.BARD_ALL]))
+        See(NearestEnemyOfType([0.0.0.DRUID_ALL]))
+    HaveSpell(WIZARD_SPELL_TURNING)  // SPWI701.SPL (Spell Turning)
+    !HasBounceEffects(Myself)
+    !HasImmunityEffects(Myself)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SPELL_TURNING)  // SPWI701.SPL (Spell Turning)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_STONE_SKIN)  // SPWI408.SPL (Stoneskin)
+    CheckStatLT(Myself,1,STONESKINS)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_STONE_SKIN)  // SPWI408.SPL (Stoneskin)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_SPIRIT_ARMOR)  // SPWI414.SPL (Spirit Armor)
+    CheckStatGT(Myself,1,ARMORCLASS)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SPIRIT_ARMOR)  // SPWI414.SPL (Spirit Armor)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_GHOST_ARMOR)  // SPWI317.SPL (Ghost Armor)
+    CheckStatGT(Myself,2,ARMORCLASS)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_GHOST_ARMOR)  // SPWI317.SPL (Ghost Armor)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_MIRROR_IMAGE)  // SPWI212.SPL (Mirror Image)
+    !StateCheck(Myself,STATE_MIRRORIMAGE)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_MIRROR_IMAGE)  // SPWI212.SPL (Mirror Image)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+    !StateCheck(Myself,STATE_INVISIBLE)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+END
+
+
+// ------------------------
+// COMBAT:STATES
+// ------------------------
+
+
+
+// ------------------------
+// COMBAT:MELEE 
+// ------------------------
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        MoveToObject(NearestEnemyOf(Myself))
+END
+
+
+// ------------------------
+// COMBAT:RANGED
+// ------------------------
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !Range(NearestEnemyOf(Myself),10)
+THEN
+    RESPONSE #100
+        EquipRanged()
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        EquipMostDamagingMelee()
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        EquipRanged()
+        EquipMostDamagingMelee()
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+
+// ------------------------
+// COMBAT:WIZARD
+// ------------------------
+// ------------------------
+// COMBAT: CLERIC
+// ------------------------
+
+// Silence Enemy Spellcasters
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_SILENCE_15_FOOT)  // SPPR211.SPL (Silence, 15' Radius)
+    OR(2)
+        See(NearestEnemyOfType([0.0.0.MAGE_ALL]))
+        See(NearestEnemyOfType([0.0.0.CLERIC_ALL]))
+    Range(LastSeenBy(Myself),25)
+    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  // SPPR211.SPL (Silence, 15' Radius)
+END
+
+// Use Flame Strike on High HP Enemy
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_FLAME_STRIKE)  // SPPR503.SPL (Flame Strike)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_FLAME_STRIKE)  // SPPR503.SPL (Flame Strike)
+END
+
+// Protect Against Mental Attacks
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_CHAOTIC_COMMANDS)  // SPPR508.SPL (Chaotic Commands)
+    OR(4)
+        Race(NearestEnemyOf(Myself),114)
+        Class(NearestEnemyOf(Myself),FAIRY_SIRINE)
+        Class(NearestEnemyOf(Myself),CLERIC_ALL)
+        Class(NearestEnemyOf(Myself),MAGE_ALL)
+    !StateCheck(NearestEnemyOf(Myself),STATE_CONFUSED)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_CHAOTIC_COMMANDS)  // SPPR508.SPL (Chaotic Commands)
+END
+
+// Use Bolt of Glory on High HP Enemy
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_BOLT_OF_GLORY)  // SPPR612.SPL (Bolt of Glory)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_BOLT_OF_GLORY)  // SPPR612.SPL (Bolt of Glory)
+END
+
+// Cast Confusion on Enemy if Not Already Confused
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_CONFUSION)  // SPPR709.SPL (Confusion)
+    !StateCheck(NearestEnemyOf(Myself),STATE_CONFUSED)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_CONFUSION)  // SPPR709.SPL (Confusion)
+END
+
+// Use True Sight if Enemy is Hidden
+IF
+    ActionListEmpty()
+    Detect([ENEMY])
+    !See(LastSeenBy(Myself))
+    Range(LastSeenBy(Myself),10)
+    HaveSpell(WIZARD_TRUE_SIGHT)  // SPWI609.SPL (True Sight)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_TRUE_SIGHT)  // SPWI609.SPL (True Sight)
+END
+
+// Summon Help if Enemy HP is High
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_ANIMAL_SUMMONING_1)  // SPPR402.SPL (Animal Summoning I)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_ANIMAL_SUMMONING_1)  // SPPR402.SPL (Animal Summoning I)
+END
+
+// Use Mental Domination on Vulnerable Enemy
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_MENTAL_DOMINATION)  // SPPR405.SPL (Mental Domination)
+    !StateCheck(NearestEnemyOf(Myself),STATE_STUNNED)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_MENTAL_DOMINATION)  // SPPR405.SPL (Mental Domination)
+END
+
+// Cast Cloak of Fear
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_CLOAK_OF_FEAR)  // SPPR416.SPL (Cloak of Fear)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_CLOAK_OF_FEAR)  // SPPR416.SPL (Cloak of Fear)
+END
+
+// Use Command Spell on High HP Enemy
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_COMMAND)  // SPPR102.SPL (Command)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_COMMAND)  // SPPR102.SPL (Command)
+END
+
+// Attack with Magic Stone
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_MAGIC_STONE)  // SPPR106.SPL (Magical Stone)
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_MAGIC_STONE)  // SPPR106.SPL (Magical Stone)
+END
+
+// Buff with Shillelagh if No Better Weapon is Equipped
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_SHILLELAGH)  // SPPR110.SPL (Shillelagh)
+    !HasItem("FBLADE",Myself)  // Flame Blade
+    !HasItem("SHILLE",Myself)  // Shillelagh
+    !HasItem("SHAMMR",Myself)  // Spiritual Hammer
+    !HasItem("CHILLT",Myself)  // Chill Touch
+    !HasItem("GHOULT",Myself)  // Ghoul Touch
+    !HasItem("SGRASP",Myself)  // Shocking Grasp
+    HPGT(NearestEnemyOf(Myself),20)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SHILLELAGH)  // SPPR110.SPL (Shillelagh)
+END
+
+// Help Allies in Combat
+IF
+    ActionListEmpty()
+    Help([PC])
+    See(LastAttackerOf(LastHelp(Myself)))
+THEN
+    RESPONSE #100
+        AttackReevaluate(LastAttackerOf(LastHelp(Myself)),60)
+END
+
+// Switch to Melee if Enemy is Close
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        EquipMostDamagingMelee()
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+// Switch to Ranged if Enemy is Far
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !Range(NearestEnemyOf(Myself),4)
+THEN
+    RESPONSE #100
+        EquipRanged()
+        AttackReevaluate(NearestEnemyOf(Myself),30)
+END
+
+// ------------------------
+// RETREAT
+// ------------------------
+
+// Check if health is below 50% and the character is in combat
+IF
+    ActuallyInCombat()
+    HPPercentLT(Myself,50)
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself), 45)
+        Hide()
+END
