@@ -1,0 +1,185 @@
+// ------------------------
+// PRECOMBAT
+// ------------------------
+// ======================================================
+// GLOBALS
+// ======================================================
+
+//Set a timer 
+IF
+    ActuallyInCombat()
+    GlobalTimerExpired("SHORT_BUFF","LOCALS")
+  THEN
+    RESPONSE #100
+      SetGlobalTimer("SHORT_BUFF","LOCALS",TWO_ROUNDS)
+END
+
+IF
+    HotKey(B)  // Detect pressing of the 'B' key
+THEN
+    RESPONSE #100
+        SetGlobalTimer("SHORT_BUFF","LOCALS",ONE_ROUND)  // Set the timer to one round
+END
+
+IF
+    NumCreatureGT([ENEMY],3)
+    !Range(NearestEnemyOf(NearestEnemyOf(Myself)),8)
+    !Range(LastSeenBy(),15)    // check that target is not too close
+    !GlobalTimerNotExpired("CAST_AOE_SPELLS","LOCALS")
+  THEN
+    RESPONSE #100
+      SetGlobalTimer("CAST_AOE_SPELLS","LOCALS",TWO_TURNS)
+END
+
+//Target Priority sets last seen by to make sure the target priority is set right.
+IF
+    OR(4)
+      See(NearestEnemyOfType([GOODCUTOFF])) // Lowest priority (any enemy)
+      See(NearestEnemyOfType([GOODCUTOFF.0.0.CLERIC_ALL]))
+      See(NearestEnemyOfType([GOODCUTOFF.0.0.MAGE_ALL]))
+      See(NearestEnemyOfType([GOODCUTOFF.0.0.SORCERER])) // Highest priority (sorcerer)
+    False()
+THEN
+    RESPONSE #100
+END
+
+// ======================================================
+// CHECK FOR CROWD CONTROLLED PARTY MEMBERS
+// ======================================================
+IF
+    CheckStatGT(Myself,11,180) // I'm in a web,entangle, or grease spell
+    CheckStatLT(Myself,15,180)
+    CheckStatLT(Myself,1,131) // I don't have free action
+    CheckStatLT(Myself,1,WEB) //and not webbed up
+    CheckStatLT(Myself,1,ENTANGLE) //nor entangled --I can move
+    CheckStatGT(Myself,4,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
+    OR(3)
+      Detect([0.0.MORNINGSTAR.FAIRY_NYMPH.65])
+      Detect(NearestEnemyOfType([0.0.MORNINGSTAR.FAIRY_NYMPH.65]))
+      Detect(NearestMyGroupOfType([0.0.MORNINGSTAR.FAIRY_NYMPH.65]))
+    Range(LastSeenBy(Myself),16)
+  THEN
+    RESPONSE #100
+      RandomWalkContinuous()
+      Wait(5)
+END
+
+// ------------------------
+// PRECOMBAT:ITEMS
+// ------------------------
+
+
+IF
+    StateCheck(Myself,STATE_POISONED)
+    HasItem("POTN20",Myself)  // Antidote
+    HPPercentLT(Myself,50)
+    !GlobalTimerNotExpired("gh_SpellCastThisRound","LOCALS")
+    OR(2)
+        ActionListEmpty()
+        GlobalTimerNotExpired("gh_ActionIsInterruptable","LOCALS")
+THEN
+    RESPONSE #100
+        SetGlobalTimer("gh_SpellCastThisRound","LOCALS",ONE_ROUND)
+        UseItem("POTN20",Myself)  // Antidote
+        DisplayStringHead(Myself,7029)  // Antidote
+END
+
+IF
+    StateCheck(Myself,STATE_POISONED)
+    HPPercentLT(Myself,50)
+    !HasItem("POTN20",Myself)  // Antidote
+    PartyHasItem("POTN20")  // Antidote
+THEN
+    RESPONSE #100
+        Shout(POISONED)
+        DisplayStringHead(Myself,14662)  // Poisoned
+        Continue()
+END
+
+IF
+    Heard([PC],POISONED)
+    HasItem("POTN20",Myself)  // Antidote
+THEN
+    RESPONSE #100
+        GiveItem("POTN20",LastHeardBy(Myself))  // Antidote
+        DisplayStringHead(Myself,3675)  // [GARRICK 23] Give and spend, and the gods will send.
+        Continue()
+END
+
+
+// ------------------------
+// PRECOMBAT:THIEF
+// ------------------------
+
+IF
+    !ActuallyInCombat()
+    !StateCheck(Myself,STATE_INVISIBLE)
+    OR(3)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,RANGER_ALL)
+        Class(Myself,MONK)
+    !Range(NearestEnemyOf(Myself),30)
+THEN
+    RESPONSE #100
+        Hide()
+        FollowObject([PC])                // Follow the nearest party member
+END
+
+IF
+    ActionListEmpty()
+    !ActuallyInCombat()
+    StateCheck(Myself,STATE_INVISIBLE)
+    !ModalState(DETECTTRAPS)
+    OR(2)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,MONK)
+THEN
+    RESPONSE #100
+        FindTraps()
+END
+
+
+// ======================================================
+// COMBAT ACTIONS - RANGED ATTACKS
+// ======================================================
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !Range(NearestEnemyOf(Myself),4)  // If the enemy is farther than 10 search squares
+    CheckStatLT(NearestEnemyOf(Myself),100,RESISTMISSILE)
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+THEN
+    RESPONSE #100
+        EquipRanged()  // Equip ranged weapon
+        AttackOneRound(LastSeenBy(Myself))
+END
+
+
+// ======================================================
+// COMBAT ACTIONS - MELEE ATTACKS
+// ======================================================
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(NearestEnemyOf(Myself),4)  // If the enemy is within melee range (4 search squares)
+THEN
+    RESPONSE #100
+        EquipMostDamagingMelee()  // Equip the most damaging melee weapon
+        AttackOneRound(LastSeenBy(Myself))
+END
+
+
+
+// ------------------------
+// RETREAT
+// ------------------------
+
+// Retreat if health drops below 60%
+IF
+    ActuallyInCombat()
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself), 30)
+END

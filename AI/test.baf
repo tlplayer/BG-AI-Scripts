@@ -1,0 +1,7 @@
+
+IF
+    See("WEB_STATIC")
+THEN
+    RESPONSE #100
+        DisplayStringHead(Myself,1)
+END

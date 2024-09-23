@@ -1,0 +1,6724 @@
+{
+    "IDS": {
+        "name": "V1.0",
+        "type": "SPELLID",
+        "id": "IDS",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "V1.0"
+            }
+        ]
+    },
+    "1101": {
+        "name": "CLERIC_BLESS",
+        "type": "SPELLID",
+        "id": "1101",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_BLESS"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "BLESS"
+            }
+        ]
+    },
+    "1102": {
+        "name": "CLERIC_COMMAND",
+        "type": "SPELLID",
+        "id": "1102",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAOTIC_COMMANDS"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_CHAOTIC_COMMANDS"
+            }
+        ]
+    },
+    "1103": {
+        "name": "CLERIC_CURE_LIGHT_WOUNDS",
+        "type": "SPELLID",
+        "id": "1103",
+        "conditions": []
+    },
+    "1104": {
+        "name": "CLERIC_DETECT_EVIL",
+        "type": "SPELLID",
+        "id": "1104",
+        "conditions": []
+    },
+    "1105": {
+        "name": "CLERIC_ENTANGLE",
+        "type": "SPELLID",
+        "id": "1105",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ENTANGLE"
+            },
+            {
+                "type": "STAT",
+                "ID": "ENTANGLE"
+            }
+        ]
+    },
+    "1106": {
+        "name": "CLERIC_MAGIC_STONE",
+        "type": "SPELLID",
+        "id": "1106",
+        "conditions": []
+    },
+    "1107": {
+        "name": "CLERIC_PROTECT_FROM_EVIL",
+        "type": "SPELLID",
+        "id": "1107",
+        "conditions": []
+    },
+    "1108": {
+        "name": "CLERIC_REMOVE_FEAR",
+        "type": "SPELLID",
+        "id": "1108",
+        "conditions": []
+    },
+    "1109": {
+        "name": "CLERIC_SANCTUARY",
+        "type": "SPELLID",
+        "id": "1109",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "SANCTUARY"
+            },
+            {
+                "type": "STAT",
+                "ID": "SANCTUARY"
+            }
+        ]
+    },
+    "1110": {
+        "name": "CLERIC_SHILLELAGH",
+        "type": "SPELLID",
+        "id": "1110",
+        "conditions": []
+    },
+    "1111": {
+        "name": "CLERIC_ARMOR_OF_FAITH",
+        "type": "SPELLID",
+        "id": "1111",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ARMOR_OF_FAITH"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_ARMOR_OF_FAITH"
+            }
+        ]
+    },
+    "1112": {
+        "name": "CLERIC_CIRCLE_OF_PROTECTION",
+        "type": "SPELLID",
+        "id": "1112",
+        "conditions": []
+    },
+    "1113": {
+        "name": "CLERIC_DOOM",
+        "type": "SPELLID",
+        "id": "1113",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "DOOM"
+            }
+        ]
+    },
+    "1114": {
+        "name": "CLERIC_ANIMAL_FRIENDSHIP",
+        "type": "SPELLID",
+        "id": "1114",
+        "conditions": []
+    },
+    "1115": {
+        "name": "CLERIC_ENDURE_HEAT_COLD",
+        "type": "SPELLID",
+        "id": "1115",
+        "conditions": []
+    },
+    "1116": {
+        "name": "CLERIC_FAERIE_FIRE",
+        "type": "SPELLID",
+        "id": "1116",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "FAERIE_FIRE"
+            }
+        ]
+    },
+    "1150": {
+        "name": "CLERIC_SPIRIT_WARD",
+        "type": "SPELLID",
+        "id": "1150",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "SPIRIT_WARD"
+            }
+        ]
+    },
+    "1201": {
+        "name": "CLERIC_AID",
+        "type": "SPELLID",
+        "id": "1201",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_AID"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "AID"
+            }
+        ]
+    },
+    "1202": {
+        "name": "CLERIC_BARKSKIN",
+        "type": "SPELLID",
+        "id": "1202",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "BARKSKIN"
+            }
+        ]
+    },
+    "1203": {
+        "name": "CLERIC_CHANT",
+        "type": "SPELLID",
+        "id": "1203",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_CHANT"
+            },
+            {
+                "type": "STATE",
+                "ID": "STATE_CHANTBAD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "BENEFICIAL_CHANT"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "DETRIMENTAL_CHANT"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "SI_ENCHANTMENT"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "ENCHANTED_WEAPON"
+            }
+        ]
+    },
+    "1204": {
+        "name": "CLERIC_CHARM_PERSON",
+        "type": "SPELLID",
+        "id": "1204",
+        "conditions": []
+    },
+    "1205": {
+        "name": "CLERIC_FIND_TRAPS",
+        "type": "SPELLID",
+        "id": "1205",
+        "conditions": []
+    },
+    "1206": {
+        "name": "CLERIC_FLAME_BLADE",
+        "type": "SPELLID",
+        "id": "1206",
+        "conditions": []
+    },
+    "1207": {
+        "name": "CLERIC_GOOD_BERRIES",
+        "type": "SPELLID",
+        "id": "1207",
+        "conditions": []
+    },
+    "1208": {
+        "name": "CLERIC_HOLD_PERSON",
+        "type": "SPELLID",
+        "id": "1208",
+        "conditions": []
+    },
+    "1209": {
+        "name": "CLERIC_KNOW_ALIGNMENT",
+        "type": "SPELLID",
+        "id": "1209",
+        "conditions": []
+    },
+    "1210": {
+        "name": "CLERIC_RESIST_FIRE",
+        "type": "SPELLID",
+        "id": "1210",
+        "conditions": []
+    },
+    "1211": {
+        "name": "CLERIC_SILENCE_15_FOOT",
+        "type": "SPELLID",
+        "id": "1211",
+        "conditions": []
+    },
+    "1212": {
+        "name": "CLERIC_SLOW_POISON",
+        "type": "SPELLID",
+        "id": "1212",
+        "conditions": []
+    },
+    "1213": {
+        "name": "CLERIC_SPIRITUAL_HAMMER",
+        "type": "SPELLID",
+        "id": "1213",
+        "conditions": []
+    },
+    "1214": {
+        "name": "CLERIC_DRAW_UPON_HOLY_MIGHT",
+        "type": "SPELLID",
+        "id": "1214",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "DRAW_UPON_HOLY_MIGHT"
+            }
+        ]
+    },
+    "1215": {
+        "name": "CLERIC_RESIST_COLD",
+        "type": "SPELLID",
+        "id": "1215",
+        "conditions": []
+    },
+    "1250": {
+        "name": "CLERIC_WRITHING_FOG",
+        "type": "SPELLID",
+        "id": "1250",
+        "conditions": []
+    },
+    "1301": {
+        "name": "CLERIC_ANIMATE_DEAD",
+        "type": "SPELLID",
+        "id": "1301",
+        "conditions": []
+    },
+    "1302": {
+        "name": "CLERIC_CALL_LIGHTNING",
+        "type": "SPELLID",
+        "id": "1302",
+        "conditions": []
+    },
+    "1303": {
+        "name": "CLERIC_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "1303",
+        "conditions": []
+    },
+    "1304": {
+        "name": "CLERIC_GLYPH_OF_WARDING",
+        "type": "SPELLID",
+        "id": "1304",
+        "conditions": []
+    },
+    "1305": {
+        "name": "CLERIC_HOLD_ANIMAL",
+        "type": "SPELLID",
+        "id": "1305",
+        "conditions": []
+    },
+    "1306": {
+        "name": "CLERIC_PROTECTION_FROM_FIRE",
+        "type": "SPELLID",
+        "id": "1306",
+        "conditions": []
+    },
+    "1307": {
+        "name": "CLERIC_REMOVE_CURSE",
+        "type": "SPELLID",
+        "id": "1307",
+        "conditions": []
+    },
+    "1308": {
+        "name": "CLERIC_REMOVE_PARALYSIS",
+        "type": "SPELLID",
+        "id": "1308",
+        "conditions": []
+    },
+    "1309": {
+        "name": "CLERIC_INVISIBILITY_PURGE",
+        "type": "SPELLID",
+        "id": "1309",
+        "conditions": []
+    },
+    "1310": {
+        "name": "CLERIC_MISCAST_MAGIC",
+        "type": "SPELLID",
+        "id": "1310",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "MISCAST_MAGIC"
+            }
+        ]
+    },
+    "1311": {
+        "name": "CLERIC_RIGID_THINKING",
+        "type": "SPELLID",
+        "id": "1311",
+        "conditions": []
+    },
+    "1312": {
+        "name": "CLERIC_STRENGTH_OF_ONE",
+        "type": "SPELLID",
+        "id": "1312",
+        "conditions": []
+    },
+    "1313": {
+        "name": "CLERIC_HOLY_SMITE",
+        "type": "SPELLID",
+        "id": "1313",
+        "conditions": []
+    },
+    "1314": {
+        "name": "CLERIC_UNHOLY_BLIGHT",
+        "type": "SPELLID",
+        "id": "1314",
+        "conditions": []
+    },
+    "1315": {
+        "name": "CLERIC_CURE_MEDIUM_WOUNDS",
+        "type": "SPELLID",
+        "id": "1315",
+        "conditions": []
+    },
+    "1316": {
+        "name": "CLERIC_CURE_BLIND_DEAF",
+        "type": "SPELLID",
+        "id": "1316",
+        "conditions": []
+    },
+    "1317": {
+        "name": "CLERIC_CURE_DISEASE",
+        "type": "SPELLID",
+        "id": "1317",
+        "conditions": []
+    },
+    "1318": {
+        "name": "CLERIC_ZONE_OF_SWEET_AIR",
+        "type": "SPELLID",
+        "id": "1318",
+        "conditions": []
+    },
+    "1319": {
+        "name": "CLERIC_SUMMON_INSECTS",
+        "type": "SPELLID",
+        "id": "1319",
+        "conditions": []
+    },
+    "1350": {
+        "name": "CLERIC_SPIRITUAL_CLARITY",
+        "type": "SPELLID",
+        "id": "1350",
+        "conditions": []
+    },
+    "1401": {
+        "name": "CLERIC_CURE_SERIOUS_WOUNDS",
+        "type": "SPELLID",
+        "id": "1401",
+        "conditions": []
+    },
+    "1402": {
+        "name": "CLERIC_ANIMAL_SUMMONING_1",
+        "type": "SPELLID",
+        "id": "1402",
+        "conditions": []
+    },
+    "1403": {
+        "name": "CLERIC_FREE_ACTION",
+        "type": "SPELLID",
+        "id": "1403",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "FREE_ACTION"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_FREE_ACTION"
+            }
+        ]
+    },
+    "1404": {
+        "name": "CLERIC_NEUTRALIZE_POISON",
+        "type": "SPELLID",
+        "id": "1404",
+        "conditions": []
+    },
+    "1405": {
+        "name": "CLERIC_MENTAL_DOMINATION",
+        "type": "SPELLID",
+        "id": "1405",
+        "conditions": []
+    },
+    "1406": {
+        "name": "CLERIC_DEFENSIVE_HARMONY",
+        "type": "SPELLID",
+        "id": "1406",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "CLERIC_DEFENSIVE_HARMONY"
+            }
+        ]
+    },
+    "1407": {
+        "name": "CLERIC_PROTECTION_FROM_LIGHTNING",
+        "type": "SPELLID",
+        "id": "1407",
+        "conditions": []
+    },
+    "1408": {
+        "name": "CLERIC_PROTECTION_FROM_EVIL_10_FOOT",
+        "type": "SPELLID",
+        "id": "1408",
+        "conditions": []
+    },
+    "1409": {
+        "name": "CLERIC_DEATH_WARD",
+        "type": "SPELLID",
+        "id": "1409",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "DEATH_WARD"
+            },
+            {
+                "type": "STAT",
+                "ID": "DEATH_WARD"
+            }
+        ]
+    },
+    "1410": {
+        "name": "CLERIC_CALL_WOODLAND_BEINGS",
+        "type": "SPELLID",
+        "id": "1410",
+        "conditions": []
+    },
+    "1411": {
+        "name": "CLERIC_POISON",
+        "type": "SPELLID",
+        "id": "1411",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_POISONED"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "POISON_WEAPON"
+            },
+            {
+                "type": "STAT",
+                "ID": "RESISTPOISON"
+            }
+        ]
+    },
+    "1412": {
+        "name": "CLERIC_HOLY_POWER",
+        "type": "SPELLID",
+        "id": "1412",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "HOLY_POWER"
+            }
+        ]
+    },
+    "1413": {
+        "name": "CLERIC_NEGATIVE_PLANE_PROTECTION",
+        "type": "SPELLID",
+        "id": "1413",
+        "conditions": []
+    },
+    "1414": {
+        "name": "CLERIC_CAUSE_SERIOUS_WOUNDS",
+        "type": "SPELLID",
+        "id": "1414",
+        "conditions": []
+    },
+    "1415": {
+        "name": "CLERIC_FAR_SIGHT",
+        "type": "SPELLID",
+        "id": "1415",
+        "conditions": []
+    },
+    "1416": {
+        "name": "CLERIC_CLOAK_OF_FEAR",
+        "type": "SPELLID",
+        "id": "1416",
+        "conditions": []
+    },
+    "1417": {
+        "name": "CLERIC_LESSER_RESTORATION",
+        "type": "SPELLID",
+        "id": "1417",
+        "conditions": []
+    },
+    "1450": {
+        "name": "CLERIC_SPIRIT_FIRE",
+        "type": "SPELLID",
+        "id": "1450",
+        "conditions": []
+    },
+    "1501": {
+        "name": "CLERIC_ANIMAL_SUMMONING_2",
+        "type": "SPELLID",
+        "id": "1501",
+        "conditions": []
+    },
+    "1502": {
+        "name": "CLERIC_CURE_CRITICAL_WOUNDS",
+        "type": "SPELLID",
+        "id": "1502",
+        "conditions": []
+    },
+    "1503": {
+        "name": "CLERIC_FLAME_STRIKE",
+        "type": "SPELLID",
+        "id": "1503",
+        "conditions": []
+    },
+    "1504": {
+        "name": "CLERIC_RAISE_DEAD",
+        "type": "SPELLID",
+        "id": "1504",
+        "conditions": []
+    },
+    "1505": {
+        "name": "CLERIC_TRUE_SIGHT",
+        "type": "SPELLID",
+        "id": "1505",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "TRUE_SIGHT"
+            }
+        ]
+    },
+    "1506": {
+        "name": "CLERIC_IRONSKIN",
+        "type": "SPELLID",
+        "id": "1506",
+        "conditions": []
+    },
+    "1507": {
+        "name": "CLERIC_CHAMPIONS_STRENGTH",
+        "type": "SPELLID",
+        "id": "1507",
+        "conditions": []
+    },
+    "1508": {
+        "name": "CLERIC_CHAOTIC_COMMANDS",
+        "type": "SPELLID",
+        "id": "1508",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAOTIC_COMMANDS"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_CHAOTIC_COMMANDS"
+            }
+        ]
+    },
+    "1509": {
+        "name": "CLERIC_MAGIC_RESISTANCE",
+        "type": "SPELLID",
+        "id": "1509",
+        "conditions": []
+    },
+    "1510": {
+        "name": "CLERIC_CAUSE_CRITICAL_WOUNDS",
+        "type": "SPELLID",
+        "id": "1510",
+        "conditions": []
+    },
+    "1511": {
+        "name": "CLERIC_SLAY_LIVING",
+        "type": "SPELLID",
+        "id": "1511",
+        "conditions": []
+    },
+    "1512": {
+        "name": "CLERIC_GREATER_COMMAND",
+        "type": "SPELLID",
+        "id": "1512",
+        "conditions": []
+    },
+    "1513": {
+        "name": "CLERIC_RIGHTEOUS_MAGIC",
+        "type": "SPELLID",
+        "id": "1513",
+        "conditions": []
+    },
+    "1514": {
+        "name": "CLERIC_MASS_CURE",
+        "type": "SPELLID",
+        "id": "1514",
+        "conditions": []
+    },
+    "1515": {
+        "name": "CLERIC_REPULSE_UNDEAD",
+        "type": "SPELLID",
+        "id": "1515",
+        "conditions": []
+    },
+    "1516": {
+        "name": "CLERIC_PIXIE_DUST",
+        "type": "SPELLID",
+        "id": "1516",
+        "conditions": []
+    },
+    "1517": {
+        "name": "CLERIC_INSECT_PLAGUE",
+        "type": "SPELLID",
+        "id": "1517",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "CLERIC_INSECT_PLAGUE"
+            }
+        ]
+    },
+    "1550": {
+        "name": "CLERIC_RECALL_SPIRIT",
+        "type": "SPELLID",
+        "id": "1550",
+        "conditions": []
+    },
+    "1599": {
+        "name": "ENEMY_CLERIC_SLAY_LIVING",
+        "type": "SPELLID",
+        "id": "1599",
+        "conditions": []
+    },
+    "1601": {
+        "name": "CLERIC_AERIAL_SERVANT",
+        "type": "SPELLID",
+        "id": "1601",
+        "conditions": []
+    },
+    "1602": {
+        "name": "CLERIC_ANIMAL_SUMMONING_3",
+        "type": "SPELLID",
+        "id": "1602",
+        "conditions": []
+    },
+    "1603": {
+        "name": "CLERIC_BLADE_BARRIER",
+        "type": "SPELLID",
+        "id": "1603",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "CLERIC_BLADE_BARRIER"
+            }
+        ]
+    },
+    "1604": {
+        "name": "CLERIC_CONJURE_ANIMALS",
+        "type": "SPELLID",
+        "id": "1604",
+        "conditions": []
+    },
+    "1605": {
+        "name": "CLERIC_CONJURE_FIRE_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "1605",
+        "conditions": []
+    },
+    "1606": {
+        "name": "CLERIC_FIRE_SEEDS",
+        "type": "SPELLID",
+        "id": "1606",
+        "conditions": []
+    },
+    "1607": {
+        "name": "CLERIC_HEAL",
+        "type": "SPELLID",
+        "id": "1607",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "POTION_OF_HEALING"
+            }
+        ]
+    },
+    "1608": {
+        "name": "CLERIC_HARM",
+        "type": "SPELLID",
+        "id": "1608",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_CHARMED"
+            },
+            {
+                "type": "STATE",
+                "ID": "STATE_HARMLESS"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_DEFENSIVE_HARMONY"
+            },
+            {
+                "type": "STAT",
+                "ID": "THRULLCHARM"
+            }
+        ]
+    },
+    "1609": {
+        "name": "CLERIC_FALSE_DAWN",
+        "type": "SPELLID",
+        "id": "1609",
+        "conditions": []
+    },
+    "1610": {
+        "name": "CLERIC_DOLOROUS_DECAY",
+        "type": "SPELLID",
+        "id": "1610",
+        "conditions": []
+    },
+    "1611": {
+        "name": "CLERIC_WONDROUS_RECALL",
+        "type": "SPELLID",
+        "id": "1611",
+        "conditions": []
+    },
+    "1612": {
+        "name": "CLERIC_BOLT_OF_GLORY",
+        "type": "SPELLID",
+        "id": "1612",
+        "conditions": []
+    },
+    "1613": {
+        "name": "CLERIC_PHYSICAL_MIRROR",
+        "type": "SPELLID",
+        "id": "1613",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "CLERIC_PHYSICAL_MIRROR"
+            }
+        ]
+    },
+    "1614": {
+        "name": "CLERIC_SOL_SEARING_ORB",
+        "type": "SPELLID",
+        "id": "1614",
+        "conditions": []
+    },
+    "1650": {
+        "name": "CLERIC_SPIRITUAL_LOCK",
+        "type": "SPELLID",
+        "id": "1650",
+        "conditions": []
+    },
+    "1698": {
+        "name": "NPC_BLADE_BARRIER",
+        "type": "SPELLID",
+        "id": "1698",
+        "conditions": []
+    },
+    "1699": {
+        "name": "ENEMY_CLERIC_HARM",
+        "type": "SPELLID",
+        "id": "1699",
+        "conditions": []
+    },
+    "1701": {
+        "name": "CLERIC_SHIELD_OF_THE_ARCHONS",
+        "type": "SPELLID",
+        "id": "1701",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "CLERIC_SHIELD_OF_THE_ARCHONS"
+            }
+        ]
+    },
+    "1702": {
+        "name": "CLERIC_CONJURE_EARTH_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "1702",
+        "conditions": []
+    },
+    "1703": {
+        "name": "CLERIC_GATE",
+        "type": "SPELLID",
+        "id": "1703",
+        "conditions": []
+    },
+    "1704": {
+        "name": "CLERIC_NATURE_BEAUTY",
+        "type": "SPELLID",
+        "id": "1704",
+        "conditions": []
+    },
+    "1705": {
+        "name": "CLERIC_FIRE_STORM",
+        "type": "SPELLID",
+        "id": "1705",
+        "conditions": []
+    },
+    "1706": {
+        "name": "CLERIC_SYMBOL_FEAR",
+        "type": "SPELLID",
+        "id": "1706",
+        "conditions": []
+    },
+    "1707": {
+        "name": "CLERIC_SUNRAY",
+        "type": "SPELLID",
+        "id": "1707",
+        "conditions": []
+    },
+    "1708": {
+        "name": "CLERIC_FINGER_OF_DEATH",
+        "type": "SPELLID",
+        "id": "1708",
+        "conditions": []
+    },
+    "1709": {
+        "name": "CLERIC_CONFUSION",
+        "type": "SPELLID",
+        "id": "1709",
+        "conditions": []
+    },
+    "1710": {
+        "name": "CLERIC_HOLY_WORD",
+        "type": "SPELLID",
+        "id": "1710",
+        "conditions": []
+    },
+    "1711": {
+        "name": "CLERIC_REGENERATE",
+        "type": "SPELLID",
+        "id": "1711",
+        "conditions": []
+    },
+    "1712": {
+        "name": "CLERIC_RESURRECTION",
+        "type": "SPELLID",
+        "id": "1712",
+        "conditions": []
+    },
+    "1713": {
+        "name": "CLERIC_RESTORATION",
+        "type": "SPELLID",
+        "id": "1713",
+        "conditions": []
+    },
+    "1714": {
+        "name": "CLERIC_ENERGY_DRAIN",
+        "type": "SPELLID",
+        "id": "1714",
+        "conditions": []
+    },
+    "1715": {
+        "name": "CLERIC_UNHOLY_WORD",
+        "type": "SPELLID",
+        "id": "1715",
+        "conditions": []
+    },
+    "1716": {
+        "name": "CLERIC_SPACE_WARP",
+        "type": "SPELLID",
+        "id": "1716",
+        "conditions": []
+    },
+    "1717": {
+        "name": "CLERIC_CREEPING_DOOM",
+        "type": "SPELLID",
+        "id": "1717",
+        "conditions": []
+    },
+    "1718": {
+        "name": "CLERIC_SYMBOL_STUN",
+        "type": "SPELLID",
+        "id": "1718",
+        "conditions": []
+    },
+    "1719": {
+        "name": "CLERIC_SYMBOL_DEATH",
+        "type": "SPELLID",
+        "id": "1719",
+        "conditions": []
+    },
+    "1720": {
+        "name": "CLERIC_EARTHQUAKE",
+        "type": "SPELLID",
+        "id": "1720",
+        "conditions": []
+    },
+    "1721": {
+        "name": "CLERIC_ENERGY_BLADES",
+        "type": "SPELLID",
+        "id": "1721",
+        "conditions": []
+    },
+    "1722": {
+        "name": "CLERIC_STORM_OF_VENGEANCE",
+        "type": "SPELLID",
+        "id": "1722",
+        "conditions": []
+    },
+    "1723": {
+        "name": "CLERIC_ELEMENTAL_SWARM",
+        "type": "SPELLID",
+        "id": "1723",
+        "conditions": []
+    },
+    "1724": {
+        "name": "CLERIC_GREATER_ELEMENTAL_SWARM",
+        "type": "SPELLID",
+        "id": "1724",
+        "conditions": []
+    },
+    "1725": {
+        "name": "CLERIC_GLOBE_OF_BLADES",
+        "type": "SPELLID",
+        "id": "1725",
+        "conditions": []
+    },
+    "1726": {
+        "name": "CLERIC_SUMMON_DEVA",
+        "type": "SPELLID",
+        "id": "1726",
+        "conditions": []
+    },
+    "1727": {
+        "name": "CLERIC_SUMMON_FALLEN_DEVA",
+        "type": "SPELLID",
+        "id": "1727",
+        "conditions": []
+    },
+    "1728": {
+        "name": "CLERIC_IMPLOSION",
+        "type": "SPELLID",
+        "id": "1728",
+        "conditions": []
+    },
+    "1729": {
+        "name": "CLERIC_MASS_RAISE_DEAD",
+        "type": "SPELLID",
+        "id": "1729",
+        "conditions": []
+    },
+    "1730": {
+        "name": "CLERIC_AURA_OF_FLAMING_DEATH",
+        "type": "SPELLID",
+        "id": "1730",
+        "conditions": []
+    },
+    "1731": {
+        "name": "CLERIC_ELEMENTAL_TRANSFORMATION_FIRE",
+        "type": "SPELLID",
+        "id": "1731",
+        "conditions": []
+    },
+    "1732": {
+        "name": "CLERIC_ELEMENTAL_TRANSFORMATION_EARTH",
+        "type": "SPELLID",
+        "id": "1732",
+        "conditions": []
+    },
+    "1750": {
+        "name": "CLERIC_ETHER_GATE",
+        "type": "SPELLID",
+        "id": "1750",
+        "conditions": []
+    },
+    "1751": {
+        "name": "CLERIC_ETHEREAL_RETRIBUTION",
+        "type": "SPELLID",
+        "id": "1751",
+        "conditions": []
+    },
+    "1982": {
+        "name": "TRAP_DIRE_CHARM",
+        "type": "SPELLID",
+        "id": "1982",
+        "conditions": []
+    },
+    "1983": {
+        "name": "TRAP_CONFUSION",
+        "type": "SPELLID",
+        "id": "1983",
+        "conditions": []
+    },
+    "1984": {
+        "name": "TRAP_CHROMATIC_ORB",
+        "type": "SPELLID",
+        "id": "1984",
+        "conditions": []
+    },
+    "1985": {
+        "name": "TRAP_FLAMESTRIKE",
+        "type": "SPELLID",
+        "id": "1985",
+        "conditions": []
+    },
+    "1986": {
+        "name": "TRAP_MISCAST_MAGIC",
+        "type": "SPELLID",
+        "id": "1986",
+        "conditions": []
+    },
+    "1987": {
+        "name": "TRAP_CALL_LIGHTNING",
+        "type": "SPELLID",
+        "id": "1987",
+        "conditions": []
+    },
+    "1988": {
+        "name": "TRAP_SILENCE",
+        "type": "SPELLID",
+        "id": "1988",
+        "conditions": []
+    },
+    "1989": {
+        "name": "TRAP_HOLD_PERSON",
+        "type": "SPELLID",
+        "id": "1989",
+        "conditions": []
+    },
+    "1999": {
+        "name": "SHOAL_REVIVE",
+        "type": "SPELLID",
+        "id": "1999",
+        "conditions": []
+    },
+    "2001": {
+        "name": "TRAP_FIREBALL",
+        "type": "SPELLID",
+        "id": "2001",
+        "conditions": []
+    },
+    "2002": {
+        "name": "TRAP_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "2002",
+        "conditions": []
+    },
+    "2003": {
+        "name": "TRAP_MAGIC_MISSILE",
+        "type": "SPELLID",
+        "id": "2003",
+        "conditions": []
+    },
+    "2004": {
+        "name": "TRAP_STINKING_CLOUD",
+        "type": "SPELLID",
+        "id": "2004",
+        "conditions": []
+    },
+    "2005": {
+        "name": "TRAP_ARROW",
+        "type": "SPELLID",
+        "id": "2005",
+        "conditions": []
+    },
+    "2006": {
+        "name": "TRAP_ARROW_SLAYING",
+        "type": "SPELLID",
+        "id": "2006",
+        "conditions": []
+    },
+    "2007": {
+        "name": "TRAP_ARROW_ACID",
+        "type": "SPELLID",
+        "id": "2007",
+        "conditions": []
+    },
+    "2008": {
+        "name": "TRAP_ARROW_BITING",
+        "type": "SPELLID",
+        "id": "2008",
+        "conditions": []
+    },
+    "2009": {
+        "name": "TRAP_ARROW_DETONATION",
+        "type": "SPELLID",
+        "id": "2009",
+        "conditions": []
+    },
+    "2010": {
+        "name": "TRAP_ARROW_DISPELLING",
+        "type": "SPELLID",
+        "id": "2010",
+        "conditions": []
+    },
+    "2011": {
+        "name": "TRAP_ARROW_FIRE",
+        "type": "SPELLID",
+        "id": "2011",
+        "conditions": []
+    },
+    "2012": {
+        "name": "TRAP_ARROW_ICE",
+        "type": "SPELLID",
+        "id": "2012",
+        "conditions": []
+    },
+    "2013": {
+        "name": "TRAP_ARROW_PIERCING",
+        "type": "SPELLID",
+        "id": "2013",
+        "conditions": []
+    },
+    "2014": {
+        "name": "TRAP_MONSTER_SUMMONING",
+        "type": "SPELLID",
+        "id": "2014",
+        "conditions": []
+    },
+    "2015": {
+        "name": "TRAP_FROST",
+        "type": "SPELLID",
+        "id": "2015",
+        "conditions": []
+    },
+    "2016": {
+        "name": "TRAP_CLOUDKILL",
+        "type": "SPELLID",
+        "id": "2016",
+        "conditions": []
+    },
+    "2017": {
+        "name": "TRAP_MINOR_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "2017",
+        "conditions": []
+    },
+    "2020": {
+        "name": "TRAP_UNDERWATER_BITE",
+        "type": "SPELLID",
+        "id": "2020",
+        "conditions": []
+    },
+    "2021": {
+        "name": "TRAP_HALLWAY_SPIKES",
+        "type": "SPELLID",
+        "id": "2021",
+        "conditions": []
+    },
+    "2022": {
+        "name": "TRAP_MUCK",
+        "type": "SPELLID",
+        "id": "2022",
+        "conditions": []
+    },
+    "2023": {
+        "name": "TRAP_SHADOW_DEATH",
+        "type": "SPELLID",
+        "id": "2023",
+        "conditions": []
+    },
+    "2024": {
+        "name": "TRAP_GUILLOTINE",
+        "type": "SPELLID",
+        "id": "2024",
+        "conditions": []
+    },
+    "2025": {
+        "name": "TRAP_LIGHTNING_ORB1",
+        "type": "SPELLID",
+        "id": "2025",
+        "conditions": []
+    },
+    "2026": {
+        "name": "TRAP_LIGHTNING_ORB2",
+        "type": "SPELLID",
+        "id": "2026",
+        "conditions": []
+    },
+    "2027": {
+        "name": "TRAP_LIGHTNING_ORB3",
+        "type": "SPELLID",
+        "id": "2027",
+        "conditions": []
+    },
+    "2050": {
+        "name": "WIZARD_CHAOS_VISUALS_ONLY",
+        "type": "SPELLID",
+        "id": "2050",
+        "conditions": []
+    },
+    "2051": {
+        "name": "WIZARD_DISPEL_MAGIC_VISUALS_ONLY",
+        "type": "SPELLID",
+        "id": "2051",
+        "conditions": []
+    },
+    "2052": {
+        "name": "WIZARD_POWER_WORD_SILENCE_VISUALS_ONLY",
+        "type": "SPELLID",
+        "id": "2052",
+        "conditions": []
+    },
+    "2053": {
+        "name": "WIZARD_FLESH_TO_STONE_IGNORE_RESISTANCE",
+        "type": "SPELLID",
+        "id": "2053",
+        "conditions": []
+    },
+    "2054": {
+        "name": "WIZARD_FINGER_OF_DEATH_IGNORE_RESISTANCE",
+        "type": "SPELLID",
+        "id": "2054",
+        "conditions": []
+    },
+    "2055": {
+        "name": "WIZARD_DISINTEGRATE_IGNORE_RESISTANCE",
+        "type": "SPELLID",
+        "id": "2055",
+        "conditions": []
+    },
+    "2056": {
+        "name": "WIZARD_DISINTEGRATE2_IGNORE_RESISTANCE",
+        "type": "SPELLID",
+        "id": "2056",
+        "conditions": []
+    },
+    "2101": {
+        "name": "WIZARD_GREASE",
+        "type": "SPELLID",
+        "id": "2101",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "GREASE"
+            },
+            {
+                "type": "STAT",
+                "ID": "GREASE"
+            }
+        ]
+    },
+    "2102": {
+        "name": "WIZARD_ARMOR",
+        "type": "SPELLID",
+        "id": "2102",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ARMOR_OF_FAITH"
+            },
+            {
+                "type": "STAT",
+                "ID": "ARMORCLASS"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_ARMOR_OF_FAITH"
+            }
+        ]
+    },
+    "2103": {
+        "name": "WIZARD_BURNING_HANDS",
+        "type": "SPELLID",
+        "id": "2103",
+        "conditions": []
+    },
+    "2104": {
+        "name": "WIZARD_CHARM_PERSON",
+        "type": "SPELLID",
+        "id": "2104",
+        "conditions": []
+    },
+    "2105": {
+        "name": "WIZARD_COLOR_SPRAY",
+        "type": "SPELLID",
+        "id": "2105",
+        "conditions": []
+    },
+    "2106": {
+        "name": "WIZARD_BLINDNESS",
+        "type": "SPELLID",
+        "id": "2106",
+        "conditions": []
+    },
+    "2107": {
+        "name": "WIZARD_FRIENDS",
+        "type": "SPELLID",
+        "id": "2107",
+        "conditions": []
+    },
+    "2108": {
+        "name": "WIZARD_PROTECTION_FROM_PETRIFICATION",
+        "type": "SPELLID",
+        "id": "2108",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_PETRIFICATION"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_PETRIFICATION"
+            }
+        ]
+    },
+    "2109": {
+        "name": "WIZARD_HOLD_PORTAL",
+        "type": "SPELLID",
+        "id": "2109",
+        "conditions": []
+    },
+    "2110": {
+        "name": "WIZARD_IDENTIFY",
+        "type": "SPELLID",
+        "id": "2110",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "IDENTIFYMODE"
+            }
+        ]
+    },
+    "2111": {
+        "name": "WIZARD_INFRAVISION",
+        "type": "SPELLID",
+        "id": "2111",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_INFRAVISION"
+            }
+        ]
+    },
+    "2112": {
+        "name": "WIZARD_MAGIC_MISSILE",
+        "type": "SPELLID",
+        "id": "2112",
+        "conditions": []
+    },
+    "2113": {
+        "name": "WIZARD_PROTECTION_FROM_EVIL",
+        "type": "SPELLID",
+        "id": "2113",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_EVIL"
+            },
+            {
+                "type": "STAT",
+                "ID": "PROTECTION_FROM_EVIL"
+            }
+        ]
+    },
+    "2114": {
+        "name": "WIZARD_SHIELD",
+        "type": "SPELLID",
+        "id": "2114",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "RED_FIRESHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "BLUE_FIRESHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "ENTROPY_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAOS_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_CHAOS_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "SPELL_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "WIZARD_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "SHIELDGLOBE"
+            },
+            {
+                "type": "STAT",
+                "ID": "PROFICIENCYSWORDANDSHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "CLERIC_SHIELD_OF_THE_ARCHONS"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_FIRE_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "CHAOS_SHIELD"
+            }
+        ]
+    },
+    "2115": {
+        "name": "WIZARD_SHOCKING_GRASP",
+        "type": "SPELLID",
+        "id": "2115",
+        "conditions": []
+    },
+    "2116": {
+        "name": "WIZARD_SLEEP",
+        "type": "SPELLID",
+        "id": "2116",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_SLEEPING"
+            }
+        ]
+    },
+    "2117": {
+        "name": "WIZARD_CHILL_TOUCH",
+        "type": "SPELLID",
+        "id": "2117",
+        "conditions": []
+    },
+    "2118": {
+        "name": "WIZARD_CHROMATIC_ORB",
+        "type": "SPELLID",
+        "id": "2118",
+        "conditions": []
+    },
+    "2119": {
+        "name": "WIZARD_LARLOCH_MINOR_DRAIN",
+        "type": "SPELLID",
+        "id": "2119",
+        "conditions": []
+    },
+    "2120": {
+        "name": "WIZARD_REFLECTED_IMAGE",
+        "type": "SPELLID",
+        "id": "2120",
+        "conditions": []
+    },
+    "2121": {
+        "name": "WIZARD_REVEAL_MAGIC",
+        "type": "SPELLID",
+        "id": "2121",
+        "conditions": []
+    },
+    "2122": {
+        "name": "WIZARD_PROTECTION_CIRCLE",
+        "type": "SPELLID",
+        "id": "2122",
+        "conditions": []
+    },
+    "2123": {
+        "name": "WIZARD_FIND_FAMILAR",
+        "type": "SPELLID",
+        "id": "2123",
+        "conditions": []
+    },
+    "2124": {
+        "name": "WIZARD_ALARM",
+        "type": "SPELLID",
+        "id": "2124",
+        "conditions": []
+    },
+    "2125": {
+        "name": "WIZARD_SPOOK",
+        "type": "SPELLID",
+        "id": "2125",
+        "conditions": []
+    },
+    "2126": {
+        "name": "WIZARD_DANCING_LIGHTS",
+        "type": "SPELLID",
+        "id": "2126",
+        "conditions": []
+    },
+    "2201": {
+        "name": "WIZARD_BLUR",
+        "type": "SPELLID",
+        "id": "2201",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_BLUR"
+            }
+        ]
+    },
+    "2202": {
+        "name": "WIZARD_DETECT_EVIL",
+        "type": "SPELLID",
+        "id": "2202",
+        "conditions": []
+    },
+    "2203": {
+        "name": "WIZARD_DETECT_INVISIBILITY",
+        "type": "SPELLID",
+        "id": "2203",
+        "conditions": []
+    },
+    "2204": {
+        "name": "WIZARD_FOG_CLOUD",
+        "type": "SPELLID",
+        "id": "2204",
+        "conditions": []
+    },
+    "2205": {
+        "name": "WIZARD_HORROR",
+        "type": "SPELLID",
+        "id": "2205",
+        "conditions": []
+    },
+    "2206": {
+        "name": "WIZARD_INVISIBILITY",
+        "type": "SPELLID",
+        "id": "2206",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_IMPROVEDINVISIBILITY"
+            }
+        ]
+    },
+    "2207": {
+        "name": "WIZARD_KNOCK",
+        "type": "SPELLID",
+        "id": "2207",
+        "conditions": []
+    },
+    "2208": {
+        "name": "WIZARD_KNOW_ALIGNMENT",
+        "type": "SPELLID",
+        "id": "2208",
+        "conditions": []
+    },
+    "2209": {
+        "name": "WIZARD_LUCK",
+        "type": "SPELLID",
+        "id": "2209",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_LUCK"
+            },
+            {
+                "type": "STAT",
+                "ID": "LUCK"
+            },
+            {
+                "type": "STAT",
+                "ID": "DAMAGELUCK"
+            }
+        ]
+    },
+    "2210": {
+        "name": "WIZARD_RESIST_FEAR",
+        "type": "SPELLID",
+        "id": "2210",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "RESIST_FEAR"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_RESIST_FEAR"
+            }
+        ]
+    },
+    "2211": {
+        "name": "WIZARD_MELF_ACID_ARROW",
+        "type": "SPELLID",
+        "id": "2211",
+        "conditions": []
+    },
+    "2212": {
+        "name": "WIZARD_MIRROR_IMAGE",
+        "type": "SPELLID",
+        "id": "2212",
+        "conditions": []
+    },
+    "2213": {
+        "name": "WIZARD_STINKING_CLOUD",
+        "type": "SPELLID",
+        "id": "2213",
+        "conditions": []
+    },
+    "2214": {
+        "name": "WIZARD_STRENGTH",
+        "type": "SPELLID",
+        "id": "2214",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "STRENGTH_MODIFIER"
+            }
+        ]
+    },
+    "2215": {
+        "name": "WIZARD_WEB",
+        "type": "SPELLID",
+        "id": "2215",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "WEB"
+            },
+            {
+                "type": "STAT",
+                "ID": "WEB"
+            }
+        ]
+    },
+    "2216": {
+        "name": "WIZARD_WIZARD_LOCK",
+        "type": "SPELLID",
+        "id": "2216",
+        "conditions": []
+    },
+    "2217": {
+        "name": "WIZARD_AGANNAZAR_SCORCHER",
+        "type": "SPELLID",
+        "id": "2217",
+        "conditions": []
+    },
+    "2218": {
+        "name": "WIZARD_GHOUL_TOUCH",
+        "type": "SPELLID",
+        "id": "2218",
+        "conditions": []
+    },
+    "2219": {
+        "name": "WIZARD_VOCALIZE",
+        "type": "SPELLID",
+        "id": "2219",
+        "conditions": []
+    },
+    "2220": {
+        "name": "WIZARD_POWER_WORD_SLEEP",
+        "type": "SPELLID",
+        "id": "2220",
+        "conditions": []
+    },
+    "2221": {
+        "name": "WIZARD_RAY_OF_ENFEEBLEMENT",
+        "type": "SPELLID",
+        "id": "2221",
+        "conditions": []
+    },
+    "2222": {
+        "name": "WIZARD_CHAOS_SHIELD",
+        "type": "SPELLID",
+        "id": "2222",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAOS_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_CHAOS_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "CHAOS_SHIELD"
+            }
+        ]
+    },
+    "2223": {
+        "name": "WIZARD_DEAFNESS",
+        "type": "SPELLID",
+        "id": "2223",
+        "conditions": []
+    },
+    "2224": {
+        "name": "WIZARD_GLITTERDUST",
+        "type": "SPELLID",
+        "id": "2224",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "GLITTERDUST"
+            }
+        ]
+    },
+    "2228": {
+        "name": "WIZARD_DARKNESS_15_FOOT",
+        "type": "SPELLID",
+        "id": "2228",
+        "conditions": []
+    },
+    "2298": {
+        "name": "CONTINGENCY_MIRROR_IMAGE",
+        "type": "SPELLID",
+        "id": "2298",
+        "conditions": []
+    },
+    "2301": {
+        "name": "WIZARD_CLAIRVOYANCE",
+        "type": "SPELLID",
+        "id": "2301",
+        "conditions": []
+    },
+    "2302": {
+        "name": "WIZARD_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "2302",
+        "conditions": []
+    },
+    "2303": {
+        "name": "WIZARD_FLAME_ARROW",
+        "type": "SPELLID",
+        "id": "2303",
+        "conditions": []
+    },
+    "2304": {
+        "name": "WIZARD_FIREBALL",
+        "type": "SPELLID",
+        "id": "2304",
+        "conditions": []
+    },
+    "2305": {
+        "name": "WIZARD_HASTE",
+        "type": "SPELLID",
+        "id": "2305",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_HASTED"
+            },
+            {
+                "type": "STAT",
+                "ID": "IMPROVEDHASTE"
+            },
+            {
+                "type": "STAT",
+                "ID": "ANIMATION_ONLY_HASTE"
+            }
+        ]
+    },
+    "2306": {
+        "name": "WIZARD_HOLD_PERSON",
+        "type": "SPELLID",
+        "id": "2306",
+        "conditions": []
+    },
+    "2307": {
+        "name": "WIZARD_INVISIBILITY_10_FOOT",
+        "type": "SPELLID",
+        "id": "2307",
+        "conditions": []
+    },
+    "2308": {
+        "name": "WIZARD_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "2308",
+        "conditions": []
+    },
+    "2309": {
+        "name": "WIZARD_MONSTER_SUMMONING_1",
+        "type": "SPELLID",
+        "id": "2309",
+        "conditions": []
+    },
+    "2310": {
+        "name": "WIZARD_NON_DETECTION",
+        "type": "SPELLID",
+        "id": "2310",
+        "conditions": []
+    },
+    "2311": {
+        "name": "WIZARD_PROTECTION_FROM_NORMAL_MISSILES",
+        "type": "SPELLID",
+        "id": "2311",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_NORMAL_MISSILES"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_NORMAL_MISSILES"
+            }
+        ]
+    },
+    "2312": {
+        "name": "WIZARD_SLOW",
+        "type": "SPELLID",
+        "id": "2312",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_SLOWED"
+            },
+            {
+                "type": "STAT",
+                "ID": "PREVENT_AI_SLOWDOWN"
+            }
+        ]
+    },
+    "2313": {
+        "name": "WIZARD_SKULL_TRAP",
+        "type": "SPELLID",
+        "id": "2313",
+        "conditions": []
+    },
+    "2314": {
+        "name": "WIZARD_VAMPIRIC_TOUCH",
+        "type": "SPELLID",
+        "id": "2314",
+        "conditions": []
+    },
+    "2315": {
+        "name": "WIZARD_WRAITH_FORM",
+        "type": "SPELLID",
+        "id": "2315",
+        "conditions": []
+    },
+    "2316": {
+        "name": "WIZARD_DIRE_CHARM",
+        "type": "SPELLID",
+        "id": "2316",
+        "conditions": []
+    },
+    "2317": {
+        "name": "WIZARD_GHOST_ARMOR",
+        "type": "SPELLID",
+        "id": "2317",
+        "conditions": []
+    },
+    "2318": {
+        "name": "WIZARD_MINOR_SPELL_DEFLECTION",
+        "type": "SPELLID",
+        "id": "2318",
+        "conditions": []
+    },
+    "2319": {
+        "name": "WIZARD_PROTECTION_FROM_FIRE",
+        "type": "SPELLID",
+        "id": "2319",
+        "conditions": []
+    },
+    "2320": {
+        "name": "WIZARD_PROTECTION_FROM_COLD",
+        "type": "SPELLID",
+        "id": "2320",
+        "conditions": []
+    },
+    "2321": {
+        "name": "WIZARD_SPELL_THRUST",
+        "type": "SPELLID",
+        "id": "2321",
+        "conditions": []
+    },
+    "2322": {
+        "name": "WIZARD_DETECT_ILLUSION",
+        "type": "SPELLID",
+        "id": "2322",
+        "conditions": []
+    },
+    "2324": {
+        "name": "WIZARD_HOLD_UNDEAD",
+        "type": "SPELLID",
+        "id": "2324",
+        "conditions": []
+    },
+    "2325": {
+        "name": "WIZARD_MELF_METEOR",
+        "type": "SPELLID",
+        "id": "2325",
+        "conditions": []
+    },
+    "2326": {
+        "name": "WIZARD_TRUE_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "2326",
+        "conditions": []
+    },
+    "2401": {
+        "name": "WIZARD_CONFUSION",
+        "type": "SPELLID",
+        "id": "2401",
+        "conditions": []
+    },
+    "2402": {
+        "name": "WIZARD_DIMENSION_DOOR",
+        "type": "SPELLID",
+        "id": "2402",
+        "conditions": []
+    },
+    "2403": {
+        "name": "WIZARD_FIRE_SHIELD_BLUE",
+        "type": "SPELLID",
+        "id": "2403",
+        "conditions": []
+    },
+    "2404": {
+        "name": "WIZARD_ICE_STORM",
+        "type": "SPELLID",
+        "id": "2404",
+        "conditions": []
+    },
+    "2405": {
+        "name": "WIZARD_IMPROVED_INVISIBILITY",
+        "type": "SPELLID",
+        "id": "2405",
+        "conditions": []
+    },
+    "2406": {
+        "name": "WIZARD_MINOR_GLOBE_OF_INVULNERABILITY",
+        "type": "SPELLID",
+        "id": "2406",
+        "conditions": []
+    },
+    "2407": {
+        "name": "WIZARD_MONSTER_SUMMONING_2",
+        "type": "SPELLID",
+        "id": "2407",
+        "conditions": []
+    },
+    "2408": {
+        "name": "WIZARD_STONE_SKIN",
+        "type": "SPELLID",
+        "id": "2408",
+        "conditions": []
+    },
+    "2409": {
+        "name": "WIZARD_CONTAGION",
+        "type": "SPELLID",
+        "id": "2409",
+        "conditions": []
+    },
+    "2410": {
+        "name": "WIZARD_REMOVE_CURSE",
+        "type": "SPELLID",
+        "id": "2410",
+        "conditions": []
+    },
+    "2411": {
+        "name": "WIZARD_EMOTION_HOPELESSNESS",
+        "type": "SPELLID",
+        "id": "2411",
+        "conditions": []
+    },
+    "2412": {
+        "name": "WIZARD_GREATER_MALISON",
+        "type": "SPELLID",
+        "id": "2412",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_GREATER_MALISON"
+            }
+        ]
+    },
+    "2413": {
+        "name": "WIZARD_OTILUKES_RESILIENT_SPHERE",
+        "type": "SPELLID",
+        "id": "2413",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "OTILUKES_RESILIENT_SPHERE"
+            }
+        ]
+    },
+    "2414": {
+        "name": "WIZARD_SPIRIT_ARMOR",
+        "type": "SPELLID",
+        "id": "2414",
+        "conditions": []
+    },
+    "2415": {
+        "name": "WIZARD_POLYMORPH_OTHER",
+        "type": "SPELLID",
+        "id": "2415",
+        "conditions": []
+    },
+    "2416": {
+        "name": "WIZARD_POLYMORPH_SELF",
+        "type": "SPELLID",
+        "id": "2416",
+        "conditions": []
+    },
+    "2417": {
+        "name": "WIZARD_ENCHANTED_WEAPON",
+        "type": "SPELLID",
+        "id": "2417",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ENCHANTED_WEAPON"
+            }
+        ]
+    },
+    "2418": {
+        "name": "WIZARD_FIRE_SHIELD_RED",
+        "type": "SPELLID",
+        "id": "2418",
+        "conditions": []
+    },
+    "2419": {
+        "name": "WIZARD_SECRET_WORD",
+        "type": "SPELLID",
+        "id": "2419",
+        "conditions": []
+    },
+    "2420": {
+        "name": "WIZARD_MINOR_SEQUENCER",
+        "type": "SPELLID",
+        "id": "2420",
+        "conditions": []
+    },
+    "2421": {
+        "name": "WIZARD_TELEPORT_FIELD",
+        "type": "SPELLID",
+        "id": "2421",
+        "conditions": []
+    },
+    "2423": {
+        "name": "WIZARD_SPIDER_SPAWN",
+        "type": "SPELLID",
+        "id": "2423",
+        "conditions": []
+    },
+    "2424": {
+        "name": "WIZARD_FAR_SIGHT",
+        "type": "SPELLID",
+        "id": "2424",
+        "conditions": []
+    },
+    "2425": {
+        "name": "WIZARD_EYE",
+        "type": "SPELLID",
+        "id": "2425",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_THE_MIND"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_THE_SWORD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_THE_MAGE"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_VENOM"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_THE_SPIRIT"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_FORTITUDE"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "EYE_OF_STONE"
+            }
+        ]
+    },
+    "2501": {
+        "name": "WIZARD_ANIMATE_DEAD",
+        "type": "SPELLID",
+        "id": "2501",
+        "conditions": []
+    },
+    "2502": {
+        "name": "WIZARD_CLOUDKILL",
+        "type": "SPELLID",
+        "id": "2502",
+        "conditions": []
+    },
+    "2503": {
+        "name": "WIZARD_CONE_OF_COLD",
+        "type": "SPELLID",
+        "id": "2503",
+        "conditions": []
+    },
+    "2504": {
+        "name": "WIZARD_MONSTER_SUMMONING_3",
+        "type": "SPELLID",
+        "id": "2504",
+        "conditions": []
+    },
+    "2505": {
+        "name": "WIZARD_SHADOW_DOOR",
+        "type": "SPELLID",
+        "id": "2505",
+        "conditions": []
+    },
+    "2506": {
+        "name": "WIZARD_DOMINATION",
+        "type": "SPELLID",
+        "id": "2506",
+        "conditions": []
+    },
+    "2507": {
+        "name": "WIZARD_HOLD_MONSTER",
+        "type": "SPELLID",
+        "id": "2507",
+        "conditions": []
+    },
+    "2508": {
+        "name": "WIZARD_CHAOS",
+        "type": "SPELLID",
+        "id": "2508",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAOS_SHIELD"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_CHAOS_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "CHAOS_SHIELD"
+            }
+        ]
+    },
+    "2509": {
+        "name": "WIZARD_FEEBLEMIND",
+        "type": "SPELLID",
+        "id": "2509",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_FEEBLEMINDED"
+            }
+        ]
+    },
+    "2510": {
+        "name": "WIZARD_SPELL_IMMUNITY",
+        "type": "SPELLID",
+        "id": "2510",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_IMMUNITY"
+            }
+        ]
+    },
+    "2511": {
+        "name": "WIZARD_PROTECTION_FROM_NORMAL_WEAPONS",
+        "type": "SPELLID",
+        "id": "2511",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_NORMAL_WEAPONS"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_NORMAL_WEAPONS"
+            }
+        ]
+    },
+    "2512": {
+        "name": "WIZARD_PROTECTION_FROM_ELECTRICITY",
+        "type": "SPELLID",
+        "id": "2512",
+        "conditions": []
+    },
+    "2513": {
+        "name": "WIZARD_BREACH",
+        "type": "SPELLID",
+        "id": "2513",
+        "conditions": []
+    },
+    "2514": {
+        "name": "WIZARD_LOWER_RESISTANCE",
+        "type": "SPELLID",
+        "id": "2514",
+        "conditions": []
+    },
+    "2515": {
+        "name": "WIZARD_ORACLE",
+        "type": "SPELLID",
+        "id": "2515",
+        "conditions": []
+    },
+    "2516": {
+        "name": "WIZARD_CONJURE_LESSER_FIRE_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2516",
+        "conditions": []
+    },
+    "2517": {
+        "name": "WIZARD_PROTECTION_FROM_ACID",
+        "type": "SPELLID",
+        "id": "2517",
+        "conditions": []
+    },
+    "2518": {
+        "name": "WIZARD_PHANTOM_BLADE",
+        "type": "SPELLID",
+        "id": "2518",
+        "conditions": []
+    },
+    "2519": {
+        "name": "WIZARD_SPELL_SHIELD",
+        "type": "SPELLID",
+        "id": "2519",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "SPELL_SHIELD"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_SHIELD"
+            }
+        ]
+    },
+    "2520": {
+        "name": "WIZARD_CONJURE_LESSER_AIR_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2520",
+        "conditions": []
+    },
+    "2521": {
+        "name": "WIZARD_CONJURE_LESSER_EARTH_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2521",
+        "conditions": []
+    },
+    "2522": {
+        "name": "WIZARD_MINOR_SPELL_TURNING",
+        "type": "SPELLID",
+        "id": "2522",
+        "conditions": []
+    },
+    "2523": {
+        "name": "WIZARD_SUN_FIRE",
+        "type": "SPELLID",
+        "id": "2523",
+        "conditions": []
+    },
+    "2590": {
+        "name": "WIZARD_SPELL_IMMUNITY_ABJURATION",
+        "type": "SPELLID",
+        "id": "2590",
+        "conditions": []
+    },
+    "2591": {
+        "name": "WIZARD_SPELL_IMMUNITY_CONJURATION",
+        "type": "SPELLID",
+        "id": "2591",
+        "conditions": []
+    },
+    "2592": {
+        "name": "WIZARD_SPELL_IMMUNITY_DIVINATION",
+        "type": "SPELLID",
+        "id": "2592",
+        "conditions": []
+    },
+    "2593": {
+        "name": "WIZARD_SPELL_IMMUNITY_ENCHANTMENT",
+        "type": "SPELLID",
+        "id": "2593",
+        "conditions": []
+    },
+    "2594": {
+        "name": "WIZARD_SPELL_IMMUNITY_ILLUSIONIST",
+        "type": "SPELLID",
+        "id": "2594",
+        "conditions": []
+    },
+    "2595": {
+        "name": "WIZARD_SPELL_IMMUNITY_INVOCATION",
+        "type": "SPELLID",
+        "id": "2595",
+        "conditions": []
+    },
+    "2596": {
+        "name": "WIZARD_SPELL_IMMUNITY_NECROMANCY",
+        "type": "SPELLID",
+        "id": "2596",
+        "conditions": []
+    },
+    "2597": {
+        "name": "WIZARD_SPELL_IMMUNITY_ALTERATION",
+        "type": "SPELLID",
+        "id": "2597",
+        "conditions": []
+    },
+    "2601": {
+        "name": "WIZARD_INVISIBLE_STALKER",
+        "type": "SPELLID",
+        "id": "2601",
+        "conditions": []
+    },
+    "2602": {
+        "name": "WIZARD_GLOBE_OF_INVULNERABILITY",
+        "type": "SPELLID",
+        "id": "2602",
+        "conditions": []
+    },
+    "2603": {
+        "name": "WIZARD_TENSERS_TRANSFORMATION",
+        "type": "SPELLID",
+        "id": "2603",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "TENSERS_TRANSFORMATION"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_TENSERS_TRANSFORMATION"
+            }
+        ]
+    },
+    "2604": {
+        "name": "WIZARD_FLESH_TO_STONE",
+        "type": "SPELLID",
+        "id": "2604",
+        "conditions": []
+    },
+    "2605": {
+        "name": "WIZARD_DEATH_SPELL",
+        "type": "SPELLID",
+        "id": "2605",
+        "conditions": []
+    },
+    "2606": {
+        "name": "WIZARD_PROTECTION_FROM_MAGIC_ENERGY",
+        "type": "SPELLID",
+        "id": "2606",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_MAGIC_ENERGY"
+            }
+        ]
+    },
+    "2607": {
+        "name": "WIZARD_MISLEAD",
+        "type": "SPELLID",
+        "id": "2607",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_MISLEAD"
+            }
+        ]
+    },
+    "2608": {
+        "name": "WIZARD_PIERCE_MAGIC",
+        "type": "SPELLID",
+        "id": "2608",
+        "conditions": []
+    },
+    "2609": {
+        "name": "WIZARD_TRUE_SIGHT",
+        "type": "SPELLID",
+        "id": "2609",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "TRUE_SIGHT"
+            }
+        ]
+    },
+    "2610": {
+        "name": "WIZARD_MONSTER_SUMMONING_4",
+        "type": "SPELLID",
+        "id": "2610",
+        "conditions": []
+    },
+    "2611": {
+        "name": "WIZARD_PROTECTION_FROM_MAGIC_WEAPONS",
+        "type": "SPELLID",
+        "id": "2611",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_MAGIC_WEAPONS"
+            }
+        ]
+    },
+    "2612": {
+        "name": "WIZARD_POWER_WORD_SILENCE",
+        "type": "SPELLID",
+        "id": "2612",
+        "conditions": []
+    },
+    "2613": {
+        "name": "WIZARD_IMPROVED_HASTE",
+        "type": "SPELLID",
+        "id": "2613",
+        "conditions": []
+    },
+    "2614": {
+        "name": "WIZARD_DEATH_FOG",
+        "type": "SPELLID",
+        "id": "2614",
+        "conditions": []
+    },
+    "2615": {
+        "name": "WIZARD_CHAIN_LIGHTNING",
+        "type": "SPELLID",
+        "id": "2615",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "CHAIN_LIGHTNING"
+            }
+        ]
+    },
+    "2616": {
+        "name": "WIZARD_DISINTEGRATE",
+        "type": "SPELLID",
+        "id": "2616",
+        "conditions": []
+    },
+    "2617": {
+        "name": "WIZARD_CONTINGENCY",
+        "type": "SPELLID",
+        "id": "2617",
+        "conditions": []
+    },
+    "2618": {
+        "name": "WIZARD_SPELL_DEFLECTION",
+        "type": "SPELLID",
+        "id": "2618",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_DEFLECTION"
+            }
+        ]
+    },
+    "2619": {
+        "name": "WIZARD_WYVERN_CALL",
+        "type": "SPELLID",
+        "id": "2619",
+        "conditions": []
+    },
+    "2620": {
+        "name": "WIZARD_CONJURE_FIRE_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2620",
+        "conditions": []
+    },
+    "2621": {
+        "name": "WIZARD_CONJURE_AIR_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2621",
+        "conditions": []
+    },
+    "2622": {
+        "name": "WIZARD_CONJURE_EARTH_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "2622",
+        "conditions": []
+    },
+    "2623": {
+        "name": "WIZARD_CARRION",
+        "type": "SPELLID",
+        "id": "2623",
+        "conditions": []
+    },
+    "2624": {
+        "name": "WIZARD_SUMMON_NISHRUU",
+        "type": "SPELLID",
+        "id": "2624",
+        "conditions": []
+    },
+    "2625": {
+        "name": "WIZARD_STONE_TO_FLESH",
+        "type": "SPELLID",
+        "id": "2625",
+        "conditions": []
+    },
+    "2701": {
+        "name": "WIZARD_SPELL_TURNING",
+        "type": "SPELLID",
+        "id": "2701",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_TURNING"
+            }
+        ]
+    },
+    "2702": {
+        "name": "WIZARD_PROTECTION_FROM_THE_ELEMENTS",
+        "type": "SPELLID",
+        "id": "2702",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_THE_ELEMENTS"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_THE_ELEMENTS"
+            }
+        ]
+    },
+    "2703": {
+        "name": "WIZARD_PROJECT_IMAGE",
+        "type": "SPELLID",
+        "id": "2703",
+        "conditions": []
+    },
+    "2704": {
+        "name": "WIZARD_RUBY_RAY_OF_REVERSAL",
+        "type": "SPELLID",
+        "id": "2704",
+        "conditions": []
+    },
+    "2705": {
+        "name": "WIZARD_WARDING_WHIP",
+        "type": "SPELLID",
+        "id": "2705",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_KHELBENS_WARDING_WHIP"
+            }
+        ]
+    },
+    "2707": {
+        "name": "WIZARD_CACOFIEND",
+        "type": "SPELLID",
+        "id": "2707",
+        "conditions": []
+    },
+    "2708": {
+        "name": "WIZARD_MANTLE",
+        "type": "SPELLID",
+        "id": "2708",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "MANTLE"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_MANTLE"
+            }
+        ]
+    },
+    "2709": {
+        "name": "WIZARD_TATTOOS_OF_POWER",
+        "type": "SPELLID",
+        "id": "2709",
+        "conditions": []
+    },
+    "2710": {
+        "name": "WIZARD_SPELL_SEQUENCER",
+        "type": "SPELLID",
+        "id": "2710",
+        "conditions": []
+    },
+    "2711": {
+        "name": "WIZARD_SPHERE_OF_CHAOS",
+        "type": "SPELLID",
+        "id": "2711",
+        "conditions": []
+    },
+    "2712": {
+        "name": "WIZARD_DELAYED_BLAST_FIREBALL",
+        "type": "SPELLID",
+        "id": "2712",
+        "conditions": []
+    },
+    "2713": {
+        "name": "WIZARD_FINGER_OF_DEATH",
+        "type": "SPELLID",
+        "id": "2713",
+        "conditions": []
+    },
+    "2714": {
+        "name": "WIZARD_PRISMATIC_SPRAY",
+        "type": "SPELLID",
+        "id": "2714",
+        "conditions": []
+    },
+    "2715": {
+        "name": "WIZARD_POWER_WORD_STUN",
+        "type": "SPELLID",
+        "id": "2715",
+        "conditions": []
+    },
+    "2716": {
+        "name": "WIZARD_MORDENKAINENS_SWORD",
+        "type": "SPELLID",
+        "id": "2716",
+        "conditions": []
+    },
+    "2717": {
+        "name": "WIZARD_SUMMON_EFREET",
+        "type": "SPELLID",
+        "id": "2717",
+        "conditions": []
+    },
+    "2718": {
+        "name": "WIZARD_SUMMON_DJINNI",
+        "type": "SPELLID",
+        "id": "2718",
+        "conditions": []
+    },
+    "2719": {
+        "name": "WIZARD_SUMMON_HAKEASHAR",
+        "type": "SPELLID",
+        "id": "2719",
+        "conditions": []
+    },
+    "2720": {
+        "name": "WIZARD_CONTROL_UNDEAD",
+        "type": "SPELLID",
+        "id": "2720",
+        "conditions": []
+    },
+    "2721": {
+        "name": "WIZARD_MASS_INVISIBILITY",
+        "type": "SPELLID",
+        "id": "2721",
+        "conditions": []
+    },
+    "2722": {
+        "name": "WIZARD_LIMITED_WISH",
+        "type": "SPELLID",
+        "id": "2722",
+        "conditions": []
+    },
+    "2723": {
+        "name": "WIZARD_IMPROVED_CHAOS_SHIELD",
+        "type": "SPELLID",
+        "id": "2723",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_CHAOS_SHIELD"
+            }
+        ]
+    },
+    "2801": {
+        "name": "WIZARD_DELETED",
+        "type": "SPELLID",
+        "id": "2801",
+        "conditions": []
+    },
+    "2803": {
+        "name": "WIZARD_PROTECTION_FROM_ENERGY",
+        "type": "SPELLID",
+        "id": "2803",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_PROTECTION_FROM_ENERGY"
+            }
+        ]
+    },
+    "2804": {
+        "name": "WIZARD_SIMULACRUM",
+        "type": "SPELLID",
+        "id": "2804",
+        "conditions": []
+    },
+    "2805": {
+        "name": "WIZARD_PIERCE_SHIELD",
+        "type": "SPELLID",
+        "id": "2805",
+        "conditions": []
+    },
+    "2807": {
+        "name": "WIZARD_SUMMON_FIEND",
+        "type": "SPELLID",
+        "id": "2807",
+        "conditions": []
+    },
+    "2808": {
+        "name": "WIZARD_IMPROVED_MANTLE",
+        "type": "SPELLID",
+        "id": "2808",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPROVED_MANTLE"
+            }
+        ]
+    },
+    "2809": {
+        "name": "WIZARD_SPELL_TRIGGER",
+        "type": "SPELLID",
+        "id": "2809",
+        "conditions": []
+    },
+    "2810": {
+        "name": "WIZARD_INCENDIARY_CLOUD",
+        "type": "SPELLID",
+        "id": "2810",
+        "conditions": []
+    },
+    "2811": {
+        "name": "WIZARD_SYMBOL_FEAR",
+        "type": "SPELLID",
+        "id": "2811",
+        "conditions": []
+    },
+    "2812": {
+        "name": "WIZARD_ABI_DALZIMS_HORRID_WILTING",
+        "type": "SPELLID",
+        "id": "2812",
+        "conditions": []
+    },
+    "2813": {
+        "name": "WIZARD_MAZE",
+        "type": "SPELLID",
+        "id": "2813",
+        "conditions": []
+    },
+    "2814": {
+        "name": "WIZARD_OTTOS_IRRESISTIBLE_DANCE",
+        "type": "SPELLID",
+        "id": "2814",
+        "conditions": []
+    },
+    "2815": {
+        "name": "WIZARD_POWER_WORD_BLIND",
+        "type": "SPELLID",
+        "id": "2815",
+        "conditions": []
+    },
+    "2816": {
+        "name": "WIZARD_SYMBOL_STUN",
+        "type": "SPELLID",
+        "id": "2816",
+        "conditions": []
+    },
+    "2817": {
+        "name": "WIZARD_SYMBOL_DEATH",
+        "type": "SPELLID",
+        "id": "2817",
+        "conditions": []
+    },
+    "2818": {
+        "name": "WIZARD_BIGBYS_CLENCHED_FIST",
+        "type": "SPELLID",
+        "id": "2818",
+        "conditions": []
+    },
+    "2888": {
+        "name": "FORCE_DAMAGE_1",
+        "type": "SPELLID",
+        "id": "2888",
+        "conditions": []
+    },
+    "2897": {
+        "name": "WIZARD_NPC_SYMBOL_DEATH",
+        "type": "SPELLID",
+        "id": "2897",
+        "conditions": []
+    },
+    "2898": {
+        "name": "WIZARD_NPC_SYMBOL_STUN",
+        "type": "SPELLID",
+        "id": "2898",
+        "conditions": []
+    },
+    "2899": {
+        "name": "WIZARD_NPC_SYMBOL_FEAR",
+        "type": "SPELLID",
+        "id": "2899",
+        "conditions": []
+    },
+    "2902": {
+        "name": "WIZARD_SPELL_TRAP",
+        "type": "SPELLID",
+        "id": "2902",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "WIZARD_SPELL_TRAP"
+            }
+        ]
+    },
+    "2903": {
+        "name": "WIZARD_SPELL_STRIKE",
+        "type": "SPELLID",
+        "id": "2903",
+        "conditions": []
+    },
+    "2905": {
+        "name": "WIZARD_GATE",
+        "type": "SPELLID",
+        "id": "2905",
+        "conditions": []
+    },
+    "2907": {
+        "name": "WIZARD_ABSOLUTE_IMMUNITY",
+        "type": "SPELLID",
+        "id": "2907",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ABSOLUTE_IMMUNITY"
+            }
+        ]
+    },
+    "2908": {
+        "name": "WIZARD_CHAIN_CONTINGENCY",
+        "type": "SPELLID",
+        "id": "2908",
+        "conditions": []
+    },
+    "2909": {
+        "name": "WIZARD_TIME_STOP",
+        "type": "SPELLID",
+        "id": "2909",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "IMMUNE_TO_TIME_STOP"
+            }
+        ]
+    },
+    "2910": {
+        "name": "WIZARD_IMPRISONMENT",
+        "type": "SPELLID",
+        "id": "2910",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "IMPRISONMENT_DESTROY"
+            }
+        ]
+    },
+    "2911": {
+        "name": "WIZARD_METEOR_SWARM",
+        "type": "SPELLID",
+        "id": "2911",
+        "conditions": []
+    },
+    "2912": {
+        "name": "WIZARD_POWER_WORD_KILL",
+        "type": "SPELLID",
+        "id": "2912",
+        "conditions": []
+    },
+    "2913": {
+        "name": "WIZARD_WAIL_OF_THE_BANSHEE",
+        "type": "SPELLID",
+        "id": "2913",
+        "conditions": []
+    },
+    "2914": {
+        "name": "WIZARD_ENERGY_DRAIN",
+        "type": "SPELLID",
+        "id": "2914",
+        "conditions": []
+    },
+    "2915": {
+        "name": "WIZARD_BLACK_BLADE_OF_DISASTER",
+        "type": "SPELLID",
+        "id": "2915",
+        "conditions": []
+    },
+    "2916": {
+        "name": "WIZARD_SHAPECHANGE",
+        "type": "SPELLID",
+        "id": "2916",
+        "conditions": []
+    },
+    "2917": {
+        "name": "WIZARD_FREEDOM",
+        "type": "SPELLID",
+        "id": "2917",
+        "conditions": []
+    },
+    "2918": {
+        "name": "WIZARD_BIGBYS_CRUSHING_HAND",
+        "type": "SPELLID",
+        "id": "2918",
+        "conditions": []
+    },
+    "2919": {
+        "name": "WIZARD_WISH",
+        "type": "SPELLID",
+        "id": "2919",
+        "conditions": []
+    },
+    "2920": {
+        "name": "WIZARD_ENERGY_BLADES",
+        "type": "SPELLID",
+        "id": "2920",
+        "conditions": []
+    },
+    "2921": {
+        "name": "WIZARD_IMPROVED_ALUCRITY",
+        "type": "SPELLID",
+        "id": "2921",
+        "conditions": []
+    },
+    "2922": {
+        "name": "WIZARD_DRAGONS_BREATH",
+        "type": "SPELLID",
+        "id": "2922",
+        "conditions": []
+    },
+    "2923": {
+        "name": "WIZARD_SUMMON_PLANATAR_GOOD",
+        "type": "SPELLID",
+        "id": "2923",
+        "conditions": []
+    },
+    "2924": {
+        "name": "WIZARD_SUMMON_PLANATAR_EVIL",
+        "type": "SPELLID",
+        "id": "2924",
+        "conditions": []
+    },
+    "2925": {
+        "name": "WIZARD_COMET",
+        "type": "SPELLID",
+        "id": "2925",
+        "conditions": []
+    },
+    "2926": {
+        "name": "QUICK_TELEPORT",
+        "type": "SPELLID",
+        "id": "2926",
+        "conditions": []
+    },
+    "2927": {
+        "name": "SUCCUBUS_ETHEREAL",
+        "type": "SPELLID",
+        "id": "2927",
+        "conditions": []
+    },
+    "2928": {
+        "name": "SUCCUBUS_ENERGY_DRAIN",
+        "type": "SPELLID",
+        "id": "2928",
+        "conditions": []
+    },
+    "2929": {
+        "name": "SUCCUBUS_CHARM_FEMALE",
+        "type": "SPELLID",
+        "id": "2929",
+        "conditions": []
+    },
+    "2930": {
+        "name": "SUCCUBUS_CHARM_MALE",
+        "type": "SPELLID",
+        "id": "2930",
+        "conditions": []
+    },
+    "2931": {
+        "name": "SUCCUBUS_TELEPORT",
+        "type": "SPELLID",
+        "id": "2931",
+        "conditions": []
+    },
+    "2932": {
+        "name": "TANARI_CHANGE",
+        "type": "SPELLID",
+        "id": "2932",
+        "conditions": []
+    },
+    "2933": {
+        "name": "DURLAG_SWORD",
+        "type": "SPELLID",
+        "id": "2933",
+        "conditions": []
+    },
+    "2934": {
+        "name": "CRUSHING_TRAP",
+        "type": "SPELLID",
+        "id": "2934",
+        "conditions": []
+    },
+    "2935": {
+        "name": "SUMMON_SKELETON_WARRIOR3",
+        "type": "SPELLID",
+        "id": "2935",
+        "conditions": []
+    },
+    "2936": {
+        "name": "SUMMON_SKELETON_WARRIOR2",
+        "type": "SPELLID",
+        "id": "2936",
+        "conditions": []
+    },
+    "2937": {
+        "name": "SUMMON_SKELETON_WARRIOR",
+        "type": "SPELLID",
+        "id": "2937",
+        "conditions": []
+    },
+    "2939": {
+        "name": "CHARM_HERO",
+        "type": "SPELLID",
+        "id": "2939",
+        "conditions": []
+    },
+    "2940": {
+        "name": "FIREDRAKE_DAMAGE",
+        "type": "SPELLID",
+        "id": "2940",
+        "conditions": []
+    },
+    "2941": {
+        "name": "LOVEM_CHANGE",
+        "type": "SPELLID",
+        "id": "2941",
+        "conditions": []
+    },
+    "2942": {
+        "name": "QUEEN_CHANGE",
+        "type": "SPELLID",
+        "id": "2942",
+        "conditions": []
+    },
+    "2943": {
+        "name": "SIRINE_DIRE_CHARM",
+        "type": "SPELLID",
+        "id": "2943",
+        "conditions": []
+    },
+    "2944": {
+        "name": "DAESEWOLF_CHANGE",
+        "type": "SPELLID",
+        "id": "2944",
+        "conditions": []
+    },
+    "2945": {
+        "name": "LOUPGAR_CHANGE",
+        "type": "SPELLID",
+        "id": "2945",
+        "conditions": []
+    },
+    "2946": {
+        "name": "PLAYER_WEREWOLF_CHANGE",
+        "type": "SPELLID",
+        "id": "2946",
+        "conditions": []
+    },
+    "2947": {
+        "name": "GREATER_WOLFWERE_CHANGE",
+        "type": "SPELLID",
+        "id": "2947",
+        "conditions": []
+    },
+    "2948": {
+        "name": "WEREWOLF_CHANGE",
+        "type": "SPELLID",
+        "id": "2948",
+        "conditions": []
+    },
+    "2949": {
+        "name": "WOLFWERE_CHANGE",
+        "type": "SPELLID",
+        "id": "2949",
+        "conditions": []
+    },
+    "2950": {
+        "name": "FAST_SKULLTRAP",
+        "type": "SPELLID",
+        "id": "2950",
+        "conditions": []
+    },
+    "2951": {
+        "name": "JELLY_SPLIT",
+        "type": "SPELLID",
+        "id": "2951",
+        "conditions": []
+    },
+    "2952": {
+        "name": "DRADEEL_FLAMEBLADE",
+        "type": "SPELLID",
+        "id": "2952",
+        "conditions": []
+    },
+    "2953": {
+        "name": "DRADEEL_BLUE_FIREBALL",
+        "type": "SPELLID",
+        "id": "2953",
+        "conditions": []
+    },
+    "2954": {
+        "name": "DRADEEL_MINOR_GLOBE",
+        "type": "SPELLID",
+        "id": "2954",
+        "conditions": []
+    },
+    "2955": {
+        "name": "PAIN",
+        "type": "SPELLID",
+        "id": "2955",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PAIN"
+            }
+        ]
+    },
+    "2956": {
+        "name": "FEAR",
+        "type": "SPELLID",
+        "id": "2956",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "RESIST_FEAR"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_RESIST_FEAR"
+            }
+        ]
+    },
+    "2957": {
+        "name": "RED_FIREBALL",
+        "type": "SPELLID",
+        "id": "2957",
+        "conditions": []
+    },
+    "2958": {
+        "name": "POWERWORD_BLIND",
+        "type": "SPELLID",
+        "id": "2958",
+        "conditions": []
+    },
+    "2959": {
+        "name": "POWERWORD_STUN",
+        "type": "SPELLID",
+        "id": "2959",
+        "conditions": []
+    },
+    "2960": {
+        "name": "POWERWORD_KILL",
+        "type": "SPELLID",
+        "id": "2960",
+        "conditions": []
+    },
+    "2961": {
+        "name": "DOPPLEGANGER_CHANGE4",
+        "type": "SPELLID",
+        "id": "2961",
+        "conditions": []
+    },
+    "2962": {
+        "name": "DOPPLEGANGER_CHANGE5",
+        "type": "SPELLID",
+        "id": "2962",
+        "conditions": []
+    },
+    "2963": {
+        "name": "DOPPLEGANGER_CHANGE6",
+        "type": "SPELLID",
+        "id": "2963",
+        "conditions": []
+    },
+    "2964": {
+        "name": "DOPPLEGANGER_CHANGE7",
+        "type": "SPELLID",
+        "id": "2964",
+        "conditions": []
+    },
+    "2965": {
+        "name": "DOPPLEGANGER_CHANGE8",
+        "type": "SPELLID",
+        "id": "2965",
+        "conditions": []
+    },
+    "2975": {
+        "name": "WHITE_HOLY_MIGHT",
+        "type": "SPELLID",
+        "id": "2975",
+        "conditions": []
+    },
+    "2979": {
+        "name": "SAREVOK_STRIKE",
+        "type": "SPELLID",
+        "id": "2979",
+        "conditions": []
+    },
+    "2980": {
+        "name": "FIREBALL_DEATH",
+        "type": "SPELLID",
+        "id": "2980",
+        "conditions": []
+    },
+    "2981": {
+        "name": "MUSHROOM_FIRE",
+        "type": "SPELLID",
+        "id": "2981",
+        "conditions": []
+    },
+    "2982": {
+        "name": "DAERRAGH",
+        "type": "SPELLID",
+        "id": "2982",
+        "conditions": []
+    },
+    "2983": {
+        "name": "RISE_FROM_ASH",
+        "type": "SPELLID",
+        "id": "2983",
+        "conditions": []
+    },
+    "2984": {
+        "name": "RED_SWIRL",
+        "type": "SPELLID",
+        "id": "2984",
+        "conditions": []
+    },
+    "2985": {
+        "name": "RED_HOLY_MIGHT",
+        "type": "SPELLID",
+        "id": "2985",
+        "conditions": []
+    },
+    "2986": {
+        "name": "SPIDER_SUMMON",
+        "type": "SPELLID",
+        "id": "2986",
+        "conditions": []
+    },
+    "2987": {
+        "name": "DOPPLEGANGER_CHANGE_DEFAULT_LESSER",
+        "type": "SPELLID",
+        "id": "2987",
+        "conditions": []
+    },
+    "2988": {
+        "name": "DOPPLEGANGER_CHANGE_DEFAULT",
+        "type": "SPELLID",
+        "id": "2988",
+        "conditions": []
+    },
+    "2989": {
+        "name": "EFFECT_ONLY",
+        "type": "SPELLID",
+        "id": "2989",
+        "conditions": []
+    },
+    "2990": {
+        "name": "DOPPLEGANGER_CHANGE3",
+        "type": "SPELLID",
+        "id": "2990",
+        "conditions": []
+    },
+    "2991": {
+        "name": "DOPPLEGANGER_RASHAD",
+        "type": "SPELLID",
+        "id": "2991",
+        "conditions": []
+    },
+    "2992": {
+        "name": "DOPPLEGANGER_CHANGE2",
+        "type": "SPELLID",
+        "id": "2992",
+        "conditions": []
+    },
+    "2993": {
+        "name": "DOPPLEGANGER_CHANGE",
+        "type": "SPELLID",
+        "id": "2993",
+        "conditions": []
+    },
+    "2994": {
+        "name": "PHASE_SPIDER_TELEPORT",
+        "type": "SPELLID",
+        "id": "2994",
+        "conditions": []
+    },
+    "2995": {
+        "name": "DRYAD_TELEPORT",
+        "type": "SPELLID",
+        "id": "2995",
+        "conditions": []
+    },
+    "2996": {
+        "name": "CHARM_KORAX",
+        "type": "SPELLID",
+        "id": "2996",
+        "conditions": []
+    },
+    "2997": {
+        "name": "GORION_LIGHTNING",
+        "type": "SPELLID",
+        "id": "2997",
+        "conditions": []
+    },
+    "2998": {
+        "name": "GORION_MAGIC_MISSILE",
+        "type": "SPELLID",
+        "id": "2998",
+        "conditions": []
+    },
+    "2999": {
+        "name": "DIETY_KILL",
+        "type": "SPELLID",
+        "id": "2999",
+        "conditions": []
+    },
+    "3117": {
+        "name": "MINSC_BERSERK",
+        "type": "SPELLID",
+        "id": "3117",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "MINSC_BERSERK"
+            }
+        ]
+    },
+    "3119": {
+        "name": "SAFANA_CHARM",
+        "type": "SPELLID",
+        "id": "3119",
+        "conditions": []
+    },
+    "3123": {
+        "name": "DRUID_HUMAN_FORM",
+        "type": "SPELLID",
+        "id": "3123",
+        "conditions": []
+    },
+    "3160": {
+        "name": "SALAMANDER_BREATHE_FIREBALL",
+        "type": "SPELLID",
+        "id": "3160",
+        "conditions": []
+    },
+    "3191": {
+        "name": "BOMBARDIER_BEETLE_CLOUD",
+        "type": "SPELLID",
+        "id": "3191",
+        "conditions": []
+    },
+    "3205": {
+        "name": "MKHIIN_SUMMON_ANCESTRAL_GUARDIAN",
+        "type": "SPELLID",
+        "id": "3205",
+        "conditions": []
+    },
+    "3412": {
+        "name": "SET_SNARE_ENEMY",
+        "type": "SPELLID",
+        "id": "3412",
+        "conditions": []
+    },
+    "3413": {
+        "name": "THIEF_STEALTH",
+        "type": "SPELLID",
+        "id": "3413",
+        "conditions": []
+    },
+    "3500": {
+        "name": "PSIONIC_DIMENSION_WALK",
+        "type": "SPELLID",
+        "id": "3500",
+        "conditions": []
+    },
+    "3501": {
+        "name": "PSIONIC_TELEKINESIS",
+        "type": "SPELLID",
+        "id": "3501",
+        "conditions": []
+    },
+    "3502": {
+        "name": "PSIONIC_ID_INSINUATION",
+        "type": "SPELLID",
+        "id": "3502",
+        "conditions": []
+    },
+    "3503": {
+        "name": "PSIONIC_CONTROL_BODY",
+        "type": "SPELLID",
+        "id": "3503",
+        "conditions": []
+    },
+    "3504": {
+        "name": "PSIONIC_TASTE_LINK",
+        "type": "SPELLID",
+        "id": "3504",
+        "conditions": []
+    },
+    "3520": {
+        "name": "NEOTHELID_BREATH",
+        "type": "SPELLID",
+        "id": "3520",
+        "conditions": []
+    },
+    "3531": {
+        "name": "ABAZIGAL_SHOCKWAVE",
+        "type": "SPELLID",
+        "id": "3531",
+        "conditions": []
+    },
+    "3532": {
+        "name": "DRAGON_LOWER_ELECTRICAL",
+        "type": "SPELLID",
+        "id": "3532",
+        "conditions": []
+    },
+    "3533": {
+        "name": "SENDAI_CHANGE",
+        "type": "SPELLID",
+        "id": "3533",
+        "conditions": []
+    },
+    "3534": {
+        "name": "SUMMON_DEVIL_SHADE",
+        "type": "SPELLID",
+        "id": "3534",
+        "conditions": []
+    },
+    "3535": {
+        "name": "GREEN_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3535",
+        "conditions": []
+    },
+    "3536": {
+        "name": "LICH_FEAR",
+        "type": "SPELLID",
+        "id": "3536",
+        "conditions": []
+    },
+    "3537": {
+        "name": "TROLL_FIRE_CHANGE",
+        "type": "SPELLID",
+        "id": "3537",
+        "conditions": []
+    },
+    "3538": {
+        "name": "MAJOR_POLYMORPH",
+        "type": "SPELLID",
+        "id": "3538",
+        "conditions": []
+    },
+    "3539": {
+        "name": "FLAMING_SKULL_BOLT",
+        "type": "SPELLID",
+        "id": "3539",
+        "conditions": []
+    },
+    "3540": {
+        "name": "RABBIT_POWER",
+        "type": "SPELLID",
+        "id": "3540",
+        "conditions": []
+    },
+    "3541": {
+        "name": "SAR_DIVINATION",
+        "type": "SPELLID",
+        "id": "3541",
+        "conditions": []
+    },
+    "3542": {
+        "name": "PSIONIC_DISINTEGRATE",
+        "type": "SPELLID",
+        "id": "3542",
+        "conditions": []
+    },
+    "3543": {
+        "name": "PSIONIC_INFLICT_PAIN",
+        "type": "SPELLID",
+        "id": "3543",
+        "conditions": []
+    },
+    "3544": {
+        "name": "PSIONIC_SUPERIOR_INVISIBILITY",
+        "type": "SPELLID",
+        "id": "3544",
+        "conditions": []
+    },
+    "3545": {
+        "name": "PSIONIC_LIFE_DRAIN",
+        "type": "SPELLID",
+        "id": "3545",
+        "conditions": []
+    },
+    "3546": {
+        "name": "PSIONIC_INERTIAL_BARRIER",
+        "type": "SPELLID",
+        "id": "3546",
+        "conditions": []
+    },
+    "3547": {
+        "name": "PSIONIC_PROJECT_FORCE",
+        "type": "SPELLID",
+        "id": "3547",
+        "conditions": []
+    },
+    "3548": {
+        "name": "DEMOGORGON_GATE",
+        "type": "SPELLID",
+        "id": "3548",
+        "conditions": []
+    },
+    "3549": {
+        "name": "SUMMON_INFERNAL_HOST",
+        "type": "SPELLID",
+        "id": "3549",
+        "conditions": []
+    },
+    "3550": {
+        "name": "HIVE_MOTHER_ANTIMAGIC_RAY",
+        "type": "SPELLID",
+        "id": "3550",
+        "conditions": []
+    },
+    "3551": {
+        "name": "HIVE_MOTHER_CAUSE_SERIOUS_WOUNDS",
+        "type": "SPELLID",
+        "id": "3551",
+        "conditions": []
+    },
+    "3552": {
+        "name": "HIVE_MOTHER_DISINTEGRATE",
+        "type": "SPELLID",
+        "id": "3552",
+        "conditions": []
+    },
+    "3553": {
+        "name": "NALMISSRA_CHARM",
+        "type": "SPELLID",
+        "id": "3553",
+        "conditions": []
+    },
+    "3554": {
+        "name": "GAIN_ONE_CHA_PERMANENT",
+        "type": "SPELLID",
+        "id": "3554",
+        "conditions": []
+    },
+    "3555": {
+        "name": "GAIN_ONE_WIS_PERMANENT",
+        "type": "SPELLID",
+        "id": "3555",
+        "conditions": []
+    },
+    "3556": {
+        "name": "GAIN_ONE_INT_PERMANENT",
+        "type": "SPELLID",
+        "id": "3556",
+        "conditions": []
+    },
+    "3557": {
+        "name": "GAIN_ONE_DEX_PERMANENT",
+        "type": "SPELLID",
+        "id": "3557",
+        "conditions": []
+    },
+    "3558": {
+        "name": "ERINYES_CHARM",
+        "type": "SPELLID",
+        "id": "3558",
+        "conditions": []
+    },
+    "3559": {
+        "name": "BURNING_MAN_KEENING",
+        "type": "SPELLID",
+        "id": "3559",
+        "conditions": []
+    },
+    "3560": {
+        "name": "BURNING_MAN_CINDER_SHOWER",
+        "type": "SPELLID",
+        "id": "3560",
+        "conditions": []
+    },
+    "3561": {
+        "name": "FIRE_GIANT_LAVA",
+        "type": "SPELLID",
+        "id": "3561",
+        "conditions": []
+    },
+    "3562": {
+        "name": "ICE_GOLEM_STEAM",
+        "type": "SPELLID",
+        "id": "3562",
+        "conditions": []
+    },
+    "3563": {
+        "name": "HOLY_PILLAR_VISUAL",
+        "type": "SPELLID",
+        "id": "3563",
+        "conditions": []
+    },
+    "3564": {
+        "name": "SKULL_EXPLODE",
+        "type": "SPELLID",
+        "id": "3564",
+        "conditions": []
+    },
+    "3565": {
+        "name": "GAROCK_TELEPORT",
+        "type": "SPELLID",
+        "id": "3565",
+        "conditions": []
+    },
+    "3566": {
+        "name": "MIMIC_WEB",
+        "type": "SPELLID",
+        "id": "3566",
+        "conditions": []
+    },
+    "3567": {
+        "name": "MIMIC_FIRE",
+        "type": "SPELLID",
+        "id": "3567",
+        "conditions": []
+    },
+    "3568": {
+        "name": "MIMIC_POISON",
+        "type": "SPELLID",
+        "id": "3568",
+        "conditions": []
+    },
+    "3569": {
+        "name": "SUMMON_ICE_SALAMANDER",
+        "type": "SPELLID",
+        "id": "3569",
+        "conditions": []
+    },
+    "3570": {
+        "name": "SUMMON_FIRE_ELEMENTAL",
+        "type": "SPELLID",
+        "id": "3570",
+        "conditions": []
+    },
+    "3571": {
+        "name": "SUCCUBUS_KISS",
+        "type": "SPELLID",
+        "id": "3571",
+        "conditions": []
+    },
+    "3572": {
+        "name": "CUTSCENE_HASTE",
+        "type": "SPELLID",
+        "id": "3572",
+        "conditions": []
+    },
+    "3573": {
+        "name": "IMOEN_BHAAL2",
+        "type": "SPELLID",
+        "id": "3573",
+        "conditions": []
+    },
+    "3574": {
+        "name": "IMOEN_BHAAL1",
+        "type": "SPELLID",
+        "id": "3574",
+        "conditions": []
+    },
+    "3575": {
+        "name": "VORTEX_WEB",
+        "type": "SPELLID",
+        "id": "3575",
+        "conditions": []
+    },
+    "3576": {
+        "name": "DENSE_PUDDING_SPLIT",
+        "type": "SPELLID",
+        "id": "3576",
+        "conditions": []
+    },
+    "3577": {
+        "name": "GAIN_ONE_THACO",
+        "type": "SPELLID",
+        "id": "3577",
+        "conditions": []
+    },
+    "3578": {
+        "name": "GAIN_ONE_AC",
+        "type": "SPELLID",
+        "id": "3578",
+        "conditions": []
+    },
+    "3579": {
+        "name": "POWER_AMP",
+        "type": "SPELLID",
+        "id": "3579",
+        "conditions": []
+    },
+    "3580": {
+        "name": "IMPRISONMENT_NO_SAVE",
+        "type": "SPELLID",
+        "id": "3580",
+        "conditions": []
+    },
+    "3581": {
+        "name": "RESTORATION_IGNORE_RESIST",
+        "type": "SPELLID",
+        "id": "3581",
+        "conditions": []
+    },
+    "3582": {
+        "name": "CONFUSION_NO_SAVE",
+        "type": "SPELLID",
+        "id": "3582",
+        "conditions": []
+    },
+    "3583": {
+        "name": "POISON_NO_SAVE",
+        "type": "SPELLID",
+        "id": "3583",
+        "conditions": []
+    },
+    "3584": {
+        "name": "GAIN_HASTE_TEMPORARY",
+        "type": "SPELLID",
+        "id": "3584",
+        "conditions": []
+    },
+    "3585": {
+        "name": "GAIN_MAGIC_RESIST_PERMANENT",
+        "type": "SPELLID",
+        "id": "3585",
+        "conditions": []
+    },
+    "3586": {
+        "name": "LOSE_FIFTEEN_LEVELS",
+        "type": "SPELLID",
+        "id": "3586",
+        "conditions": []
+    },
+    "3587": {
+        "name": "LOSE_FIVE_LEVELS",
+        "type": "SPELLID",
+        "id": "3587",
+        "conditions": []
+    },
+    "3588": {
+        "name": "LOSE_ONE_DEX_PERMANENT",
+        "type": "SPELLID",
+        "id": "3588",
+        "conditions": []
+    },
+    "3589": {
+        "name": "LOSE_ONE_INT_PERMANENT",
+        "type": "SPELLID",
+        "id": "3589",
+        "conditions": []
+    },
+    "3590": {
+        "name": "GAIN_ONE_CON_PERMANENT",
+        "type": "SPELLID",
+        "id": "3590",
+        "conditions": []
+    },
+    "3591": {
+        "name": "GAIN_ONE_STR_PERMANENT",
+        "type": "SPELLID",
+        "id": "3591",
+        "conditions": []
+    },
+    "3592": {
+        "name": "HELM_RITUAL_SCROLL",
+        "type": "SPELLID",
+        "id": "3592",
+        "conditions": []
+    },
+    "3593": {
+        "name": "ODREN_RITUAL_SCROLL",
+        "type": "SPELLID",
+        "id": "3593",
+        "conditions": []
+    },
+    "3594": {
+        "name": "DEMOGORGON_CHANGE",
+        "type": "SPELLID",
+        "id": "3594",
+        "conditions": []
+    },
+    "3595": {
+        "name": "YELLOW_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3595",
+        "conditions": []
+    },
+    "3596": {
+        "name": "BROWN_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3596",
+        "conditions": []
+    },
+    "3597": {
+        "name": "BLUE_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3597",
+        "conditions": []
+    },
+    "3598": {
+        "name": "SAREVOK_FLASHY1",
+        "type": "SPELLID",
+        "id": "3598",
+        "conditions": []
+    },
+    "3599": {
+        "name": "FIRE_HEALING",
+        "type": "SPELLID",
+        "id": "3599",
+        "conditions": []
+    },
+    "3600": {
+        "name": "SAREVOK_SOULSTEAL",
+        "type": "SPELLID",
+        "id": "3600",
+        "conditions": []
+    },
+    "3601": {
+        "name": "SPECIAL_SWEET_AIR",
+        "type": "SPELLID",
+        "id": "3601",
+        "conditions": []
+    },
+    "3602": {
+        "name": "CHROMATIC_DEMON_RED",
+        "type": "SPELLID",
+        "id": "3602",
+        "conditions": []
+    },
+    "3603": {
+        "name": "CHROMATIC_DEMON_WHITE",
+        "type": "SPELLID",
+        "id": "3603",
+        "conditions": []
+    },
+    "3604": {
+        "name": "CHROMATIC_DEMON_GREEN",
+        "type": "SPELLID",
+        "id": "3604",
+        "conditions": []
+    },
+    "3605": {
+        "name": "CHROMATIC_DEMON_YELLOW",
+        "type": "SPELLID",
+        "id": "3605",
+        "conditions": []
+    },
+    "3606": {
+        "name": "DECK_SUN",
+        "type": "SPELLID",
+        "id": "3606",
+        "conditions": []
+    },
+    "3607": {
+        "name": "DECK_JESTER",
+        "type": "SPELLID",
+        "id": "3607",
+        "conditions": []
+    },
+    "3608": {
+        "name": "DECK_VIZIER",
+        "type": "SPELLID",
+        "id": "3608",
+        "conditions": []
+    },
+    "3609": {
+        "name": "DECK_GEM",
+        "type": "SPELLID",
+        "id": "3609",
+        "conditions": []
+    },
+    "3610": {
+        "name": "DECK_FATES",
+        "type": "SPELLID",
+        "id": "3610",
+        "conditions": []
+    },
+    "3611": {
+        "name": "DECK_COMET",
+        "type": "SPELLID",
+        "id": "3611",
+        "conditions": []
+    },
+    "3612": {
+        "name": "DECK_FOOL",
+        "type": "SPELLID",
+        "id": "3612",
+        "conditions": []
+    },
+    "3613": {
+        "name": "DECK_TALONS",
+        "type": "SPELLID",
+        "id": "3613",
+        "conditions": []
+    },
+    "3614": {
+        "name": "DECK_ROGUE",
+        "type": "SPELLID",
+        "id": "3614",
+        "conditions": []
+    },
+    "3615": {
+        "name": "DECK_KNIGHT",
+        "type": "SPELLID",
+        "id": "3615",
+        "conditions": []
+    },
+    "3616": {
+        "name": "DECK_FLAMES",
+        "type": "SPELLID",
+        "id": "3616",
+        "conditions": []
+    },
+    "3617": {
+        "name": "DECK_EURYALE",
+        "type": "SPELLID",
+        "id": "3617",
+        "conditions": []
+    },
+    "3618": {
+        "name": "DECK_MOON",
+        "type": "SPELLID",
+        "id": "3618",
+        "conditions": []
+    },
+    "3619": {
+        "name": "DECK_THRONE",
+        "type": "SPELLID",
+        "id": "3619",
+        "conditions": []
+    },
+    "3620": {
+        "name": "DECK_STAR",
+        "type": "SPELLID",
+        "id": "3620",
+        "conditions": []
+    },
+    "3621": {
+        "name": "DECK_KEY",
+        "type": "SPELLID",
+        "id": "3621",
+        "conditions": []
+    },
+    "3622": {
+        "name": "DECK_SKULL",
+        "type": "SPELLID",
+        "id": "3622",
+        "conditions": []
+    },
+    "3623": {
+        "name": "DECK_MAGICIAN",
+        "type": "SPELLID",
+        "id": "3623",
+        "conditions": []
+    },
+    "3624": {
+        "name": "DECK_VOID",
+        "type": "SPELLID",
+        "id": "3624",
+        "conditions": []
+    },
+    "3625": {
+        "name": "DECK_RUIN",
+        "type": "SPELLID",
+        "id": "3625",
+        "conditions": []
+    },
+    "3626": {
+        "name": "DECK_DONJON",
+        "type": "SPELLID",
+        "id": "3626",
+        "conditions": []
+    },
+    "3627": {
+        "name": "FROZEN_DEATH",
+        "type": "SPELLID",
+        "id": "3627",
+        "conditions": [
+            {
+                "type": "STATE",
+                "ID": "STATE_FROZEN_DEATH"
+            }
+        ]
+    },
+    "3628": {
+        "name": "SLOW_FREEZE",
+        "type": "SPELLID",
+        "id": "3628",
+        "conditions": []
+    },
+    "3629": {
+        "name": "DECK_WHEEL",
+        "type": "SPELLID",
+        "id": "3629",
+        "conditions": []
+    },
+    "3630": {
+        "name": "DECK_STRENGTH",
+        "type": "SPELLID",
+        "id": "3630",
+        "conditions": []
+    },
+    "3631": {
+        "name": "DECK_CONSTRUCT",
+        "type": "SPELLID",
+        "id": "3631",
+        "conditions": []
+    },
+    "3632": {
+        "name": "DECK_EMPEROR",
+        "type": "SPELLID",
+        "id": "3632",
+        "conditions": []
+    },
+    "3633": {
+        "name": "DECK_EMPRESS",
+        "type": "SPELLID",
+        "id": "3633",
+        "conditions": []
+    },
+    "3634": {
+        "name": "DECK_HIGH_PRIESTESS",
+        "type": "SPELLID",
+        "id": "3634",
+        "conditions": []
+    },
+    "3635": {
+        "name": "DECK_STRIFE",
+        "type": "SPELLID",
+        "id": "3635",
+        "conditions": []
+    },
+    "3636": {
+        "name": "DECK_DEFIANCE",
+        "type": "SPELLID",
+        "id": "3636",
+        "conditions": []
+    },
+    "3637": {
+        "name": "DECK_GUILE",
+        "type": "SPELLID",
+        "id": "3637",
+        "conditions": []
+    },
+    "3638": {
+        "name": "DECK_TRIUMPH",
+        "type": "SPELLID",
+        "id": "3638",
+        "conditions": []
+    },
+    "3639": {
+        "name": "DECK_PLAGUE",
+        "type": "SPELLID",
+        "id": "3639",
+        "conditions": []
+    },
+    "3640": {
+        "name": "DECK_XP_DRAIN",
+        "type": "SPELLID",
+        "id": "3640",
+        "conditions": []
+    },
+    "3641": {
+        "name": "DECK_VITALITY_DRAIN",
+        "type": "SPELLID",
+        "id": "3641",
+        "conditions": []
+    },
+    "3642": {
+        "name": "POISONOUS_CLOUD",
+        "type": "SPELLID",
+        "id": "3642",
+        "conditions": []
+    },
+    "3643": {
+        "name": "FAN_BLOW",
+        "type": "SPELLID",
+        "id": "3643",
+        "conditions": []
+    },
+    "3644": {
+        "name": "BALOR_FIRE_SHIELD",
+        "type": "SPELLID",
+        "id": "3644",
+        "conditions": []
+    },
+    "3645": {
+        "name": "WILD_MAGIC_AREA",
+        "type": "SPELLID",
+        "id": "3645",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "WILD_MAGIC_AREA"
+            }
+        ]
+    },
+    "3646": {
+        "name": "DEAD_MAGIC_AREA",
+        "type": "SPELLID",
+        "id": "3646",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "DEAD_MAGIC_AREA"
+            }
+        ]
+    },
+    "3647": {
+        "name": "DISPEL_NO_SAVE",
+        "type": "SPELLID",
+        "id": "3647",
+        "conditions": []
+    },
+    "3648": {
+        "name": "HOLD_PERSON_NO_SAVE",
+        "type": "SPELLID",
+        "id": "3648",
+        "conditions": []
+    },
+    "3649": {
+        "name": "ENTER_POCKET_PLANE",
+        "type": "SPELLID",
+        "id": "3649",
+        "conditions": []
+    },
+    "3650": {
+        "name": "DM_SHIELD",
+        "type": "SPELLID",
+        "id": "3650",
+        "conditions": []
+    },
+    "3651": {
+        "name": "DM_SEE_INVISIBLE",
+        "type": "SPELLID",
+        "id": "3651",
+        "conditions": []
+    },
+    "3652": {
+        "name": "DM_MAGIC_PROTECTION",
+        "type": "SPELLID",
+        "id": "3652",
+        "conditions": []
+    },
+    "3653": {
+        "name": "DM_COLD_PROTECTION",
+        "type": "SPELLID",
+        "id": "3653",
+        "conditions": []
+    },
+    "3654": {
+        "name": "DM_FIRE_PROTECTION",
+        "type": "SPELLID",
+        "id": "3654",
+        "conditions": []
+    },
+    "3655": {
+        "name": "DM_IMPROVED_HASTE",
+        "type": "SPELLID",
+        "id": "3655",
+        "conditions": []
+    },
+    "3656": {
+        "name": "VIEKANG_LIGHTNING",
+        "type": "SPELLID",
+        "id": "3656",
+        "conditions": []
+    },
+    "3657": {
+        "name": "DO_SOME_EFFECTS",
+        "type": "SPELLID",
+        "id": "3657",
+        "conditions": []
+    },
+    "3658": {
+        "name": "HELL_BUFFET",
+        "type": "SPELLID",
+        "id": "3658",
+        "conditions": []
+    },
+    "3659": {
+        "name": "TROLL_CHANGE_NITHIRI",
+        "type": "SPELLID",
+        "id": "3659",
+        "conditions": []
+    },
+    "3660": {
+        "name": "POOF_GONE",
+        "type": "SPELLID",
+        "id": "3660",
+        "conditions": []
+    },
+    "3661": {
+        "name": "EDWINA_IN_HELL",
+        "type": "SPELLID",
+        "id": "3661",
+        "conditions": []
+    },
+    "3662": {
+        "name": "EDWIN_CHANGE_BACK",
+        "type": "SPELLID",
+        "id": "3662",
+        "conditions": []
+    },
+    "3663": {
+        "name": "CREATE_YOSHIMO_BLADE",
+        "type": "SPELLID",
+        "id": "3663",
+        "conditions": []
+    },
+    "3664": {
+        "name": "NETHER_SCROLL",
+        "type": "SPELLID",
+        "id": "3664",
+        "conditions": []
+    },
+    "3665": {
+        "name": "BEHOLDER_BLAST_VISUAL2",
+        "type": "SPELLID",
+        "id": "3665",
+        "conditions": []
+    },
+    "3666": {
+        "name": "ZOMBIE_LEVEL_DRAIN",
+        "type": "SPELLID",
+        "id": "3666",
+        "conditions": []
+    },
+    "3667": {
+        "name": "SLAYER_BACK_TO_HUMAN_NOVIS",
+        "type": "SPELLID",
+        "id": "3667",
+        "conditions": []
+    },
+    "3668": {
+        "name": "REMOVE_NON_PERMANENT_DEATH",
+        "type": "SPELLID",
+        "id": "3668",
+        "conditions": []
+    },
+    "3669": {
+        "name": "APPLY_NON_PERMANENT_DEATH",
+        "type": "SPELLID",
+        "id": "3669",
+        "conditions": []
+    },
+    "3670": {
+        "name": "SEA_TROLL_CHANGE",
+        "type": "SPELLID",
+        "id": "3670",
+        "conditions": []
+    },
+    "3671": {
+        "name": "SWOOSH_GONE",
+        "type": "SPELLID",
+        "id": "3671",
+        "conditions": []
+    },
+    "3672": {
+        "name": "QUICK_INVISIBLE",
+        "type": "SPELLID",
+        "id": "3672",
+        "conditions": []
+    },
+    "3673": {
+        "name": "SPORE_DEATH",
+        "type": "SPELLID",
+        "id": "3673",
+        "conditions": []
+    },
+    "3674": {
+        "name": "MIST_CHAOS",
+        "type": "SPELLID",
+        "id": "3674",
+        "conditions": []
+    },
+    "3675": {
+        "name": "MIST_HORROR",
+        "type": "SPELLID",
+        "id": "3675",
+        "conditions": []
+    },
+    "3676": {
+        "name": "INVOKE_COURAGE",
+        "type": "SPELLID",
+        "id": "3676",
+        "conditions": []
+    },
+    "3677": {
+        "name": "SUMMON_POISON",
+        "type": "SPELLID",
+        "id": "3677",
+        "conditions": []
+    },
+    "3678": {
+        "name": "ANOMEN_TITLE",
+        "type": "SPELLID",
+        "id": "3678",
+        "conditions": []
+    },
+    "3679": {
+        "name": "HEAL_NO_VISUAL",
+        "type": "SPELLID",
+        "id": "3679",
+        "conditions": []
+    },
+    "3680": {
+        "name": "HARPER_DEATH_SONG",
+        "type": "SPELLID",
+        "id": "3680",
+        "conditions": []
+    },
+    "3681": {
+        "name": "BANSHEE_WAIL",
+        "type": "SPELLID",
+        "id": "3681",
+        "conditions": []
+    },
+    "3682": {
+        "name": "DRAGON_LOWER_FIRE",
+        "type": "SPELLID",
+        "id": "3682",
+        "conditions": []
+    },
+    "3683": {
+        "name": "FIGURINE_SPIDER_WEB",
+        "type": "SPELLID",
+        "id": "3683",
+        "conditions": []
+    },
+    "3684": {
+        "name": "KOA_TRUE_SIGHT_NO_VIS",
+        "type": "SPELLID",
+        "id": "3684",
+        "conditions": []
+    },
+    "3685": {
+        "name": "MAGIC_MISSILE_SURE_HIT",
+        "type": "SPELLID",
+        "id": "3685",
+        "conditions": []
+    },
+    "3686": {
+        "name": "PROTECTION_MAGIC_WEAPON_NOEFF",
+        "type": "SPELLID",
+        "id": "3686",
+        "conditions": []
+    },
+    "3687": {
+        "name": "SHADOW_DRAGON_SHADOWS",
+        "type": "SPELLID",
+        "id": "3687",
+        "conditions": []
+    },
+    "3688": {
+        "name": "BLACK_DRAGON_PLANT",
+        "type": "SPELLID",
+        "id": "3688",
+        "conditions": []
+    },
+    "3689": {
+        "name": "BLACK_DRAGON_INSECT",
+        "type": "SPELLID",
+        "id": "3689",
+        "conditions": []
+    },
+    "3690": {
+        "name": "HOLY_LIGHT_FROM_ABOVE",
+        "type": "SPELLID",
+        "id": "3690",
+        "conditions": []
+    },
+    "3691": {
+        "name": "BLACK_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3691",
+        "conditions": []
+    },
+    "3692": {
+        "name": "DRAGON_SILENCE",
+        "type": "SPELLID",
+        "id": "3692",
+        "conditions": []
+    },
+    "3693": {
+        "name": "RED_DRAGON_HIT",
+        "type": "SPELLID",
+        "id": "3693",
+        "conditions": []
+    },
+    "3694": {
+        "name": "DRAGON_STONE_SKIN",
+        "type": "SPELLID",
+        "id": "3694",
+        "conditions": []
+    },
+    "3695": {
+        "name": "DRAGON_WING_BUFFET",
+        "type": "SPELLID",
+        "id": "3695",
+        "conditions": []
+    },
+    "3696": {
+        "name": "MOON_DOG_HOWL",
+        "type": "SPELLID",
+        "id": "3696",
+        "conditions": []
+    },
+    "3697": {
+        "name": "HASTE_SELF",
+        "type": "SPELLID",
+        "id": "3697",
+        "conditions": []
+    },
+    "3698": {
+        "name": "NON_DETECTION_SELF",
+        "type": "SPELLID",
+        "id": "3698",
+        "conditions": []
+    },
+    "3699": {
+        "name": "INVISIBILITY_SELF",
+        "type": "SPELLID",
+        "id": "3699",
+        "conditions": []
+    },
+    "3700": {
+        "name": "TROLL_SETHP1",
+        "type": "SPELLID",
+        "id": "3700",
+        "conditions": []
+    },
+    "3701": {
+        "name": "DEATHKNIGHT_FIREBALL",
+        "type": "SPELLID",
+        "id": "3701",
+        "conditions": []
+    },
+    "3702": {
+        "name": "FAKE_FLAME_STRIKE",
+        "type": "SPELLID",
+        "id": "3702",
+        "conditions": []
+    },
+    "3703": {
+        "name": "AERIE_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "3703",
+        "conditions": []
+    },
+    "3704": {
+        "name": "NYMPH_CONFUSION",
+        "type": "SPELLID",
+        "id": "3704",
+        "conditions": []
+    },
+    "3705": {
+        "name": "TRAP_PENDULUM",
+        "type": "SPELLID",
+        "id": "3705",
+        "conditions": []
+    },
+    "3706": {
+        "name": "TRAP_VENT",
+        "type": "SPELLID",
+        "id": "3706",
+        "conditions": []
+    },
+    "3707": {
+        "name": "TRAP_DARTS",
+        "type": "SPELLID",
+        "id": "3707",
+        "conditions": []
+    },
+    "3708": {
+        "name": "TRAP_SLIME",
+        "type": "SPELLID",
+        "id": "3708",
+        "conditions": []
+    },
+    "3709": {
+        "name": "TRAP_SPEAR",
+        "type": "SPELLID",
+        "id": "3709",
+        "conditions": []
+    },
+    "3710": {
+        "name": "SPELL_DEFLECTION_NO_VISUAL",
+        "type": "SPELLID",
+        "id": "3710",
+        "conditions": []
+    },
+    "3711": {
+        "name": "FINAL_HEAL",
+        "type": "SPELLID",
+        "id": "3711",
+        "conditions": []
+    },
+    "3712": {
+        "name": "MULTIPLAYER_ANTIMAGIC",
+        "type": "SPELLID",
+        "id": "3712",
+        "conditions": []
+    },
+    "3713": {
+        "name": "ICE_DUST",
+        "type": "SPELLID",
+        "id": "3713",
+        "conditions": []
+    },
+    "3714": {
+        "name": "CELESTIAL_BOLT",
+        "type": "SPELLID",
+        "id": "3714",
+        "conditions": []
+    },
+    "3715": {
+        "name": "TROLL_RAT_SPAWN",
+        "type": "SPELLID",
+        "id": "3715",
+        "conditions": []
+    },
+    "3716": {
+        "name": "SLAYER_IMMUNE_TO_DAMAGE",
+        "type": "SPELLID",
+        "id": "3716",
+        "conditions": []
+    },
+    "3717": {
+        "name": "SLAYER_CHANGE_CUT_SCENE",
+        "type": "SPELLID",
+        "id": "3717",
+        "conditions": []
+    },
+    "3718": {
+        "name": "SLAYER_BACK_TO_HUMAN",
+        "type": "SPELLID",
+        "id": "3718",
+        "conditions": []
+    },
+    "3719": {
+        "name": "CUTSCENE_METEOR_SWARM",
+        "type": "SPELLID",
+        "id": "3719",
+        "conditions": []
+    },
+    "3720": {
+        "name": "CUTSCENE_DAMAGE_1C",
+        "type": "SPELLID",
+        "id": "3720",
+        "conditions": []
+    },
+    "3721": {
+        "name": "CUTSCENE_DAMAGE_1B",
+        "type": "SPELLID",
+        "id": "3721",
+        "conditions": []
+    },
+    "3722": {
+        "name": "GREAT_DRUID_TITLE",
+        "type": "SPELLID",
+        "id": "3722",
+        "conditions": []
+    },
+    "3723": {
+        "name": "DRAGON_RAIN",
+        "type": "SPELLID",
+        "id": "3723",
+        "conditions": []
+    },
+    "3724": {
+        "name": "RAISSA_RESTORE",
+        "type": "SPELLID",
+        "id": "3724",
+        "conditions": []
+    },
+    "3725": {
+        "name": "SKIN_DANCER_RESTORE_2",
+        "type": "SPELLID",
+        "id": "3725",
+        "conditions": []
+    },
+    "3726": {
+        "name": "CUTSCENE_DAMAGE_1",
+        "type": "SPELLID",
+        "id": "3726",
+        "conditions": []
+    },
+    "3727": {
+        "name": "NOSAVE_PSIONIC_BLAST",
+        "type": "SPELLID",
+        "id": "3727",
+        "conditions": []
+    },
+    "3728": {
+        "name": "SKIN_DANCER_RESTORE",
+        "type": "SPELLID",
+        "id": "3728",
+        "conditions": []
+    },
+    "3729": {
+        "name": "SKIN_DANCER_SWITCH",
+        "type": "SPELLID",
+        "id": "3729",
+        "conditions": []
+    },
+    "3730": {
+        "name": "SUMMON_FUNGUS",
+        "type": "SPELLID",
+        "id": "3730",
+        "conditions": []
+    },
+    "3731": {
+        "name": "WISH_SPELL_FAILURE",
+        "type": "SPELLID",
+        "id": "3731",
+        "conditions": []
+    },
+    "3732": {
+        "name": "WISH_LOSE_SPELL",
+        "type": "SPELLID",
+        "id": "3732",
+        "conditions": []
+    },
+    "3733": {
+        "name": "WISH_POISON",
+        "type": "SPELLID",
+        "id": "3733",
+        "conditions": []
+    },
+    "3734": {
+        "name": "WISH_HEAL_PARTY",
+        "type": "SPELLID",
+        "id": "3734",
+        "conditions": []
+    },
+    "3735": {
+        "name": "WISH_RABBIT",
+        "type": "SPELLID",
+        "id": "3735",
+        "conditions": []
+    },
+    "3736": {
+        "name": "WISH_GLOBE",
+        "type": "SPELLID",
+        "id": "3736",
+        "conditions": []
+    },
+    "3737": {
+        "name": "WISH_MEMORIZE",
+        "type": "SPELLID",
+        "id": "3737",
+        "conditions": []
+    },
+    "3738": {
+        "name": "WISH_PLANE",
+        "type": "SPELLID",
+        "id": "3738",
+        "conditions": []
+    },
+    "3739": {
+        "name": "TROLL_SPECTRAL_CHANGE",
+        "type": "SPELLID",
+        "id": "3739",
+        "conditions": []
+    },
+    "3740": {
+        "name": "TROLL_SNOW_CHANGE",
+        "type": "SPELLID",
+        "id": "3740",
+        "conditions": []
+    },
+    "3741": {
+        "name": "TROLL_SPIRIT_CHANGE",
+        "type": "SPELLID",
+        "id": "3741",
+        "conditions": []
+    },
+    "3742": {
+        "name": "TROLL_GIANT_CHANGE",
+        "type": "SPELLID",
+        "id": "3742",
+        "conditions": []
+    },
+    "3743": {
+        "name": "TROLL_FRESHWATER_CHANGE",
+        "type": "SPELLID",
+        "id": "3743",
+        "conditions": []
+    },
+    "3744": {
+        "name": "TROLL_DESERT_CHANGE",
+        "type": "SPELLID",
+        "id": "3744",
+        "conditions": []
+    },
+    "3745": {
+        "name": "AERIE_PORTRAIT",
+        "type": "SPELLID",
+        "id": "3745",
+        "conditions": []
+    },
+    "3746": {
+        "name": "RESTORE_FULL_HEALTH",
+        "type": "SPELLID",
+        "id": "3746",
+        "conditions": []
+    },
+    "3747": {
+        "name": "HELL_SELFISH_EVIL",
+        "type": "SPELLID",
+        "id": "3747",
+        "conditions": []
+    },
+    "3748": {
+        "name": "HELL_SELFISH_GOOD",
+        "type": "SPELLID",
+        "id": "3748",
+        "conditions": []
+    },
+    "3749": {
+        "name": "HELL_WRATH_EVIL",
+        "type": "SPELLID",
+        "id": "3749",
+        "conditions": []
+    },
+    "3750": {
+        "name": "HELL_WRATH_GOOD",
+        "type": "SPELLID",
+        "id": "3750",
+        "conditions": []
+    },
+    "3751": {
+        "name": "HELL_PRIDE_EVIL",
+        "type": "SPELLID",
+        "id": "3751",
+        "conditions": []
+    },
+    "3752": {
+        "name": "HELL_PRIDE_GOOD",
+        "type": "SPELLID",
+        "id": "3752",
+        "conditions": []
+    },
+    "3753": {
+        "name": "HELL_FEAR_EVIL",
+        "type": "SPELLID",
+        "id": "3753",
+        "conditions": []
+    },
+    "3754": {
+        "name": "HELL_FEAR_GOOD",
+        "type": "SPELLID",
+        "id": "3754",
+        "conditions": []
+    },
+    "3755": {
+        "name": "HELL_GREED_EVIL",
+        "type": "SPELLID",
+        "id": "3755",
+        "conditions": []
+    },
+    "3756": {
+        "name": "HELL_GREED_GOOD",
+        "type": "SPELLID",
+        "id": "3756",
+        "conditions": []
+    },
+    "3757": {
+        "name": "IRENICUS_WORD_OF_POWER",
+        "type": "SPELLID",
+        "id": "3757",
+        "conditions": []
+    },
+    "3758": {
+        "name": "PLAYER1_WORD_OF_POWER",
+        "type": "SPELLID",
+        "id": "3758",
+        "conditions": []
+    },
+    "3759": {
+        "name": "HELL_GAIN_CHR",
+        "type": "SPELLID",
+        "id": "3759",
+        "conditions": []
+    },
+    "3760": {
+        "name": "HELL_GAIN_CON",
+        "type": "SPELLID",
+        "id": "3760",
+        "conditions": []
+    },
+    "3761": {
+        "name": "HELL_GAIN_DEX",
+        "type": "SPELLID",
+        "id": "3761",
+        "conditions": []
+    },
+    "3762": {
+        "name": "HELL_GAIN_WIS",
+        "type": "SPELLID",
+        "id": "3762",
+        "conditions": []
+    },
+    "3763": {
+        "name": "HELL_GAIN_INT",
+        "type": "SPELLID",
+        "id": "3763",
+        "conditions": []
+    },
+    "3764": {
+        "name": "HELL_GAIN_STR",
+        "type": "SPELLID",
+        "id": "3764",
+        "conditions": []
+    },
+    "3765": {
+        "name": "HELL_LOSE_XP",
+        "type": "SPELLID",
+        "id": "3765",
+        "conditions": []
+    },
+    "3766": {
+        "name": "HELL_LOSE_DEX",
+        "type": "SPELLID",
+        "id": "3766",
+        "conditions": []
+    },
+    "3767": {
+        "name": "HELL_LOSE_HP",
+        "type": "SPELLID",
+        "id": "3767",
+        "conditions": []
+    },
+    "3768": {
+        "name": "HELL_DISPELL",
+        "type": "SPELLID",
+        "id": "3768",
+        "conditions": []
+    },
+    "3769": {
+        "name": "HELL_HOLD",
+        "type": "SPELLID",
+        "id": "3769",
+        "conditions": []
+    },
+    "3770": {
+        "name": "HELL_EXPLODE",
+        "type": "SPELLID",
+        "id": "3770",
+        "conditions": []
+    },
+    "3771": {
+        "name": "HELL_DAMAGE_HALF",
+        "type": "SPELLID",
+        "id": "3771",
+        "conditions": []
+    },
+    "3772": {
+        "name": "HELL_FEAR",
+        "type": "SPELLID",
+        "id": "3772",
+        "conditions": []
+    },
+    "3773": {
+        "name": "EVIL_LAYONHANDS",
+        "type": "SPELLID",
+        "id": "3773",
+        "conditions": []
+    },
+    "3774": {
+        "name": "PSIONIC_MAZE",
+        "type": "SPELLID",
+        "id": "3774",
+        "conditions": []
+    },
+    "3775": {
+        "name": "PSIONIC_MIND_BLAST",
+        "type": "SPELLID",
+        "id": "3775",
+        "conditions": []
+    },
+    "3776": {
+        "name": "MAKE_STATUE",
+        "type": "SPELLID",
+        "id": "3776",
+        "conditions": []
+    },
+    "3777": {
+        "name": "BEHOLDER_BLAST_VISUAL",
+        "type": "SPELLID",
+        "id": "3777",
+        "conditions": []
+    },
+    "3778": {
+        "name": "WILD_MAGIC_ZONE",
+        "type": "SPELLID",
+        "id": "3778",
+        "conditions": []
+    },
+    "3779": {
+        "name": "ANTI_MAGIC_ZONE",
+        "type": "SPELLID",
+        "id": "3779",
+        "conditions": []
+    },
+    "3780": {
+        "name": "FLASHY_DEATH_3",
+        "type": "SPELLID",
+        "id": "3780",
+        "conditions": []
+    },
+    "3781": {
+        "name": "FLASHY_DEATH_2",
+        "type": "SPELLID",
+        "id": "3781",
+        "conditions": []
+    },
+    "3782": {
+        "name": "FLASHY_DEATH_1",
+        "type": "SPELLID",
+        "id": "3782",
+        "conditions": []
+    },
+    "3783": {
+        "name": "SLAYER_ENEMY",
+        "type": "SPELLID",
+        "id": "3783",
+        "conditions": []
+    },
+    "3784": {
+        "name": "SNAKE_GAZE",
+        "type": "SPELLID",
+        "id": "3784",
+        "conditions": []
+    },
+    "3785": {
+        "name": "PERM_CHARM",
+        "type": "SPELLID",
+        "id": "3785",
+        "conditions": []
+    },
+    "3786": {
+        "name": "LICH_IMPRISON",
+        "type": "SPELLID",
+        "id": "3786",
+        "conditions": []
+    },
+    "3787": {
+        "name": "SMALL_DAMAGE_SPELL",
+        "type": "SPELLID",
+        "id": "3787",
+        "conditions": []
+    },
+    "3788": {
+        "name": "DEMILICH_TRAP_SOUL",
+        "type": "SPELLID",
+        "id": "3788",
+        "conditions": []
+    },
+    "3789": {
+        "name": "DEMILICH_DEATH",
+        "type": "SPELLID",
+        "id": "3789",
+        "conditions": []
+    },
+    "3790": {
+        "name": "LONG_VISUAL2",
+        "type": "SPELLID",
+        "id": "3790",
+        "conditions": []
+    },
+    "3791": {
+        "name": "TROLL_ICE_CHANGE",
+        "type": "SPELLID",
+        "id": "3791",
+        "conditions": []
+    },
+    "3792": {
+        "name": "LONG_VISUAL",
+        "type": "SPELLID",
+        "id": "3792",
+        "conditions": []
+    },
+    "3793": {
+        "name": "FLASHY_DEATH_YEAH",
+        "type": "SPELLID",
+        "id": "3793",
+        "conditions": []
+    },
+    "3794": {
+        "name": "FLASHY_4",
+        "type": "SPELLID",
+        "id": "3794",
+        "conditions": []
+    },
+    "3795": {
+        "name": "FLASHY_3",
+        "type": "SPELLID",
+        "id": "3795",
+        "conditions": []
+    },
+    "3796": {
+        "name": "FLASHY_2",
+        "type": "SPELLID",
+        "id": "3796",
+        "conditions": []
+    },
+    "3797": {
+        "name": "FLASHY_1",
+        "type": "SPELLID",
+        "id": "3797",
+        "conditions": []
+    },
+    "3798": {
+        "name": "BODHI_BAT_ASYLUM",
+        "type": "SPELLID",
+        "id": "3798",
+        "conditions": []
+    },
+    "3799": {
+        "name": "DACE_FLAME",
+        "type": "SPELLID",
+        "id": "3799",
+        "conditions": []
+    },
+    "3800": {
+        "name": "FLAME_HEAD",
+        "type": "SPELLID",
+        "id": "3800",
+        "conditions": []
+    },
+    "3801": {
+        "name": "NO_FEAR_PARTY",
+        "type": "SPELLID",
+        "id": "3801",
+        "conditions": []
+    },
+    "3802": {
+        "name": "MIND_CRIPPLE",
+        "type": "SPELLID",
+        "id": "3802",
+        "conditions": []
+    },
+    "3803": {
+        "name": "DACE_MIST_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3803",
+        "conditions": []
+    },
+    "3804": {
+        "name": "PSIONIC_EMOTION_KILL",
+        "type": "SPELLID",
+        "id": "3804",
+        "conditions": []
+    },
+    "3805": {
+        "name": "THIEF_DETECT_ILLUSION",
+        "type": "SPELLID",
+        "id": "3805",
+        "conditions": []
+    },
+    "3806": {
+        "name": "LICH_REPLACE_SELF",
+        "type": "SPELLID",
+        "id": "3806",
+        "conditions": []
+    },
+    "3807": {
+        "name": "SLAYER_FEAR",
+        "type": "SPELLID",
+        "id": "3807",
+        "conditions": []
+    },
+    "3808": {
+        "name": "DRAIN_PARTY",
+        "type": "SPELLID",
+        "id": "3808",
+        "conditions": []
+    },
+    "3809": {
+        "name": "BODHI_MIST_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3809",
+        "conditions": []
+    },
+    "3810": {
+        "name": "GIVE_SLAYER_POWER",
+        "type": "SPELLID",
+        "id": "3810",
+        "conditions": []
+    },
+    "3811": {
+        "name": "VAMPIRE_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3811",
+        "conditions": []
+    },
+    "3812": {
+        "name": "DEL_VAMP_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3812",
+        "conditions": []
+    },
+    "3813": {
+        "name": "SLAVE_CHUNK",
+        "type": "SPELLID",
+        "id": "3813",
+        "conditions": []
+    },
+    "3814": {
+        "name": "TANOVA_MIST_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3814",
+        "conditions": []
+    },
+    "3815": {
+        "name": "DEL_MIST_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3815",
+        "conditions": []
+    },
+    "3816": {
+        "name": "VALEN_MIST_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3816",
+        "conditions": []
+    },
+    "3817": {
+        "name": "C6BODHI_WEAKNESS",
+        "type": "SPELLID",
+        "id": "3817",
+        "conditions": []
+    },
+    "3818": {
+        "name": "C6VAMPIRE_WEAKNESS",
+        "type": "SPELLID",
+        "id": "3818",
+        "conditions": []
+    },
+    "3819": {
+        "name": "LAVA_BURST",
+        "type": "SPELLID",
+        "id": "3819",
+        "conditions": []
+    },
+    "3820": {
+        "name": "ELVEN_GUARD_WAIL",
+        "type": "SPELLID",
+        "id": "3820",
+        "conditions": []
+    },
+    "3821": {
+        "name": "LONG_RED_MIGHT",
+        "type": "SPELLID",
+        "id": "3821",
+        "conditions": []
+    },
+    "3822": {
+        "name": "SLAYER_START",
+        "type": "SPELLID",
+        "id": "3822",
+        "conditions": []
+    },
+    "3823": {
+        "name": "SLAYER_CHANGE_TWO",
+        "type": "SPELLID",
+        "id": "3823",
+        "conditions": []
+    },
+    "3824": {
+        "name": "DEATH_CURSE",
+        "type": "SPELLID",
+        "id": "3824",
+        "conditions": []
+    },
+    "3825": {
+        "name": "DROW_CHANGE",
+        "type": "SPELLID",
+        "id": "3825",
+        "conditions": []
+    },
+    "3826": {
+        "name": "MAZZY_STRENGTH",
+        "type": "SPELLID",
+        "id": "3826",
+        "conditions": []
+    },
+    "3827": {
+        "name": "MAZZY_LAY",
+        "type": "SPELLID",
+        "id": "3827",
+        "conditions": []
+    },
+    "3828": {
+        "name": "MAZZY_HASTE",
+        "type": "SPELLID",
+        "id": "3828",
+        "conditions": []
+    },
+    "3829": {
+        "name": "JAN_AMMO",
+        "type": "SPELLID",
+        "id": "3829",
+        "conditions": []
+    },
+    "3830": {
+        "name": "UNDER_NORM",
+        "type": "SPELLID",
+        "id": "3830",
+        "conditions": []
+    },
+    "3831": {
+        "name": "UNDER_SQUIRREL",
+        "type": "SPELLID",
+        "id": "3831",
+        "conditions": []
+    },
+    "3832": {
+        "name": "SILVER_DRAGON_BREATH_PARALIZATION",
+        "type": "SPELLID",
+        "id": "3832",
+        "conditions": []
+    },
+    "3833": {
+        "name": "SILVER_DRAGON_BREATH_COLD",
+        "type": "SPELLID",
+        "id": "3833",
+        "conditions": []
+    },
+    "3834": {
+        "name": "BRAIN_PSIONIC_BLAST",
+        "type": "SPELLID",
+        "id": "3834",
+        "conditions": []
+    },
+    "3835": {
+        "name": "ILLUSION_DEATH",
+        "type": "SPELLID",
+        "id": "3835",
+        "conditions": []
+    },
+    "3836": {
+        "name": "JON_ALL_DEAD",
+        "type": "SPELLID",
+        "id": "3836",
+        "conditions": []
+    },
+    "3837": {
+        "name": "JON_WISH",
+        "type": "SPELLID",
+        "id": "3837",
+        "conditions": []
+    },
+    "3838": {
+        "name": "LOSE_ALL",
+        "type": "SPELLID",
+        "id": "3838",
+        "conditions": []
+    },
+    "3839": {
+        "name": "HULK_CONFUSION",
+        "type": "SPELLID",
+        "id": "3839",
+        "conditions": []
+    },
+    "3840": {
+        "name": "BOOK_GOLEM",
+        "type": "SPELLID",
+        "id": "3840",
+        "conditions": []
+    },
+    "3841": {
+        "name": "BOOK_BEHOLD",
+        "type": "SPELLID",
+        "id": "3841",
+        "conditions": []
+    },
+    "3842": {
+        "name": "BOOK_MIND",
+        "type": "SPELLID",
+        "id": "3842",
+        "conditions": []
+    },
+    "3843": {
+        "name": "BOOK_UMBER",
+        "type": "SPELLID",
+        "id": "3843",
+        "conditions": []
+    },
+    "3844": {
+        "name": "BOOK_SPIDER",
+        "type": "SPELLID",
+        "id": "3844",
+        "conditions": []
+    },
+    "3845": {
+        "name": "BOOK_KOBOLD",
+        "type": "SPELLID",
+        "id": "3845",
+        "conditions": []
+    },
+    "3846": {
+        "name": "SAND_DIE",
+        "type": "SPELLID",
+        "id": "3846",
+        "conditions": []
+    },
+    "3847": {
+        "name": "FIRAMB05_CHANGE",
+        "type": "SPELLID",
+        "id": "3847",
+        "conditions": []
+    },
+    "3848": {
+        "name": "DISARM_ENEMY",
+        "type": "SPELLID",
+        "id": "3848",
+        "conditions": []
+    },
+    "3849": {
+        "name": "TROLL_SMALL_CHANGE",
+        "type": "SPELLID",
+        "id": "3849",
+        "conditions": []
+    },
+    "3850": {
+        "name": "DGTROLL_CHANGE",
+        "type": "SPELLID",
+        "id": "3850",
+        "conditions": []
+    },
+    "3851": {
+        "name": "FIRAMB01_CHANGE",
+        "type": "SPELLID",
+        "id": "3851",
+        "conditions": []
+    },
+    "3852": {
+        "name": "SLAYER_CHANGE",
+        "type": "SPELLID",
+        "id": "3852",
+        "conditions": []
+    },
+    "3853": {
+        "name": "FORCE_SPHERE",
+        "type": "SPELLID",
+        "id": "3853",
+        "conditions": []
+    },
+    "3854": {
+        "name": "MAGNET",
+        "type": "SPELLID",
+        "id": "3854",
+        "conditions": []
+    },
+    "3855": {
+        "name": "SUMMON_DJINN_TRAP",
+        "type": "SPELLID",
+        "id": "3855",
+        "conditions": []
+    },
+    "3856": {
+        "name": "SUMMON_DEATH_KNIGHT",
+        "type": "SPELLID",
+        "id": "3856",
+        "conditions": []
+    },
+    "3857": {
+        "name": "SUMMON_PIT_FIEND",
+        "type": "SPELLID",
+        "id": "3857",
+        "conditions": []
+    },
+    "3858": {
+        "name": "ONE_INT",
+        "type": "SPELLID",
+        "id": "3858",
+        "conditions": []
+    },
+    "3859": {
+        "name": "ONE_WIS",
+        "type": "SPELLID",
+        "id": "3859",
+        "conditions": []
+    },
+    "3860": {
+        "name": "ONE_DEX",
+        "type": "SPELLID",
+        "id": "3860",
+        "conditions": []
+    },
+    "3861": {
+        "name": "ONE_CON",
+        "type": "SPELLID",
+        "id": "3861",
+        "conditions": []
+    },
+    "3862": {
+        "name": "NOHOLD_PARTY",
+        "type": "SPELLID",
+        "id": "3862",
+        "conditions": []
+    },
+    "3863": {
+        "name": "HOLD_PARTY",
+        "type": "SPELLID",
+        "id": "3863",
+        "conditions": []
+    },
+    "3864": {
+        "name": "TRANSFORMATION_DEATH",
+        "type": "SPELLID",
+        "id": "3864",
+        "conditions": []
+    },
+    "3865": {
+        "name": "FORCE_STONE_TRAP",
+        "type": "SPELLID",
+        "id": "3865",
+        "conditions": []
+    },
+    "3866": {
+        "name": "FORCE_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "3866",
+        "conditions": []
+    },
+    "3867": {
+        "name": "RED_PILLAR_VISUAL",
+        "type": "SPELLID",
+        "id": "3867",
+        "conditions": []
+    },
+    "3868": {
+        "name": "CERND_CERND",
+        "type": "SPELLID",
+        "id": "3868",
+        "conditions": []
+    },
+    "3869": {
+        "name": "CERND_BEAR",
+        "type": "SPELLID",
+        "id": "3869",
+        "conditions": []
+    },
+    "3870": {
+        "name": "SUMMON_SHADOW_WOLF",
+        "type": "SPELLID",
+        "id": "3870",
+        "conditions": []
+    },
+    "3871": {
+        "name": "END_EXPLORE",
+        "type": "SPELLID",
+        "id": "3871",
+        "conditions": []
+    },
+    "3872": {
+        "name": "FIVE_ROUND_ENCHANTMENT_IMMUNITY",
+        "type": "SPELLID",
+        "id": "3872",
+        "conditions": []
+    },
+    "3873": {
+        "name": "UNPAUSE_CASTER",
+        "type": "SPELLID",
+        "id": "3873",
+        "conditions": []
+    },
+    "3874": {
+        "name": "FALDORN_PANTHER",
+        "type": "SPELLID",
+        "id": "3874",
+        "conditions": []
+    },
+    "3875": {
+        "name": "ANATH_WEREWOLF2",
+        "type": "SPELLID",
+        "id": "3875",
+        "conditions": []
+    },
+    "3876": {
+        "name": "ANATH_WEREWOLF",
+        "type": "SPELLID",
+        "id": "3876",
+        "conditions": []
+    },
+    "3877": {
+        "name": "APPRENTI_DEATH",
+        "type": "SPELLID",
+        "id": "3877",
+        "conditions": []
+    },
+    "3878": {
+        "name": "SHADOW_DRAIN",
+        "type": "SPELLID",
+        "id": "3878",
+        "conditions": []
+    },
+    "3879": {
+        "name": "MAKE_SHADOW",
+        "type": "SPELLID",
+        "id": "3879",
+        "conditions": []
+    },
+    "3880": {
+        "name": "SUMMON_SHADOW",
+        "type": "SPELLID",
+        "id": "3880",
+        "conditions": []
+    },
+    "3881": {
+        "name": "GREATER_WEREWOLF_CHANGE",
+        "type": "SPELLID",
+        "id": "3881",
+        "conditions": []
+    },
+    "3882": {
+        "name": "VAMPIRE_FEAR",
+        "type": "SPELLID",
+        "id": "3882",
+        "conditions": []
+    },
+    "3883": {
+        "name": "VAMPIRE_DOMINATION",
+        "type": "SPELLID",
+        "id": "3883",
+        "conditions": []
+    },
+    "3884": {
+        "name": "CHICKEN_CHANGE",
+        "type": "SPELLID",
+        "id": "3884",
+        "conditions": []
+    },
+    "3885": {
+        "name": "KAMIKAZE_EXPLOSION",
+        "type": "SPELLID",
+        "id": "3885",
+        "conditions": []
+    },
+    "3886": {
+        "name": "RAELIS_OPEN_PORTAL",
+        "type": "SPELLID",
+        "id": "3886",
+        "conditions": []
+    },
+    "3887": {
+        "name": "SUMMONED_MIND",
+        "type": "SPELLID",
+        "id": "3887",
+        "conditions": []
+    },
+    "3888": {
+        "name": "SURE_STONE_SHATTER",
+        "type": "SPELLID",
+        "id": "3888",
+        "conditions": []
+    },
+    "3889": {
+        "name": "SURE_STONED",
+        "type": "SPELLID",
+        "id": "3889",
+        "conditions": []
+    },
+    "3890": {
+        "name": "DEMON_FEAR",
+        "type": "SPELLID",
+        "id": "3890",
+        "conditions": []
+    },
+    "3891": {
+        "name": "MOON_DOG_FEAR",
+        "type": "SPELLID",
+        "id": "3891",
+        "conditions": []
+    },
+    "3892": {
+        "name": "SURE_SLEEP",
+        "type": "SPELLID",
+        "id": "3892",
+        "conditions": []
+    },
+    "3893": {
+        "name": "SHADOW_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3893",
+        "conditions": []
+    },
+    "3894": {
+        "name": "RED_DRAGON_BREATH",
+        "type": "SPELLID",
+        "id": "3894",
+        "conditions": []
+    },
+    "3895": {
+        "name": "DRAGON_FEAR",
+        "type": "SPELLID",
+        "id": "3895",
+        "conditions": []
+    },
+    "3896": {
+        "name": "REPULSE_X",
+        "type": "SPELLID",
+        "id": "3896",
+        "conditions": []
+    },
+    "3897": {
+        "name": "BEHOLDER_GAS_SPORE",
+        "type": "SPELLID",
+        "id": "3897",
+        "conditions": []
+    },
+    "3898": {
+        "name": "ARCHER_PROTECTION",
+        "type": "SPELLID",
+        "id": "3898",
+        "conditions": []
+    },
+    "3899": {
+        "name": "ZOMBIE_SICKNESS",
+        "type": "SPELLID",
+        "id": "3899",
+        "conditions": []
+    },
+    "3900": {
+        "name": "ZOMBIE_CHANGE",
+        "type": "SPELLID",
+        "id": "3900",
+        "conditions": []
+    },
+    "3901": {
+        "name": "ZOMBIE_CON_LOSS",
+        "type": "SPELLID",
+        "id": "3901",
+        "conditions": []
+    },
+    "3902": {
+        "name": "BODVAM02_MIST_CHANGE",
+        "type": "SPELLID",
+        "id": "3902",
+        "conditions": []
+    },
+    "3903": {
+        "name": "BODVAM01_MIST_CHANGE",
+        "type": "SPELLID",
+        "id": "3903",
+        "conditions": []
+    },
+    "3904": {
+        "name": "LASSAL_MIST_CHANGE",
+        "type": "SPELLID",
+        "id": "3904",
+        "conditions": []
+    },
+    "3905": {
+        "name": "DO_NOTHING",
+        "type": "SPELLID",
+        "id": "3905",
+        "conditions": []
+    },
+    "3906": {
+        "name": "THREE_ROUND_ENCHANTMENT_IMMUNITY",
+        "type": "SPELLID",
+        "id": "3906",
+        "conditions": []
+    },
+    "3907": {
+        "name": "FIFTY_PERCENT_DAMAGE_ARROW",
+        "type": "SPELLID",
+        "id": "3907",
+        "conditions": []
+    },
+    "3908": {
+        "name": "FIFTY_PERCENT_DAMAGE",
+        "type": "SPELLID",
+        "id": "3908",
+        "conditions": []
+    },
+    "3909": {
+        "name": "PSIONIC_EGOWHIP",
+        "type": "SPELLID",
+        "id": "3909",
+        "conditions": []
+    },
+    "3910": {
+        "name": "PSIONIC_DOMINATION",
+        "type": "SPELLID",
+        "id": "3910",
+        "conditions": []
+    },
+    "3911": {
+        "name": "PSIONIC_BALLISTIC",
+        "type": "SPELLID",
+        "id": "3911",
+        "conditions": []
+    },
+    "3912": {
+        "name": "PSIONIC_DETONATE",
+        "type": "SPELLID",
+        "id": "3912",
+        "conditions": []
+    },
+    "3913": {
+        "name": "MIMIC_ACID",
+        "type": "SPELLID",
+        "id": "3913",
+        "conditions": []
+    },
+    "3914": {
+        "name": "MIMIC_GLUE",
+        "type": "SPELLID",
+        "id": "3914",
+        "conditions": []
+    },
+    "3915": {
+        "name": "SPIDER_CHANGE",
+        "type": "SPELLID",
+        "id": "3915",
+        "conditions": []
+    },
+    "3916": {
+        "name": "EDWIN_CHANGE",
+        "type": "SPELLID",
+        "id": "3916",
+        "conditions": []
+    },
+    "3917": {
+        "name": "MANE_GAS",
+        "type": "SPELLID",
+        "id": "3917",
+        "conditions": []
+    },
+    "3918": {
+        "name": "HARPASS_CHANGE",
+        "type": "SPELLID",
+        "id": "3918",
+        "conditions": []
+    },
+    "3919": {
+        "name": "JAHEIRA_WEAKNESS",
+        "type": "SPELLID",
+        "id": "3919",
+        "conditions": []
+    },
+    "3920": {
+        "name": "BEHOLDER_SPELL_TURNING",
+        "type": "SPELLID",
+        "id": "3920",
+        "conditions": []
+    },
+    "3922": {
+        "name": "REVENANT_CHANGE",
+        "type": "SPELLID",
+        "id": "3922",
+        "conditions": []
+    },
+    "3923": {
+        "name": "GENIE_LIMITED_WISH_HEAL_ALL",
+        "type": "SPELLID",
+        "id": "3923",
+        "conditions": []
+    },
+    "3924": {
+        "name": "COVER_PARTIAL",
+        "type": "SPELLID",
+        "id": "3924",
+        "conditions": []
+    },
+    "3925": {
+        "name": "COVER_FULL",
+        "type": "SPELLID",
+        "id": "3925",
+        "conditions": []
+    },
+    "3926": {
+        "name": "MEPHIT_WATER_JET",
+        "type": "SPELLID",
+        "id": "3926",
+        "conditions": []
+    },
+    "3927": {
+        "name": "MEPHIT_RAINSTORM",
+        "type": "SPELLID",
+        "id": "3927",
+        "conditions": []
+    },
+    "3928": {
+        "name": "MEPHIT_GAS_FORM",
+        "type": "SPELLID",
+        "id": "3928",
+        "conditions": []
+    },
+    "3929": {
+        "name": "MEPHIT_MIST",
+        "type": "SPELLID",
+        "id": "3929",
+        "conditions": []
+    },
+    "3930": {
+        "name": "MEPHIT_LAVA",
+        "type": "SPELLID",
+        "id": "3930",
+        "conditions": []
+    },
+    "3931": {
+        "name": "MEPHIT_SOOTY_BALL",
+        "type": "SPELLID",
+        "id": "3931",
+        "conditions": []
+    },
+    "3932": {
+        "name": "MEPHIT_BOLT",
+        "type": "SPELLID",
+        "id": "3932",
+        "conditions": []
+    },
+    "3933": {
+        "name": "MEPHIT_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "3933",
+        "conditions": []
+    },
+    "3934": {
+        "name": "MEPHIT_SALT_CRYSTAL",
+        "type": "SPELLID",
+        "id": "3934",
+        "conditions": []
+    },
+    "3935": {
+        "name": "MEPHIT_GLASS_DUST",
+        "type": "SPELLID",
+        "id": "3935",
+        "conditions": []
+    },
+    "3936": {
+        "name": "MEPHIT_ICE_SHARD",
+        "type": "SPELLID",
+        "id": "3936",
+        "conditions": []
+    },
+    "3937": {
+        "name": "MEPHIT_COLOR_SPRAY",
+        "type": "SPELLID",
+        "id": "3937",
+        "conditions": []
+    },
+    "3938": {
+        "name": "MEPHIT_FLAME_FAN",
+        "type": "SPELLID",
+        "id": "3938",
+        "conditions": []
+    },
+    "3939": {
+        "name": "MEPHIT_FLAME_JET",
+        "type": "SPELLID",
+        "id": "3939",
+        "conditions": []
+    },
+    "3940": {
+        "name": "MEPHIT_STINKING_CLOUD",
+        "type": "SPELLID",
+        "id": "3940",
+        "conditions": []
+    },
+    "3941": {
+        "name": "MEPHIT_SPIT_ROCK",
+        "type": "SPELLID",
+        "id": "3941",
+        "conditions": []
+    },
+    "3942": {
+        "name": "MEPHIT_GRIT",
+        "type": "SPELLID",
+        "id": "3942",
+        "conditions": []
+    },
+    "3943": {
+        "name": "MEPHIT_BLUR",
+        "type": "SPELLID",
+        "id": "3943",
+        "conditions": []
+    },
+    "3944": {
+        "name": "CUTSCENE_POWERWORD_STUN",
+        "type": "SPELLID",
+        "id": "3944",
+        "conditions": []
+    },
+    "3945": {
+        "name": "CUTSCENE_SPELLSTRIKE",
+        "type": "SPELLID",
+        "id": "3945",
+        "conditions": []
+    },
+    "3946": {
+        "name": "CUTSCENE_BREACH",
+        "type": "SPELLID",
+        "id": "3946",
+        "conditions": []
+    },
+    "3947": {
+        "name": "CUTSCENE_MIND_FOG",
+        "type": "SPELLID",
+        "id": "3947",
+        "conditions": []
+    },
+    "3948": {
+        "name": "CUTSCENE_LOWER_RESISTANCE",
+        "type": "SPELLID",
+        "id": "3948",
+        "conditions": []
+    },
+    "3949": {
+        "name": "CUTSCENE_RUBY_RAY_OF_REVERSAL",
+        "type": "SPELLID",
+        "id": "3949",
+        "conditions": []
+    },
+    "3950": {
+        "name": "CUTSCENE_FLESH_TO_STONE",
+        "type": "SPELLID",
+        "id": "3950",
+        "conditions": []
+    },
+    "3951": {
+        "name": "CUTSCENE_POWERWORD_KILL",
+        "type": "SPELLID",
+        "id": "3951",
+        "conditions": []
+    },
+    "3952": {
+        "name": "CUTSCENE_PHANTASMAL_KILLER",
+        "type": "SPELLID",
+        "id": "3952",
+        "conditions": []
+    },
+    "3953": {
+        "name": "CUTSCENE_IMPRISONMENT",
+        "type": "SPELLID",
+        "id": "3953",
+        "conditions": []
+    },
+    "3954": {
+        "name": "SIRINE_TELEPORT_FAKE",
+        "type": "SPELLID",
+        "id": "3954",
+        "conditions": []
+    },
+    "3955": {
+        "name": "TROLL_CHANGE",
+        "type": "SPELLID",
+        "id": "3955",
+        "conditions": []
+    },
+    "3956": {
+        "name": "HELL_HOUND_FLAME",
+        "type": "SPELLID",
+        "id": "3956",
+        "conditions": []
+    },
+    "3957": {
+        "name": "GHOULLORD_FEAR",
+        "type": "SPELLID",
+        "id": "3957",
+        "conditions": []
+    },
+    "3958": {
+        "name": "ULITHARID_CURE_SERIOUS_WOUNDS",
+        "type": "SPELLID",
+        "id": "3958",
+        "conditions": []
+    },
+    "3959": {
+        "name": "ULITHARID_PSIONIC_BLAST",
+        "type": "SPELLID",
+        "id": "3959",
+        "conditions": []
+    },
+    "3960": {
+        "name": "BEHOLDER_PARALYZATION_RAY",
+        "type": "SPELLID",
+        "id": "3960",
+        "conditions": []
+    },
+    "3961": {
+        "name": "BEHOLDER_FINGER_OF_DEATH",
+        "type": "SPELLID",
+        "id": "3961",
+        "conditions": []
+    },
+    "3962": {
+        "name": "BEHOLDER_MAGIC_MISSILE",
+        "type": "SPELLID",
+        "id": "3962",
+        "conditions": []
+    },
+    "3963": {
+        "name": "VAMPIRE_BAT_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3963",
+        "conditions": []
+    },
+    "3964": {
+        "name": "VAMPIRE_GAS_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3964",
+        "conditions": []
+    },
+    "3965": {
+        "name": "TROLL_HEAL_ONE_HIT_POINT",
+        "type": "SPELLID",
+        "id": "3965",
+        "conditions": []
+    },
+    "3966": {
+        "name": "TROLL_SLEEP",
+        "type": "SPELLID",
+        "id": "3966",
+        "conditions": []
+    },
+    "3967": {
+        "name": "EFREETI_PHYSICAL_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3967",
+        "conditions": []
+    },
+    "3968": {
+        "name": "DOA_PHYSICAL_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3968",
+        "conditions": []
+    },
+    "3969": {
+        "name": "DJINNI_PHYSICAL_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3969",
+        "conditions": []
+    },
+    "3970": {
+        "name": "EFREETI_GAS_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3970",
+        "conditions": []
+    },
+    "3971": {
+        "name": "DOA_GAS_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3971",
+        "conditions": []
+    },
+    "3972": {
+        "name": "DJINNI_GAS_FORM_CHANGE",
+        "type": "SPELLID",
+        "id": "3972",
+        "conditions": []
+    },
+    "3973": {
+        "name": "AIR_ELEMENTAL_EFFECT",
+        "type": "SPELLID",
+        "id": "3973",
+        "conditions": []
+    },
+    "3974": {
+        "name": "MIND_FLAYER_PSIONIC_BLAST",
+        "type": "SPELLID",
+        "id": "3974",
+        "conditions": []
+    },
+    "3975": {
+        "name": "MIND_FLAYER_DOMINATION",
+        "type": "SPELLID",
+        "id": "3975",
+        "conditions": []
+    },
+    "3976": {
+        "name": "GOLEM_CONFUSION",
+        "type": "SPELLID",
+        "id": "3976",
+        "conditions": []
+    },
+    "3977": {
+        "name": "GOLEM_SLOW",
+        "type": "SPELLID",
+        "id": "3977",
+        "conditions": []
+    },
+    "3978": {
+        "name": "GOLEM_HASTE",
+        "type": "SPELLID",
+        "id": "3978",
+        "conditions": []
+    },
+    "3979": {
+        "name": "GOLEM_GASCLOUD",
+        "type": "SPELLID",
+        "id": "3979",
+        "conditions": []
+    },
+    "3980": {
+        "name": "BEHOLDER_CHARM_PERSON",
+        "type": "SPELLID",
+        "id": "3980",
+        "conditions": []
+    },
+    "3981": {
+        "name": "BEHOLDER_FEAR",
+        "type": "SPELLID",
+        "id": "3981",
+        "conditions": []
+    },
+    "3982": {
+        "name": "BEHOLDER_DISINTEGRATE",
+        "type": "SPELLID",
+        "id": "3982",
+        "conditions": []
+    },
+    "3983": {
+        "name": "BEHOLDER_SLOW",
+        "type": "SPELLID",
+        "id": "3983",
+        "conditions": []
+    },
+    "3984": {
+        "name": "BEHOLDER_FLESH_TO_STONE",
+        "type": "SPELLID",
+        "id": "3984",
+        "conditions": []
+    },
+    "3985": {
+        "name": "BEHOLDER_DOMINATION",
+        "type": "SPELLID",
+        "id": "3985",
+        "conditions": []
+    },
+    "3986": {
+        "name": "BEHOLDER_CAUSE_SERIOUS_WOUNDS",
+        "type": "SPELLID",
+        "id": "3986",
+        "conditions": []
+    },
+    "3987": {
+        "name": "BEHOLDER_AGANNAZAR_SCORCHER",
+        "type": "SPELLID",
+        "id": "3987",
+        "conditions": []
+    },
+    "3988": {
+        "name": "BEHOLDER_HOLD_PERSON",
+        "type": "SPELLID",
+        "id": "3988",
+        "conditions": []
+    },
+    "3989": {
+        "name": "BEHOLDER_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "3989",
+        "conditions": []
+    },
+    "3990": {
+        "name": "BEHOLDER_PARALYZATION",
+        "type": "SPELLID",
+        "id": "3990",
+        "conditions": []
+    },
+    "3991": {
+        "name": "BEHOLDER_DEATH_RAY",
+        "type": "SPELLID",
+        "id": "3991",
+        "conditions": []
+    },
+    "3992": {
+        "name": "BEHOLDER_ANTIMAGIC_RAY",
+        "type": "SPELLID",
+        "id": "3992",
+        "conditions": []
+    },
+    "3994": {
+        "name": "ACID_DAMAGE_1",
+        "type": "SPELLID",
+        "id": "3994",
+        "conditions": []
+    },
+    "3996": {
+        "name": "TANARI_DEATH_GAZE",
+        "type": "SPELLID",
+        "id": "3996",
+        "conditions": []
+    },
+    "3997": {
+        "name": "TANARI_VAMPIRIC_TOUCH",
+        "type": "SPELLID",
+        "id": "3997",
+        "conditions": []
+    },
+    "3998": {
+        "name": "TANARI_SILENCE",
+        "type": "SPELLID",
+        "id": "3998",
+        "conditions": []
+    },
+    "3999": {
+        "name": "TANARI_PARALYZE",
+        "type": "SPELLID",
+        "id": "3999",
+        "conditions": []
+    },
+    "4000": {
+        "name": "SPECTACLE_POWER",
+        "type": "SPELLID",
+        "id": "4000",
+        "conditions": []
+    },
+    "4101": {
+        "name": "DARK_GIFT",
+        "type": "SPELLID",
+        "id": "4101",
+        "conditions": []
+    },
+    "4102": {
+        "name": "BLACKGUARD_ABSORB_HEALTH",
+        "type": "SPELLID",
+        "id": "4102",
+        "conditions": []
+    },
+    "4103": {
+        "name": "AURA_OF_DESPAIR",
+        "type": "SPELLID",
+        "id": "4103",
+        "conditions": []
+    },
+    "4104": {
+        "name": "RESIST_FEAR",
+        "type": "SPELLID",
+        "id": "4104",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "RESIST_FEAR"
+            },
+            {
+                "type": "STAT",
+                "ID": "WIZARD_RESIST_FEAR"
+            }
+        ]
+    },
+    "4105": {
+        "name": "IMMUNITY_TO_LEVEL_DRAIN",
+        "type": "SPELLID",
+        "id": "4105",
+        "conditions": []
+    },
+    "4106": {
+        "name": "BLACKGUARD_ANIMATE_DEAD",
+        "type": "SPELLID",
+        "id": "4106",
+        "conditions": []
+    },
+    "4121": {
+        "name": "ARCHER_CALL_SHOT",
+        "type": "SPELLID",
+        "id": "4121",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "ARCHER_CALL_SHOT"
+            }
+        ]
+    },
+    "4144": {
+        "name": "KENSAI_KIA",
+        "type": "SPELLID",
+        "id": "4144",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "KENSAI_KIA"
+            }
+        ]
+    },
+    "4152": {
+        "name": "BARBARIAN_RAGE",
+        "type": "SPELLID",
+        "id": "4152",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "BARBARIAN_RAGE"
+            }
+        ]
+    },
+    "4211": {
+        "name": "PALADIN_LAY_ON_HANDS",
+        "type": "SPELLID",
+        "id": "4211",
+        "conditions": []
+    },
+    "4212": {
+        "name": "PALADIN_DETECT_EVIL",
+        "type": "SPELLID",
+        "id": "4212",
+        "conditions": []
+    },
+    "4213": {
+        "name": "PALADIN_PROTECTION_FROM_EVIL",
+        "type": "SPELLID",
+        "id": "4213",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "PROTECTION_FROM_EVIL"
+            },
+            {
+                "type": "STAT",
+                "ID": "PROTECTION_FROM_EVIL"
+            }
+        ]
+    },
+    "4222": {
+        "name": "CAVALIER_REMOVE_FEAR",
+        "type": "SPELLID",
+        "id": "4222",
+        "conditions": []
+    },
+    "4231": {
+        "name": "INQUIS_DISPEL_MAGIC",
+        "type": "SPELLID",
+        "id": "4231",
+        "conditions": []
+    },
+    "4232": {
+        "name": "INQUIS_TRUE_SIGHT",
+        "type": "SPELLID",
+        "id": "4232",
+        "conditions": []
+    },
+    "4236": {
+        "name": "SUN_SOUL_SUN_SOULRAY",
+        "type": "SPELLID",
+        "id": "4236",
+        "conditions": []
+    },
+    "4237": {
+        "name": "SUN_SOUL_GREATER_SUN",
+        "type": "SPELLID",
+        "id": "4237",
+        "conditions": []
+    },
+    "4239": {
+        "name": "SUN_SOUL_SUN_SOULBEAM",
+        "type": "SPELLID",
+        "id": "4239",
+        "conditions": []
+    },
+    "4311": {
+        "name": "RANGER_CHARM_ANIMAL",
+        "type": "SPELLID",
+        "id": "4311",
+        "conditions": []
+    },
+    "4321": {
+        "name": "BERSERKER_RAGE",
+        "type": "SPELLID",
+        "id": "4321",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "BERSERKER_RAGE_FATIGUE"
+            },
+            {
+                "type": "SPELLSTATE",
+                "ID": "BERSERKER_RAGE"
+            }
+        ]
+    },
+    "4342": {
+        "name": "BEASTMASTER_FIND_FAMILIAR",
+        "type": "SPELLID",
+        "id": "4342",
+        "conditions": []
+    },
+    "4412": {
+        "name": "SET_SNARE_TRAP",
+        "type": "SPELLID",
+        "id": "4412",
+        "conditions": []
+    },
+    "4414": {
+        "name": "SET_SPECIAL_SNARE_TRAP",
+        "type": "SPELLID",
+        "id": "4414",
+        "conditions": []
+    },
+    "4423": {
+        "name": "ASSASSIN_POISON",
+        "type": "SPELLID",
+        "id": "4423",
+        "conditions": []
+    },
+    "4521": {
+        "name": "BLADE_OFFENSIVE_SPIN",
+        "type": "SPELLID",
+        "id": "4521",
+        "conditions": []
+    },
+    "4522": {
+        "name": "BLADE_DEFENSIVE_SPIN",
+        "type": "SPELLID",
+        "id": "4522",
+        "conditions": []
+    },
+    "4621": {
+        "name": "TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL",
+        "type": "SPELLID",
+        "id": "4621",
+        "conditions": []
+    },
+    "4721": {
+        "name": "TALOS_STORMSHIELD",
+        "type": "SPELLID",
+        "id": "4721",
+        "conditions": []
+    },
+    "4722": {
+        "name": "TALOS_LIGHTNING_BOLT",
+        "type": "SPELLID",
+        "id": "4722",
+        "conditions": []
+    },
+    "4731": {
+        "name": "HELM_SEEKING_SWORD",
+        "type": "SPELLID",
+        "id": "4731",
+        "conditions": []
+    },
+    "4732": {
+        "name": "HELM_TRUE_SIGHT",
+        "type": "SPELLID",
+        "id": "4732",
+        "conditions": []
+    },
+    "4741": {
+        "name": "LATHANDER_BOON",
+        "type": "SPELLID",
+        "id": "4741",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "LATHANDER_BOON"
+            }
+        ]
+    },
+    "4742": {
+        "name": "LATHANDER_HOLD_UNDEAD",
+        "type": "SPELLID",
+        "id": "4742",
+        "conditions": []
+    },
+    "4811": {
+        "name": "MONK_STUNNING_BLOW",
+        "type": "SPELLID",
+        "id": "4811",
+        "conditions": []
+    },
+    "4815": {
+        "name": "MONK_LAY_ON_HANDS",
+        "type": "SPELLID",
+        "id": "4815",
+        "conditions": []
+    },
+    "4820": {
+        "name": "MONK_QUIVERING_PALM",
+        "type": "SPELLID",
+        "id": "4820",
+        "conditions": []
+    },
+    "4900": {
+        "name": "WARRIOR_WHIRLWIND",
+        "type": "SPELLID",
+        "id": "4900",
+        "conditions": []
+    },
+    "4901": {
+        "name": "WARRIOR_GREATER_WHIRLWIND",
+        "type": "SPELLID",
+        "id": "4901",
+        "conditions": []
+    },
+    "4902": {
+        "name": "WARRIOR_DEATHBLOW",
+        "type": "SPELLID",
+        "id": "4902",
+        "conditions": []
+    },
+    "4903": {
+        "name": "WARRIOR_GREATER_DEATHBLOW",
+        "type": "SPELLID",
+        "id": "4903",
+        "conditions": []
+    },
+    "4904": {
+        "name": "WARRIOR_RESIST_MAGIC",
+        "type": "SPELLID",
+        "id": "4904",
+        "conditions": []
+    },
+    "4905": {
+        "name": "WARRIOR_CRITICAL_STRIKE",
+        "type": "SPELLID",
+        "id": "4905",
+        "conditions": []
+    },
+    "4906": {
+        "name": "WARRIOR_POWER_ATTACK",
+        "type": "SPELLID",
+        "id": "4906",
+        "conditions": []
+    },
+    "4907": {
+        "name": "WARRIOR_HARDINESS",
+        "type": "SPELLID",
+        "id": "4907",
+        "conditions": []
+    },
+    "4908": {
+        "name": "WARRIOR_WAR_CRY",
+        "type": "SPELLID",
+        "id": "4908",
+        "conditions": []
+    },
+    "4909": {
+        "name": "WARRIOR_SMITE",
+        "type": "SPELLID",
+        "id": "4909",
+        "conditions": []
+    },
+    "4910": {
+        "name": "ROGUE_SET_SPIKE_TRAP",
+        "type": "SPELLID",
+        "id": "4910",
+        "conditions": []
+    },
+    "4911": {
+        "name": "ROGUE_SET_EXPLODING_TRAP",
+        "type": "SPELLID",
+        "id": "4911",
+        "conditions": []
+    },
+    "4912": {
+        "name": "ROGUE_SET_TIME_TRAP",
+        "type": "SPELLID",
+        "id": "4912",
+        "conditions": []
+    },
+    "4913": {
+        "name": "ROGUE_EVASION",
+        "type": "SPELLID",
+        "id": "4913",
+        "conditions": [
+            {
+                "type": "SPELLSTATE",
+                "ID": "EVASION"
+            }
+        ]
+    },
+    "4914": {
+        "name": "ROGUE_GREATER_EVASION",
+        "type": "SPELLID",
+        "id": "4914",
+        "conditions": []
+    },
+    "4916": {
+        "name": "ROGUE_ASSASINATION",
+        "type": "SPELLID",
+        "id": "4916",
+        "conditions": []
+    },
+    "4917": {
+        "name": "ROGUE_AVOID_DEATH",
+        "type": "SPELLID",
+        "id": "4917",
+        "conditions": []
+    },
+    "4922": {
+        "name": "RANGER_TRACKING",
+        "type": "SPELLID",
+        "id": "4922",
+        "conditions": []
+    },
+    "4923": {
+        "name": "PALADIN_SUMMON_DEVA",
+        "type": "SPELLID",
+        "id": "4923",
+        "conditions": []
+    },
+    "4924": {
+        "name": "DRUID_IMMUNE_POISON",
+        "type": "SPELLID",
+        "id": "4924",
+        "conditions": []
+    },
+    "4925": {
+        "name": "DRUID_RESISTS",
+        "type": "SPELLID",
+        "id": "4925",
+        "conditions": [
+            {
+                "type": "STAT",
+                "ID": "RESISTSLASHING"
+            }
+        ]
+    },
+    "4940": {
+        "name": "SHAMAN_SPIRIT_FORM",
+        "type": "SPELLID",
+        "id": "4940",
+        "conditions": []
+    },
+    "4941": {
+        "name": "SHAMAN_FAVORED_OF_THE_SPIRITS",
+        "type": "SPELLID",
+        "id": "4941",
+        "conditions": []
+    }
+}
