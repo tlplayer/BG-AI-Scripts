@@ -23,6 +23,7 @@ END
 
 // This section sets a global timer for casting area-of-effect spells if there are more than 3 enemies nearby.
 IF
+    Delay(60)
     OR(4)
         Exists([EVILCUTOFF])
         AreaCheck("OH8200")
@@ -228,11 +229,26 @@ IF
     ActionListEmpty()
     !ActuallyInCombat()
     See([PC])
-    OR(8)
+    OR(1)
         StateCheck(LastSeenBy(Myself),STATE_BERSERK) 
 THEN
     RESPONSE #100
         SpellRES("OHTYR1",LastSeenBy(Myself))
+END
+
+IF
+    ActionListEmpty()
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_FREE_ACTION) //Exaltation filename. 
+    See([PC])
+    OR(3)
+        CheckStat(LastSeenBy(Myself),1,WEB)
+        CheckStat(LastSeenBy(Myself),1,GREASE)
+        CheckSpellState(LastSeenBy(Myself),ENTANGLE)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_FREE_ACTION)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 // Heal Light Wounds
@@ -539,7 +555,7 @@ END
 IF
     StateCheck(Myself,STATE_POISONED)
     HPPercentLT(Myself,76)
-    PartyHasItem("POTN20",Myself) // Antidote
+    PartyHasItem("POTN20") // Antidote
 THEN
     RESPONSE #100
         TakePartyItem("POTN20")
@@ -550,7 +566,7 @@ IF
     ActionListEmpty()
     StateCheck(Myself,STATE_POISONED)
     HPPercentLT(Myself,76)
-    PartyHasItem("POTN17",Myself) // Elixir of Health
+    PartyHasItem("POTN17") // Elixir of Health
 THEN
     RESPONSE #100
         TakePartyItem("POTN17")
@@ -1200,18 +1216,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_MONSTER_SUMMONING_4)  // SPWI620.SPL (Monster Summoning IV)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_MONSTER_SUMMONING_4)  // Summon multiple creatures to aid in combat
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
 
 IF
     ActionListEmpty()
@@ -1766,7 +1770,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_FLAME_BLADE)  
-    CheckStat(Myself,THAC0)
+    CheckStatGT(Myself,3,THAC0)
     GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1779,6 +1783,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_SPIRITUAL_HAMMER)  
+    CheckStatGT(Myself,3,THAC0)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1804,20 +1809,6 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     See(NearestEnemyOf(Myself))
-    HaveSpell(CLERIC_PROTECT_FROM_EVIL)  // SPPR107.SPL (Protection from Evil)
-    !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Correct spell state for Protection from Evil
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,CLERIC_PROTECT_FROM_EVIL)  // Cast Protection from Evil
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
     HaveSpell(CLERIC_PROTECTION_FROM_EVIL_10_FOOT)  // SPPR107.SPL (Protection from Evil, 10' Radius)
     !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Same state as Protection from Evil
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1831,26 +1822,42 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HaveSpellRES("OHTMP2")  
-    !CheckSpellState(Myself,LATHANDER_BOON)  // State 16 for Righteous Wrath of the Faithful (closest match)
+    See(NearestEnemyOf(Myself))
+    HaveSpell(CLERIC_PROTECT_FROM_EVIL)  // SPPR107.SPL (Protection from Evil)
+    !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Correct spell state for Protection from Evil
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        SpellRES("OHTMP2",Myself)  // Cast Righteous Magic to increase combat abilities
+        Spell(Myself,CLERIC_PROTECT_FROM_EVIL)  // Cast Protection from Evil
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+//CHAOS OF BATTLE: Chaos of Battle applies bonuses to all allies and penalties to all enemies within a 30-ft. radius of the caster. The spell lasts 1 turn and will randomly affect the targets' Armor Class, Hit Points, THAC0, saves, or luck. The magnitude of the effect starts at 1 (5 for Hit Points) at level 1 and will improve by 1 (5 for Hit Points) every 6 levels of the caster.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("OHTMPS2")  
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(30)
+THEN
+    RESPONSE #100
+        SpellRES("OHTMPS2",Myself) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+//BOON OF LATHANDER: This spell lasts 1 round per level of the caster. It gives the caster a +1 bonus to attack and damage rolls, a +1 bonus to all Saving Throws, and 1 extra attack per round. It also protects the recipient from level drain.
 IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(LATHANDER_BOON)  
-    !CheckSpellState(Myself,LATHANDER_BOON)  // State 16 for Righteous Wrath of the Faithful (closest match)
+    !CheckSpellState(Myself,LATHANDER_BOON) 
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,LATHANDER_BOON)  // Cast Righteous Magic to increase combat abilities
+        Spell(Myself,LATHANDER_BOON)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2283,7 +2290,7 @@ END
 
 IF
     ActionListEmpty()
-    See([ENEMY)
+    See([ENEMY])
     General(LastSeenBy(Myself),UNDEAD)
     !HasBounceEffects(NearestEnemyOf(Myself))
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
@@ -2349,7 +2356,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(WIZARD_SKULL_TRAP)
-    !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
+    !Range(FarthestEnemyOf(Myself),13)  // Ensure the enemy is within medium range
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2423,6 +2430,28 @@ THEN
     RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_CONE_OF_COLD)  // SPWI608.SPL (Cone of Cold)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// ======================================================
+// SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+// ======================================================
+
+
+// Cast Flame Strike
+// Casts Flame Strike to deal fire damage in a vertical column around the target.
+// Lasts for 1 turn.
+IF
+    ActionListEmpty()
+    !Range(FarthestEnemyOf(Myself),13)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_HOLY_SMITE)  // SPPR009.SPL (Flame Strike)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+
 END
 
 // ======================================================
@@ -2559,23 +2588,6 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-// Cast Flame Strike
-// Casts Flame Strike to deal fire damage in a vertical column around the target.
-// Lasts for 1 turn.
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    HaveSpell(CLERIC_HOLY_SMITE)  // SPPR009.SPL (Flame Strike)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-
-THEN
-    RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-
-END
 
 // Cast Harm
 // Casts Harm to deal a large amount of damage to the target, reducing their HP to 1.
@@ -2930,7 +2942,7 @@ IF
 THEN
     RESPONSE #100
         BattleSong()
-        Wait(6)
+        Wait(18)
         Continue()
 END
 
@@ -2941,7 +2953,7 @@ END
 IF
     General([ENEMY],UNDEAD)
     LevelGT(Myself,12)
-    Delay(24)
+    CanTurn([Enemy],4)
     OR(2)
         Class(Myself,PALADIN_ALL)
         Class(Myself,CLERIC_ALL)
@@ -2976,7 +2988,6 @@ THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
         Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
-        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
@@ -3008,22 +3019,9 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
-    WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
-    WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-    Range(NearestEnemyOf(Myself),4)  // If the enemy is within melee range (4 search squares)
-THEN
-    RESPONSE #100
-        EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(NearestEnemyOf(Myself))
-        Continue()
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
+    OR(2)
+        See([ENEMY])
+        See([MAGE_ALL])
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
@@ -3057,7 +3055,7 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),15)
+        RunAwayFrom(NearestEnemyOf(Myself),10)
 END
 
 IF
@@ -3079,6 +3077,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HPPercentLT(Myself,37)
+    AttackedBy([ENEMY],DEFAULT)
     !StateCheck(Myself,STATE_INVISIBLE)
     HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
 THEN
@@ -3091,27 +3090,30 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     Delay(18)
-    OR(4)
+    OR(3)
         Class(Myself,THIEF_ALL)
         Class(Myself,RANGER_ALL)
         Class(Myself,MONK)
-        Class(Myself,MAGE_ALL)
+        Class(Myself,BARD_ALL)
+    !StateCheck(Myself,STATE_INVISIBLE)
 THEN
     RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),10)
+        RunAwayFrom(NearestEnemyOf(Myself),13)
+        Hide()
+        AttackOneRound(NearestEnemyOf(Myself))
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HPPercentLT(Myself,37)
+    AttackedBy([ENEMY],DEFAULT)
+    Delay(18)
     OR(3)
-        Class(Myself,THIEF_ALL)
-        Class(Myself,RANGER_ALL)
-        Class(Myself,MONK)
-    !StateCheck(Myself,STATE_INVISIBLE)
+        Class(Myself,MAGE_ALL)
+        Class(Myself,SORCERER_ALL)
+        Class(Myself,SORCERER_ALL)
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),10)
-        Hide()
 END
+
