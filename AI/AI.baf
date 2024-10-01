@@ -306,9 +306,9 @@ IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     OR(2)
-        StateCheck([GOODCUTOFF],STATE_STUNNED)
-        CheckStatGT([GOODCUTOFF],0,HELD)
-    See([GOODCUTOFF])
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
+    See([PC])
     HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
     !StateCheck(LastSeenBy(Myself),STATE_IMPROVEDINVISIBILITY)
     CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
@@ -2975,7 +2975,13 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(ARCHER_CALL_SHOT) // Check if special ability is available
-    See([ENEMY])
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
         WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
@@ -2994,8 +3000,14 @@ END
 
 IF
     ActionListEmpty()
-    !ActuallyInCombat()
-    See([ENEMY])
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
         WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
@@ -3019,9 +3031,13 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(2)
+    OR(6)
         See([ENEMY])
-        See([MAGE_ALL])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
@@ -3070,7 +3086,6 @@ THEN
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
         RunAwayFrom(NearestEnemyOf(Myself),15)
-
 END
 
 IF
@@ -3090,7 +3105,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     Delay(18)
-    OR(3)
+    OR(4)
         Class(Myself,THIEF_ALL)
         Class(Myself,RANGER_ALL)
         Class(Myself,MONK)
@@ -3108,10 +3123,9 @@ IF
     ActuallyInCombat()
     AttackedBy([ENEMY],DEFAULT)
     Delay(18)
-    OR(3)
+    OR(2)
         Class(Myself,MAGE_ALL)
-        Class(Myself,SORCERER_ALL)
-        Class(Myself,SORCERER_ALL)
+        Class(Myself,SORCERER)
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),10)
