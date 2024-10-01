@@ -3115,9 +3115,9 @@ IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     OR(2)
-        StateCheck([GOODCUTOFF],STATE_STUNNED)
-        CheckStatGT([GOODCUTOFF],0,HELD)
-    See([GOODCUTOFF])
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
+    See([PC])
     HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
     !StateCheck(LastSeenBy(Myself),STATE_IMPROVEDINVISIBILITY)
     CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
@@ -5332,7 +5332,7 @@ IF
     ActionListEmpty()
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     HaveSpell(WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
-    !Range(FarthestEnemyOf(Myself),13)
+    !Range(FarthestEnemyOf(Myself),10)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -5389,6 +5389,29 @@ THEN
 END
 
 // ======================================================
+// SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+// ======================================================
+
+
+// Cast Flame Strike
+// Casts Flame Strike to deal fire damage in a vertical column around the target.
+// Lasts for 1 turn.
+IF
+    ActionListEmpty()
+    !Range(FarthestEnemyOf(Myself),13)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_HOLY_SMITE)  // SPPR009.SPL (Flame Strike)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+
+THEN
+    RESPONSE #100
+        DisplayStringHead(Myself,168)
+        Spell(FarthestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+
+END
+
+// ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
 // ======================================================
 
@@ -5405,7 +5428,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,168)
+        DisplayStringHead(Myself,169)
         Spell(NearestEnemyOf(Myself),WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5422,7 +5445,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,169)
+        DisplayStringHead(Myself,170)
         Spell(NearestEnemyOf(Myself),WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5441,7 +5464,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,170)
+        DisplayStringHead(Myself,171)
         Spell(NearestEnemyOf(Myself),WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5458,7 +5481,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,171)
+        DisplayStringHead(Myself,172)
         Spell(NearestEnemyOf(Myself),WIZARD_FLAME_ARROW)  // SPWI304.SPL (Flame Arrow)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5470,7 +5493,7 @@ IF
     HaveSpell(WIZARD_POWER_WORD_KILL)  // SPWI910.SPL (Power Word Kill)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,172)
+        DisplayStringHead(Myself,173)
         Spell(NearestEnemyOf(Myself), WIZARD_POWER_WORD_KILL)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5487,7 +5510,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,173)
+        DisplayStringHead(Myself,174)
         Spell(NearestEnemyOf(Myself),WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5502,7 +5525,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,174)
+        DisplayStringHead(Myself,175)
         Spell(NearestEnemyOf(Myself),WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -5525,29 +5548,11 @@ IF
 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,175)
+        DisplayStringHead(Myself,176)
         Spell(NearestEnemyOf(Myself),CLERIC_FLAME_STRIKE)  // Cast Flame Strike for vertical fire damage
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-// Cast Flame Strike
-// Casts Flame Strike to deal fire damage in a vertical column around the target.
-// Lasts for 1 turn.
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    HaveSpell(CLERIC_HOLY_SMITE)  // SPPR009.SPL (Flame Strike)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-
-THEN
-    RESPONSE #100
-        DisplayStringHead(Myself,176)
-        Spell(NearestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-
-END
 
 // Cast Harm
 // Casts Harm to deal a large amount of damage to the target, reducing their HP to 1.
@@ -5927,7 +5932,7 @@ THEN
     RESPONSE #100
         DisplayStringHead(Myself,201)
         BattleSong()
-        Wait(6)
+        Wait(18)
         Continue()
 END
 
@@ -5961,7 +5966,13 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(ARCHER_CALL_SHOT) // Check if special ability is available
-    See([ENEMY])
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
         WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
@@ -5975,15 +5986,20 @@ THEN
         DisplayStringHead(Myself,203)
         EquipRanged()  // Equip ranged weapon
         Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
-        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
 
 IF
     ActionListEmpty()
-    !ActuallyInCombat()
-    See([ENEMY])
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
         WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
@@ -6008,24 +6024,13 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
-    WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
-    WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-    Range(NearestEnemyOf(Myself),4)  // If the enemy is within melee range (4 search squares)
-THEN
-    RESPONSE #100
-        DisplayStringHead(Myself,205)
-        EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(NearestEnemyOf(Myself))
-        Continue()
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    See([ENEMY])
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
@@ -6038,7 +6043,7 @@ IF
     !Class(Myself,DRUID_ALL)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,206)
+        DisplayStringHead(Myself,205)
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
         AttackOneRound(NearestEnemyOf(Myself))
         Continue()
@@ -6057,11 +6062,11 @@ IF
     HaveSpell(WIZARD_SHADOW_DOOR)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,207)
+        DisplayStringHead(Myself,206)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),15)
+        RunAwayFrom(NearestEnemyOf(Myself),10)
 END
 
 IF
@@ -6072,23 +6077,23 @@ IF
     HaveSpell(WIZARD_MISLEAD)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,208)
+        DisplayStringHead(Myself,207)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
         RunAwayFrom(NearestEnemyOf(Myself),15)
-
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
     HPPercentLT(Myself,37)
+    AttackedBy([ENEMY],DEFAULT)
     !StateCheck(Myself,STATE_INVISIBLE)
     HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,209)
+        DisplayStringHead(Myself,208)
         Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
         RunAwayFrom(NearestEnemyOf(Myself),15)
 END
@@ -6101,26 +6106,32 @@ IF
         Class(Myself,THIEF_ALL)
         Class(Myself,RANGER_ALL)
         Class(Myself,MONK)
-        Class(Myself,MAGE_ALL)
+        Class(Myself,BARD_ALL)
+    !StateCheck(Myself,STATE_INVISIBLE)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,210)
-        RunAwayFrom(NearestEnemyOf(Myself),10)
+        DisplayStringHead(Myself,209)
+        RunAwayFrom(NearestEnemyOf(Myself),13)
+        Hide()
+        AttackOneRound(NearestEnemyOf(Myself))
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HPPercentLT(Myself,37)
-    OR(3)
-        Class(Myself,THIEF_ALL)
-        Class(Myself,RANGER_ALL)
-        Class(Myself,MONK)
-    !StateCheck(Myself,STATE_INVISIBLE)
+    AttackedBy([ENEMY],DEFAULT)
+    Delay(18)
+    OR(2)
+        Class(Myself,MAGE_ALL)
+        Class(Myself,SORCERER)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,211)
+        DisplayStringHead(Myself,210)
         RunAwayFrom(NearestEnemyOf(Myself),10)
+<<<<<<< HEAD
         Hide()
 >>>>>>> 9502144 (Adding innate spells using SpellRES)
 END
+=======
+END
+>>>>>>> c44accd (fixes)
