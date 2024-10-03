@@ -250,6 +250,34 @@ THEN
         Spell(LastSeenBy(Myself),CLERIC_FREE_ACTION)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
+IF
+    ActionListEmpty()
+    OR(3)
+        HPPercentLT(Myself,60) // Heal when HP is below 20
+        StateCheck(Myself,STATE_DISEASED)
+        CheckSpellState(Myself,NAUSEA)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_HEAL)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_HEAL)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+IF
+    ActionListEmpty()
+    See([PC])
+    OR(3)
+        HPPercentLT(LastSeenBy(Myself),60) // Heal when HP is below 20
+        StateCheck(LastSeenBy(Myself),STATE_DISEASED)
+        CheckSpellState(LastSeenBy(Myself),NAUSEA)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_HEAL)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_HEAL)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
 
 // Heal Light Wounds
 IF
@@ -305,10 +333,10 @@ END
 IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    See([PC])
     OR(2)
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
-    See([PC])
     HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
     !StateCheck(LastSeenBy(Myself),STATE_IMPROVEDINVISIBILITY)
     CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
@@ -392,8 +420,8 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     OR(3)
-        StateCheck([GOODCUTOFF],STATE_STUNNED)
-        CheckStatGT([GOODCUTOFF],0,HELD)
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
         CheckStatGT([PC],0,LEVELDRAIN)
     HaveSpell(CLERIC_RESTORATION)  // 1713 (CLERIC_RESTORATION)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -432,17 +460,7 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
-IF
-    ActionListEmpty()
-    See([PC])
-    HPPercentLT([PC],50) // Heal when HP is below 20
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    HaveSpell(CLERIC_HEAL)
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_HEAL)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
-END
+
 
 IF
     ActionListEmpty()
@@ -476,6 +494,84 @@ THEN
         Spell(LastSeenBy(Myself),WIZARD_REMOVE_MAGIC)  // SPPR303.SPL (Dispel Magic)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
+
+// ======================================================
+// SECTION: RETREAT CONDITION
+// ======================================================
+
+
+IF
+    See(NearestEnemyOf(Myself))
+    Range(LastSeenBy(Myself),15)
+    AttackedBy([ENEMY],DEFAULT)
+    HPPercentLT(Myself,100)
+    HaveSpell(WIZARD_SHADOW_DOOR)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        FaceObject(LastSeenBy(Myself))
+        Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
+        RunAwayFrom(NearestEnemyOf(Myself),10)
+END
+
+IF
+    See(NearestEnemyOf(Myself))
+    Range(LastSeenBy(Myself),15)
+    AttackedBy([ENEMY],DEFAULT)
+    HPPercentLT(Myself,100)
+    HaveSpell(WIZARD_MISLEAD)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        FaceObject(LastSeenBy(Myself))
+        Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
+        RunAwayFrom(NearestEnemyOf(Myself),15)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,37)
+    AttackedBy([ENEMY],DEFAULT)
+    !StateCheck(Myself,STATE_INVISIBLE)
+    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
+        RunAwayFrom(NearestEnemyOf(Myself),15)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    Delay(18)
+    OR(4)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,RANGER_ALL)
+        Class(Myself,MONK)
+        Class(Myself,BARD_ALL)
+    !StateCheck(Myself,STATE_INVISIBLE)
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself),13)
+        Hide()
+        EquipMostDamagingMelee()
+        AttackOneRound(NearestEnemyOf(Myself))
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    AttackedBy([ENEMY],DEFAULT)
+    Delay(18)
+    OR(2)
+        Class(Myself,MAGE_ALL)
+        Class(Myself,SORCERER)
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself),10)
+END
+
 
 // ======================================================
 // SECTION: Heal ITEMS 
@@ -805,6 +901,7 @@ END
 
 IF
     ActionListEmpty()
+    See([ENEMY])
     OR(6)
         Gender(LastSeenBy(Myself),ILLUSIONARY)
         SpellCast([ENEMY],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
@@ -812,14 +909,86 @@ IF
         SpellCast([ENEMY],WIZARD_MISLEAD)  // SPWI607.SPL (Mislead)
         StateCheck(LastSeenBy(Myself),STATE_BLUR)
         StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
-    !GlobalTimerNotExpired("TrueSight","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    Delay(30)
     HaveSpell(INQUIS_TRUE_SIGHT)  // 4232 (INQUIS_TRUE_SIGHT)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
         Spell(Myself,INQUIS_TRUE_SIGHT)  // Cast INQUIS_TRUE_SIGHT
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        SetGlobalTimer("TrueSight","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_CREEPING_DOOM)  // 4231 (INQUIS_DISPEL_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_CREEPING_DOOM)  // Cast INQUIS_DISPEL_MAGIC
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_INSECT_PLAGUE)  // 4231 (INQUIS_DISPEL_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)  // Cast INQUIS_DISPEL_MAGIC
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_DOOM)  // 4231 (INQUIS_DISPEL_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_DOOM)  // Cast INQUIS_DISPEL_MAGIC
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_SILENCE_15_FOOT)  // 4231 (INQUIS_DISPEL_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  // Cast INQUIS_DISPEL_MAGIC
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 // ======================================================
@@ -920,6 +1089,18 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SUMMON","LOCALS")
+    HaveSpell(TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        DisplayStringHead(Myself,59)
+        Spell(Myself,TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
 
 // CLERIC_ANIMAL_SUMMONING_1
 IF
@@ -1300,6 +1481,18 @@ END
 // ======================================================
 // SECTION: Short Duration BUFFS (WIZARD)
 // ======================================================
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_CHAOS_SHIELD)  // Ensure the Blur spell is available
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure previous spell cast timer has expired
+    !StateCheck(Myself,STATE_BLUR)  // Ensure Blur is not already active
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_CHAOS_SHIELD)  // Cast Blur on Myself
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
+END
 
 IF
     ActionListEmpty()
@@ -1390,7 +1583,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_MIRROR_IMAGE)  // 2721 (WIZARD_MASS_INVISIBILITY)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_MIRROR_IMAGE)  // Cast WIZARD_MASS_INVISIBILITY
@@ -1401,7 +1594,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_LIMITED_WISH) 
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
         RESPONSE #100
         Spell(Myself,WIZARD_LIMITED_WISH)  // Cast WIZARD_LIMITED_WISH
@@ -1422,6 +1615,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     HaveSpell(WIZARD_ENERGY_BLADES)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell(Myself, WIZARD_ENERGY_BLADES)  // Cast Energy Blades
@@ -1434,7 +1628,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_SHAPECHANGE)  // 2916 (WIZARD_SHAPECHANGE)
     HaveSpell(WIZARD_TENSERS_TRANSFORMATION)  // 2603 (WIZARD_TENSERS_TRANSFORMATION)
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -1460,7 +1654,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_FIRE_SHIELD_BLUE)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_FIRE_SHIELD_BLUE)  
@@ -1471,7 +1665,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_FIRE_SHIELD_RED)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_FIRE_SHIELD_RED)  
@@ -1482,7 +1676,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_PROTECTION_FROM_FIRE)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_PROTECTION_FROM_FIRE)  
@@ -1491,7 +1685,7 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_GLOBE_OF_INVULNERABILITY)  // 2602 (WIZARD_GLOBE_OF_INVULNERABILITY)
     Range(NearestEnemyOf(Myself),30)
@@ -1545,19 +1739,7 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
 END
 
-// Cast Blur if conditions are met
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_CHAOS_SHIELD)  // Ensure the Blur spell is available
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure previous spell cast timer has expired
-    !StateCheck(Myself,STATE_BLUR)  // Ensure Blur is not already active
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_CHAOS_SHIELD)  // Cast Blur on Myself
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
-END
+
 
 // Cast Luck if conditions are met
 IF
@@ -1641,11 +1823,25 @@ IF
     See([PC])
     !CheckStatLT(LastSeenBy(Myself),1,CLERIC_DEFENSIVE_HARMONY)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_DEFENSIVE_HARMONY)  // Cast Protection from Fire on yourself
+        Spell(Myself,CLERIC_DEFENSIVE_HARMONY)  // Cast Protection from Fire on yourself
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_DEATH_WARD)  
+    See([PC])
+    !CheckSpellState(Myself,DEATH_WARD) 
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_DEATH_WARD)  // Cast Protection from Fire on yourself
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1694,6 +1890,7 @@ IF
     HaveSpell(CLERIC_PROTECTION_FROM_EVIL_10_FOOT)  // SPPR107.SPL (Protection from Evil)
     !CheckSpellState(Myself,PROTECTION_FROM_EVIL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -1703,8 +1900,21 @@ END
 
 IF
     ActionListEmpty()
+    HaveSpell(PALADIN_PROTECTION_FROM_EVIL)  // SPPR107.SPL (Protection from Evil)
+    !CheckSpellState(Myself,PROTECTION_FROM_EVIL)
+    CheckStatLT(Myself,1,DEAD_MAGIC)  
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,PALADIN_PROTECTION_FROM_EVIL)  // Cast Protection from Evil
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1718,7 +1928,7 @@ IF
     See([PC])
     !CheckStatLT(LastSeenBy(Myself),100,RESISTFIRE)
     HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1733,7 +1943,7 @@ IF
     See([PC])
     !CheckSpellState(LastSeenBy(Myself),BARKSKIN)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -1745,7 +1955,7 @@ IF
     ActionListEmpty()
     HaveSpell(CLERIC_PIXIE_DUST)  
     See([PC])
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1904,7 +2114,7 @@ IF
     ActionListEmpty()
     HaveSpell(CLERIC_CHAOTIC_COMMANDS)  
     OR(2)
-        !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
         GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     !CheckSpellState(Myself,CHAOTIC_COMMANDS)  // State 41 for Chaotic Commands
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1920,7 +2130,7 @@ IF
     See([PC])
     HaveSpell(CLERIC_CHAOTIC_COMMANDS)  
     OR(2)
-        !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
         GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     !CheckSpellState(LastSeenBy(Myself),CHAOTIC_COMMANDS)  // State 41 for Chaotic Commands
     CheckStatLT(LastSeenBy(Myself),1,DEAD_MAGIC)    
@@ -1933,7 +2143,7 @@ END
 
 IF
     ActionListEmpty()
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     HaveSpell(CLERIC_FREE_ACTION)  
     !CheckSpellState(Myself,FREE_ACTION)  // State 29 for Free Action
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1948,7 +2158,7 @@ IF
     ActionListEmpty()
     See([PC])
     HaveSpell(CLERIC_FREE_ACTION)  
-    !GlobalTimerExpired("SHORT_BUFF","LOCALS")  
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !CheckSpellState(LastSeenBy(Myself),FREE_ACTION)  
     GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     CheckStatLT(LastSeenBy(Myself),1,DEAD_MAGIC)    
@@ -2270,6 +2480,36 @@ IF
 THEN
     RESPONSE #100
         Spell(NearestEnemyOf(Myself),CLERIC_HOLD_PERSON)  // Cast Hold Person to incapacitate the enemy
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HPGT(NearestEnemyOf(Myself),30)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    General(NearestEnemyOf(Myself),HUMANOID)
+    HaveSpell(RANGER_CHARM_ANIMAL)  // SPPR012.SPL (Hold Person)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),RANGER_CHARM_ANIMAL)  // Cast Hold Person to incapacitate the enemy
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HPGT(NearestEnemyOf(Myself),30)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    General(NearestEnemyOf(Myself),HUMANOID)
+    HaveSpell(CLERIC_CHARM_PERSON)  // SPPR012.SPL (Hold Person)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_CHARM_PERSON)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2606,6 +2846,11 @@ THEN
 END
 
 // ======================================================
+// SECTION: ShapeShift 
+// ======================================================
+
+
+// ======================================================
 // SECTION: BUFFS (FIGHTER)
 // ======================================================
 
@@ -2844,8 +3089,9 @@ END
 
 IF
     ActionListEmpty()
-    Delay(30)
+    Delay(18)
     HaveSpell(SET_SNARE_TRAP) 
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2855,8 +3101,9 @@ END
 
 IF
     ActionListEmpty()
-    Delay(30)
+    Delay(18)
     HaveSpell(SET_SPECIAL_SNARE_TRAP) 
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2866,8 +3113,9 @@ END
 
 IF
     ActionListEmpty()
-    Delay(30)
+    Delay(18)
     HaveSpell(ROGUE_SET_SPIKE_TRAP) 
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2877,8 +3125,9 @@ END
 
 IF
     ActionListEmpty()
-    Delay(30)
+    Delay(18)
     HaveSpell(ROGUE_SET_EXPLODING_TRAP)  
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2888,8 +3137,9 @@ END
 
 IF
     ActionListEmpty()
-    Delay(30)
+    Delay(18)
     HaveSpell(ROGUE_SET_EXPLODING_TRAP)  
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2984,7 +3234,6 @@ IF
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
-        WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
@@ -3010,7 +3259,6 @@ IF
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     OR(3)
-        WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
@@ -3039,95 +3287,21 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    WeaponEffectiveVs(LastSeenBy(Myself),MAINHAND)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
     !GlobalTimerNotExpired("USE_RANGED","LOCALS")
     OR(2)
         Class(Myself,FIGHTER_ALL)
         Class(Myself,PALADIN_ALL)
-    !Class(Myself,CLERIC_ALL)
-    !Class(Myself,MAGE_ALL)
-    !Class(Myself,DRUID_ALL)
+    //Return true if I'm a caster but only if there's a 25% chance
+    OR(5)
+        !Class(Myself,CLERIC_ALL)
+        !Class(Myself,MAGE_ALL)
+        !Class(Myself,DRUID_ALL)
+        Range([ENEMY],4)
+        RandomNum(1,5)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
         AttackOneRound(NearestEnemyOf(Myself))
         Continue()
 END
-
-// ======================================================
-// SECTION: RETREAT CONDITION
-// ======================================================
-
-
-IF
-    See(NearestEnemyOf(Myself))
-    Range(LastSeenBy(Myself),15)
-    AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,100)
-    HaveSpell(WIZARD_SHADOW_DOOR)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        FaceObject(LastSeenBy(Myself))
-        Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),10)
-END
-
-IF
-    See(NearestEnemyOf(Myself))
-    Range(LastSeenBy(Myself),15)
-    AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,100)
-    HaveSpell(WIZARD_MISLEAD)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        FaceObject(LastSeenBy(Myself))
-        Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),15)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentLT(Myself,37)
-    AttackedBy([ENEMY],DEFAULT)
-    !StateCheck(Myself,STATE_INVISIBLE)
-    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
-        RunAwayFrom(NearestEnemyOf(Myself),15)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    Delay(18)
-    OR(4)
-        Class(Myself,THIEF_ALL)
-        Class(Myself,RANGER_ALL)
-        Class(Myself,MONK)
-        Class(Myself,BARD_ALL)
-    !StateCheck(Myself,STATE_INVISIBLE)
-THEN
-    RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),13)
-        Hide()
-        AttackOneRound(NearestEnemyOf(Myself))
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    AttackedBy([ENEMY],DEFAULT)
-    Delay(18)
-    OR(2)
-        Class(Myself,MAGE_ALL)
-        Class(Myself,SORCERER)
-THEN
-    RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),10)
-END
-
