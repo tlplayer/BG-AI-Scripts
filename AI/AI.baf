@@ -2,6 +2,17 @@
 // SECTION:GLOBALS
 // ======================================================
 
+// Reset daily use items to 0
+IF
+    PartyRested()
+THEN
+    RESPONSE #100
+        IncrementGlobal("USED_RING33","LOCALS",0)
+        IncrementGlobal("USED_STAF21","LOCALS",0)
+        IncrementGlobal("USED_SW1H26","LOCALS",0)
+        Continue()
+END
+
 // Set a timer for short-duration buffs
 // This section sets a global timer to track the duration of short-duration buffs.
 // The timer is set to two rounds initially and updated to one round when a hotkey is pressed.
@@ -31,7 +42,7 @@ IF
         AreaCheck("OH8400")
 THEN
     RESPONSE #100
-        SetGlobalTimer("SUMMON","LOCALS",ONE_TURN)
+        SetGlobalTimer("SUMMON","LOCALS",FIVE_ROUNDS)
         Continue()
 END
 
@@ -39,7 +50,7 @@ IF
     HotKey(K)  // Detect pressing of the 'B' key
 THEN
     RESPONSE #100
-        SetGlobalTimer("SUMMON","LOCALS",ONE_TURN)  // Set the timer to one round
+        SetGlobalTimer("SUMMON","LOCALS",FIVE_ROUNDS)  // Set the timer to one round
         Continue()
 END
 
@@ -88,13 +99,20 @@ For each enemy type:
 // See Fire Type Elemental with high resistance, don't use fire spells.
 // General form [EA.GENERAL.RACE.CLASS.SPECIFIC.GENDER.ALIGN].
 IF
-    OR(2)
+    OR(9)
         Detect([ENEMY.0.0.ELEMENTAL_FIRE.0])
         Detect([ENEMY.0.0.GREY_OOZE])
+        Class(NearestEnemyOfType,MAGE_ALL)
+        Class(NearestEnemyOfType,SORCERER)
+        Class(NearestEnemyOfType,DRUID_ALL)
+        Class(NearestEnemyOfType,CLERIC_ALL)
+        Class(NearestEnemyOfType,ELEMENTAL_FIRE)
+        Class(NearestEnemyOfType,RED_DRAGON)
+        Class(NearestEnemyOfType,SILVER_DRAGON)
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
 THEN
     RESPONSE #100
-        SetGlobalTimer("FIRE_ENEMIES","LOCALS",ONE_TURN)
+        SetGlobalTimer("FIRE_ENEMIES","LOCALS",ONE_MINUTE)
         Continue()
 END
 
@@ -227,20 +245,10 @@ END
 
 IF
     ActionListEmpty()
-    !ActuallyInCombat()
-    See([PC])
-    OR(1)
-        StateCheck(LastSeenBy(Myself),STATE_BERSERK) 
-THEN
-    RESPONSE #100
-        SpellRES("OHTYR1",LastSeenBy(Myself))
-END
-
-IF
-    ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_FREE_ACTION) //Exaltation filename. 
     See([PC])
+    !CheckSpellState(LastSeenBy(Myself),FREE_ACTION)
     OR(3)
         CheckStat(LastSeenBy(Myself),1,WEB)
         CheckStat(LastSeenBy(Myself),1,GREASE)
@@ -250,6 +258,22 @@ THEN
         Spell(LastSeenBy(Myself),CLERIC_FREE_ACTION)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
+
+IF
+    ActionListEmpty()
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_FREE_ACTION) //Exaltation filename. 
+    !CheckSpellState(Myself,FREE_ACTION)
+    OR(3)
+        CheckStat(LastSeenBy(Myself),1,WEB)
+        CheckStat(LastSeenBy(Myself),1,GREASE)
+        CheckSpellState(LastSeenBy(Myself),ENTANGLE)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_FREE_ACTION)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     OR(3)
@@ -283,32 +307,6 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],70) // Heal when HP is below 70
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    HaveSpell(CLERIC_CURE_LIGHT_WOUNDS)
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CURE_LIGHT_WOUNDS)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-// Heal Light Wounds
-IF
-    ActionListEmpty()
-    See([PC])
-    HPPercentLT([PC],70) // Heal when HP is below 70
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    HaveSpell(CLERIC_AID)
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_AID)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer (adjust as needed)
-END
-
-// Heal Light Wounds
-IF
-    ActionListEmpty()
-    See([PC])
     HPPercentLT([PC],60) // Heal when HP is below 70
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_MASS_CURE)
@@ -330,46 +328,6 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer (adjust as needed)
 END
 
-IF
-    ActionListEmpty()
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    See([PC])
-    OR(2)
-        StateCheck([PC],STATE_STUNNED)
-        CheckStatGT([PC],0,HELD)
-    HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
-    !StateCheck(LastSeenBy(Myself),STATE_IMPROVEDINVISIBILITY)
-    CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
-    !StateCheck(LastSeenBy(Myself),STATE_CONFUSED)
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-THEN
-    RESPONSE #100
-        SetInterrupt(FALSE)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        Spell(LastSeenBy(Myself),CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
-        SetInterrupt(TRUE)
-END
-
-IF
-    ActionListEmpty()
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    OR(2)
-        StateCheck([GOODCUTOFF],STATE_STUNNED)
-        CheckStatGT([GOODCUTOFF],0,HELD)
-    See([GOODCUTOFF])
-    HaveSpell(CLERIC_REMOVE_PARALYSIS) 
-    !StateCheck(LastSeenBy(Myself),STATE_IMPROVEDINVISIBILITY)
-    CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
-    !StateCheck(LastSeenBy(Myself),STATE_CONFUSED)
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-THEN
-    RESPONSE #100
-        SetInterrupt(FALSE)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        Spell(LastSeenBy(Myself),CLERIC_REMOVE_PARALYSIS) 
-        SetInterrupt(TRUE)
-END
-
 // Heal Serious Wounds
 IF
     ActionListEmpty()
@@ -381,6 +339,48 @@ THEN
     RESPONSE #100
         Spell(Myself,CLERIC_CURE_SERIOUS_WOUNDS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+IF
+    ActionListEmpty()
+    See([PC])
+    HPPercentLT([PC],70) // Heal when HP is below 70
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_AID)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_AID)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer (adjust as needed)
+END
+
+// Heal Light Wounds
+IF
+    ActionListEmpty()
+    See([PC])
+    HPPercentLT([PC],70) // Heal when HP is below 70
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_CURE_LIGHT_WOUNDS)
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_CURE_LIGHT_WOUNDS)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+
+
+IF
+    ActionListEmpty()
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    OR(2)
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
+    HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
+THEN
+    RESPONSE #100
+        SetInterrupt(FALSE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Spell(NearestAllyOf(Myself),CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
+        SetInterrupt(TRUE)
 END
 
 IF
@@ -415,6 +415,23 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
+IF
+    HaveSpell(CLERIC_FREE_ACTION)  // SPPR403.SPL (Free Action)
+    OR(3)
+        CheckStatGT(LastHeardBy(Myself),0,HELD)
+        CheckStatGT(LastHeardBy(Myself),0,GREASE)
+        CheckStatGT(LastHeardBy(Myself),0,WEB)
+    OR(2)
+        Global("MYSELF_DEBUFFED","LOCALS",1)
+        Global("FRIEND_DEBUFFED","LOCALS",1)
+THEN
+    RESPONSE #70
+        Spell(LastHeardBy(Myself),CLERIC_FREE_ACTION)  // SPPR403.SPL (Free Action)
+        SetGlobal("MYSELF_DEBUFFED","LOCALS",0)
+        SetGlobal("FRIEND_DEBUFFED","LOCALS",0)
+    RESPONSE #30
+        Continue()
+END
 
 IF
     ActionListEmpty()
@@ -626,9 +643,9 @@ IF
     CheckStatLT(Myself,1,CLERIC_CHAOTIC_COMMANDS)    
     GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     PartyHasItem("POTN21")  // Potion of Clarity
+    Delay(100)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,2796)
         //TakePartyItem("POTN21")
         UseItem("POTN21",Myself)  
 END
@@ -637,12 +654,11 @@ IF
     ActionListEmpty()
     !CheckSpellState(Myself,FREE_ACTION)
     CheckStatLT(Myself,1,CLERIC_FREE_ACTION)    
-    Delay(1000)
+    Delay(100)
     GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     PartyHasItem("POTN45")  // Potion of Freedom
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,2796)
         //TakePartyItem("POTN45")
         UseItem("POTN45",Myself)  
 END
@@ -650,12 +666,40 @@ END
 //Poison Management
 IF
     StateCheck(Myself,STATE_POISONED)
-    HPPercentLT(Myself,76)
     PartyHasItem("POTN20") // Antidote
 THEN
     RESPONSE #100
         TakePartyItem("POTN20")
         UseItem("POTN20",Myself) // Antidote
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    StateCheck(Myself,STATE_POISONED)
+    GlobalLT("USED_AMUL22","LOCALS",1)
+    HasItemEquiped("AMUL22",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("AMUL22",Myself)  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_AMUL22","LOCALS",1)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([PC])
+    StateCheck(LastSeenBy(Myself),STATE_POISONED)
+    GlobalLT("USED_AMUL22","LOCALS",1)
+    HasItemEquiped("AMUL22",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("AMUL22",LastSeenBy(Myself))  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_AMUL22","LOCALS",1)
 END
 
 IF
@@ -1097,7 +1141,6 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,59)
         Spell(Myself,TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -1604,7 +1647,6 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Class(Myself,MAGE_ALL)
     HaveSpell(WIZARD_IMPROVED_ALACRITY)
 THEN
     RESPONSE #100
@@ -1621,6 +1663,19 @@ THEN
         Spell(Myself, WIZARD_ENERGY_BLADES)  // Cast Energy Blades
         Continue()
 END
+
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_FIRE)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself, WIZARD_PROTECTION_FROM_FIRE)  // Cast Energy Blades
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
 
 //This disables spell casting
 IF
@@ -1837,11 +1892,11 @@ IF
     See([PC])
     !CheckSpellState(Myself,DEATH_WARD) 
     CheckStatLT(Myself,1,DEAD_MAGIC)    
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_DEATH_WARD)  // Cast Protection from Fire on yourself
+        Spell(Myself,CLERIC_DEATH_WARD)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1914,7 +1969,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -2869,6 +2924,19 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WARRIOR_HARDINESS)
+    !CheckSpellState(Myself,HARDINESS)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WARRIOR_HARDINESS)  // Activate Hardiness for extra protection
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
+        Continue()
+END
+
+IF
+    ActionListEmpty()
     HaveSpell(WARRIOR_GREATER_WHIRLWIND)
     ActuallyInCombat()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -3271,6 +3339,68 @@ THEN
         Continue()
 END
 
+// ======================================================
+// SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
+// ======================================================
+
+// Ilbratha +1
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !StateCheck(Myself,STATE_MIRRORIMAGE)
+    GlobalLT("USED_SW1H26","GLOBAL",1)
+    HasItemEquiped("SW1H26",Myself)  
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("SW1H26",Myself) 
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_SW1H26","GLOBAL",1)
+END
+
+//Ring of Ram
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    GlobalLT("USED_RING33","LOCALS",1)
+    HasItemEquiped("RING33",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("RING33",NearestEnemyOf(Myself)) 
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_RING33","LOCALS",1)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    GlobalLT("USED_STAF21","LOCALS",1)
+    HasItemEquiped("STAF21",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("STAF21",NearestEnemyOf(Myself))  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_STAF21","LOCALS",1)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    General(LastSeenBy(Myself),UNDEAD)
+    GlobalLT("USED_SW1H31","LOCALS",1)
+    HasItemEquiped("SW1H31",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("SW1H31",Myself)  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_SW1H31","LOCALS",1)
+END
+
+
 
 // ======================================================
 // SECTION: COMBAT ACTIONS - MELEE ATTACKS
@@ -3279,8 +3409,10 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
+    OR(8)
         See([ENEMY])
+        See([ENEMY.0.0.RANGER]) // Default target
+        See([ENEMY.0.0.THIEF]) // Default target
         See([ENEMY.0.0.BARD_ALL]) // Default target
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.DRUID_ALL])
@@ -3303,5 +3435,16 @@ THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
         AttackOneRound(NearestEnemyOf(Myself))
+        Continue()
+END
+
+
+// RESET TIMERS IF WE'RE at the bottom
+IF
+    True()
+THEN
+    RESPONSE #100
+        IncrementGlobal("WIZARD_CAST","LOCALS",0)
+        IncrementGlobal("CLERIC_CAST","LOCALS",0)
         Continue()
 END
