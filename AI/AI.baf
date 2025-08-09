@@ -3262,7 +3262,7 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    OR(3)
+    OR(2)
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
@@ -3287,7 +3287,7 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    OR(3)
+    OR(2)
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
@@ -3407,5 +3407,4 @@ THEN
     RESPONSE #100
         IncrementGlobal("WIZARD_CAST","LOCALS",0)
         IncrementGlobal("CLERIC_CAST","LOCALS",0)
-        Continue()
 END
