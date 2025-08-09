@@ -26,13 +26,6 @@ THEN
         Continue()
 END
 
-IF
-    CheckStatGT(Myself,0,WIZARD_IMPROVED_ALACRITY)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",0)
-END
-
 // This section sets a global timer for casting area-of-effect spells if there are more than 3 enemies nearby.
 IF
     Delay(60)
@@ -498,7 +491,7 @@ END
 
 IF
     ActionListEmpty()
-    HaveSpell(WIZARD_REMOVE_MAGIC)  // SPPR303.SPL (Dispel Magic)
+    HaveSpell(WIZARD_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
     Allegiance(Myself,GOODCUTOFF)
     See([PC])
     OR(4)
@@ -509,7 +502,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_REMOVE_MAGIC)  // SPPR303.SPL (Dispel Magic)
+        Spell(LastSeenBy(Myself),WIZARD_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
@@ -778,11 +771,11 @@ IF
     !StateCheck(Myself,STATE_SILENCED)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    HaveSpell(WIZARD_REMOVE_MAGIC)
+    HaveSpell(WIZARD_DISPEL_MAGIC)
     THEN
         RESPONSE #100
         SetInterrupt(FALSE)
-        Spell(LastSeenBy(Myself),WIZARD_REMOVE_MAGIC)  
+        Spell(LastSeenBy(Myself),WIZARD_DISPEL_MAGIC)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         SetInterrupt(TRUE)
 END
@@ -1645,14 +1638,6 @@ IF
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpell(WIZARD_IMPROVED_ALACRITY)
-THEN
-    RESPONSE #100
-        Spell(Myself, WIZARD_IMPROVED_ALACRITY)  // Cast Improved Alacrity
-END
 
 IF
     ActionListEmpty()
@@ -2910,31 +2895,6 @@ END
 // SECTION: BUFFS (FIGHTER)
 // ======================================================
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpell(WARRIOR_HARDINESS)
-    !CheckSpellState(Myself,HARDINESS)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WARRIOR_HARDINESS)  // Activate Hardiness for extra protection
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
-        Continue()
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpell(WARRIOR_HARDINESS)
-    !CheckSpellState(Myself,HARDINESS)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WARRIOR_HARDINESS)  // Activate Hardiness for extra protection
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
-        Continue()
-END
 
 IF
     ActionListEmpty()
