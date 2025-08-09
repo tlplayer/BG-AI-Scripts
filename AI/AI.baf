@@ -2297,8 +2297,8 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race(FarthestEnemyOf(Myself),SPIDER)  // Exclude spiders
-    !Range(FarthestEnemyOf(Myself),8)
-    Range(FarthestEnemyOf(NearestEnemyOf(Myself)),12)
+    !Range(FarthestEnemyOf(Myself),10)
+    Range(FarthestEnemyOf(NearestEnemyOf(Myself)),14)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -3375,6 +3375,17 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    OR(2)
+        Class(Myself,FIGHTER_ALL)
+        Class(Myself,PALADIN_ALL)
+    //Return true if I'm a caster but only if there's a 25% chance
+    OR(6)
+        !Class(Myself,CLERIC_ALL)
+        !Class(Myself,MAGE_ALL)
+        !Class(Myself,DRUID_ALL)
+        Range([ENEMY],4)
+        RandomNum(1,3)
+        LevelLT(Myself,9)
     OR(8)
         See([ENEMY])
         See([ENEMY.0.0.RANGER]) // Default target
@@ -3387,16 +3398,6 @@ IF
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
     !GlobalTimerNotExpired("USE_RANGED","LOCALS")
-    OR(2)
-        Class(Myself,FIGHTER_ALL)
-        Class(Myself,PALADIN_ALL)
-    //Return true if I'm a caster but only if there's a 25% chance
-    OR(5)
-        !Class(Myself,CLERIC_ALL)
-        !Class(Myself,MAGE_ALL)
-        !Class(Myself,DRUID_ALL)
-        Range([ENEMY],4)
-        RandomNum(1,5)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
@@ -3404,16 +3405,6 @@ THEN
         Continue()
 END
 
-
-IF
-ActionListEmpty()
-See(NearestEnemyOf(Myself))
-!InWeaponRange(LastSeenBy(Myself))
-THEN
-RESPONSE #100
-MoveToObject(LastSeenBy(Myself))
-Continue()
-END
 
 IF
 ActionListEmpty()
@@ -3439,7 +3430,7 @@ ActuallyInCombat()
 // Ally is fighting something
 THEN
 RESPONSE #100
-MoveToObject(NearestEnemyOf([ALLY])) // Go to the fight
+MoveToObject(FarthestEnemyOf(NearestEnemyOf([ALLY]))) // Go to the fight
 END
 
 
