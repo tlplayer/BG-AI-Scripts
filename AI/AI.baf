@@ -2488,13 +2488,15 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
+    HPPercentGT(NearestEnemyOf(Myself),90)
     !HasBounceEffects(NearestEnemyOf(Myself))
     General(NearestEnemyOf(Myself),HUMANOID)
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    !AttackedBy(NearestEnemyOf(Myself),DEFAULT) // Skip if any PC attacked recently
     HaveSpell(WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
+    !AttackedBy(NearestEnemyOf(Myself),DEFAULT) // Skip if any PC attacked recently
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2513,6 +2515,7 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HPGT(NearestEnemyOf(Myself),30)
+    HPPercentGT(NearestEnemyOf(Myself),70)
     !HasBounceEffects(NearestEnemyOf(Myself))
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
     General(NearestEnemyOf(Myself),HUMANOID)
@@ -2528,6 +2531,7 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HPGT(NearestEnemyOf(Myself),30)
+    HPPercentGT(NearestEnemyOf(Myself),90)
     !HasBounceEffects(NearestEnemyOf(Myself))
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
     General(NearestEnemyOf(Myself),HUMANOID)
@@ -2542,6 +2546,7 @@ END
 IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
+    HPPercentGT(NearestEnemyOf(Myself),90)
     HPGT(NearestEnemyOf(Myself),30)
     !HasBounceEffects(NearestEnemyOf(Myself))
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
@@ -3400,8 +3405,34 @@ THEN
 END
 
 
+IF
+ActionListEmpty()
+See(NearestEnemyOf(Myself))
+!InWeaponRange(LastSeenBy(Myself))
+THEN
+RESPONSE #100
+MoveToObject(LastSeenBy(Myself))
+END
+
+IF
+ActionListEmpty()
+// Only for these classes
+OR(4)
+Class(Myself,MAGE_ALL)
+Class(Myself,CLERIC_ALL)
+Class(Myself,BARD_ALL)
+Class(Myself,THIEF_ALL)
+// Took damage from an enemy in the last round
+TookDamage()
+THEN
+RESPONSE #100
+RunAwayFrom(LastAttackerOf(Myself),30) // 30 ticks = ~3 seconds
+END
+
 // RESET TIMERS IF WE'RE at the bottom
 IF
+    ActuallyInCombat()
+    Delay(40)
     True()
 THEN
     RESPONSE #100
