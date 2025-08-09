@@ -3400,7 +3400,7 @@ IF
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(NearestEnemyOf(Myself))
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
@@ -3412,6 +3412,7 @@ See(NearestEnemyOf(Myself))
 THEN
 RESPONSE #100
 MoveToObject(LastSeenBy(Myself))
+Continue()
 END
 
 IF
@@ -3428,6 +3429,19 @@ THEN
 RESPONSE #100
 RunAwayFrom(LastAttackerOf(Myself),30) // 30 ticks = ~3 seconds
 END
+
+IF
+ActionListEmpty()
+ActuallyInCombat()
+!Range([ENEMY],15)
+// Find any ally who is far from me
+!Range([ALLY],15) // Make sure they are *outside* close range
+// Ally is fighting something
+THEN
+RESPONSE #100
+MoveToObject(NearestEnemyOf([ALLY])) // Go to the fight
+END
+
 
 // RESET TIMERS IF WE'RE at the bottom
 IF

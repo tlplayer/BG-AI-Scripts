@@ -2718,7 +2718,6 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HPPercentGT(NearestEnemyOf(Myself),90)
-
     HPGT(NearestEnemyOf(Myself),30)
     !HasBounceEffects(NearestEnemyOf(Myself))
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
@@ -3626,44 +3625,49 @@ THEN
     RESPONSE #100
         DisplayStringHead(Myself,225)
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(NearestEnemyOf(Myself))
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
 
 IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    !InWeaponRange(LastSeenBy(Myself))
+ActionListEmpty()
+See(NearestEnemyOf(Myself))
+!InWeaponRange(LastSeenBy(Myself))
 THEN
-    RESPONSE #100
-        MoveToObject(LastSeenBy(Myself))
+RESPONSE #100
+        DisplayStringHead(Myself,226)
+MoveToObject(LastSeenBy(Myself))
+Continue()
 END
 
 IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    !InWeaponRange(LastSeenBy(Myself))
+ActionListEmpty()
+// Only for these classes
+OR(4)
+Class(Myself,MAGE_ALL)
+Class(Myself,CLERIC_ALL)
+Class(Myself,BARD_ALL)
+Class(Myself,THIEF_ALL)
+// Took damage from an enemy in the last round
+TookDamage()
 THEN
-    RESPONSE #100
-        MoveToObject(LastSeenBy(Myself))
+RESPONSE #100
+        DisplayStringHead(Myself,227)
+RunAwayFrom(LastAttackerOf(Myself),30) // 30 ticks = ~3 seconds
 END
 
 IF
-    ActionListEmpty()
-    // Only for these classes
-    OR(4)
-        Class(Myself,MAGE_ALL)
-        Class(Myself,CLERIC_ALL)
-        Class(Myself,BARD_ALL)
-        Class(Myself,THIEF_ALL)
-    // Took damage from an enemy in the last round
-    TookDamage())
+ActionListEmpty()
+ActuallyInCombat()
+!Range([ENEMY],15)
+// Find any ally who is far from me
+!Range([ALLY],15) // Make sure they are *outside* close range
+// Ally is fighting something
 THEN
-    RESPONSE #100
-        DisplayStringHead(Myself,~Retreating after taking damage!~)
-        // Run away from the enemy for ~3 seconds
-        RunAwayFrom(LastAttackerOf(Myself),30) // 30 ticks = ~3 seconds
+RESPONSE #100
+        DisplayStringHead(Myself,228)
+MoveToObject(NearestEnemyOf([ALLY])) // Go to the fight
 END
 
 
@@ -3674,7 +3678,7 @@ IF
     True()
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,226)
+        DisplayStringHead(Myself,229)
         IncrementGlobal("WIZARD_CAST","LOCALS",0)
         IncrementGlobal("CLERIC_CAST","LOCALS",0)
 END
