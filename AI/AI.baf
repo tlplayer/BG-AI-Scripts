@@ -2927,7 +2927,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
-    HaveSpell(BERSERKER_RAGE)  // 3117 (MINSC_BERSERK)
+    HaveSpell(BERSERKER_RAGE)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2938,23 +2938,23 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    HaveSpell(BARBARIAN_RAGE)  // 3117 (MINSC_BERSERK)
+    HaveSpell(BARBARIAN_RAGE)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,BARBARIAN_RAGE)  // Cast MINSC_BERSERK
+        Spell(Myself,BARBARIAN_RAGE)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    HaveSpell(KENSAI_KIA)  // 3117 (MINSC_BERSERK)
+    HaveSpell(KENSAI_KIA)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,KENSAI_KIA)  // Cast MINSC_BERSERK
+        Spell(Myself,KENSAI_KIA)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
