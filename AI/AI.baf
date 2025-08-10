@@ -8,9 +8,9 @@ IF
     PartyRested()
 THEN
     RESPONSE #100
-        IncrementGlobal("USED_RING33","LOCALS",0)
-        IncrementGlobal("USED_STAF21","LOCALS",0)
-        IncrementGlobal("USED_SW1H26","LOCALS",0)
+        SetGlobal("USED_RING33","LOCALS",0)
+        SetGlobal("USED_STAF21","LOCALS",0)
+        SetGlobal("USED_SW1H26","LOCALS",0)
         Continue()
 END
 
@@ -518,6 +518,7 @@ END
 
 
 IF
+    ActionListEmpty()
     See(NearestEnemyOf(Myself))
     Range(LastSeenBy(Myself),15)
     AttackedBy([ENEMY],DEFAULT)
@@ -532,6 +533,7 @@ THEN
 END
 
 IF
+    ActionListEmpty()
     See(NearestEnemyOf(Myself))
     Range(LastSeenBy(Myself),15)
     AttackedBy([ENEMY],DEFAULT)
@@ -908,6 +910,7 @@ END
 // ======================================================
 
 IF
+    ActionListEmpty()
     OR(6)
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.CLERIC_ALL])
@@ -3416,7 +3419,7 @@ IF
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-    !GlobalTimerNotExpired("USE_RANGED","LOCALS")
+    !GlobalTimerNotExpired("USE_RANGE","LOCALS")
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
@@ -3426,31 +3429,14 @@ END
 
 
 IF
-ActionListEmpty()
-// Only for these classes
-OR(4)
-Class(Myself,MAGE_ALL)
-Class(Myself,CLERIC_ALL)
-Class(Myself,BARD_ALL)
-Class(Myself,THIEF_ALL)
-// Took damage from an enemy in the last round
-TookDamage()
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Detect([ENEMY])
 THEN
-RESPONSE #100
-RunAwayFrom(LastAttackerOf(Myself),30) // 30 ticks = ~3 seconds
+    RESPONSE #100
+        MoveToObject(NearestEnemyOf(Myself))
 END
 
-IF
-ActionListEmpty()
-ActuallyInCombat()
-!Range([ENEMY],15)
-// Find any ally who is far from me
-!Range([ALLY],15) // Make sure they are *outside* close range
-// Ally is fighting something
-THEN
-RESPONSE #100
-MoveToObject(FarthestEnemyOf(NearestEnemyOf([ALLY]))) // Go to the fight
-END
 
 
 // RESET TIMERS IF WE'RE at the bottom
@@ -3460,6 +3446,6 @@ IF
     True()
 THEN
     RESPONSE #100
-        IncrementGlobal("WIZARD_CAST","LOCALS",0)
-        IncrementGlobal("CLERIC_CAST","LOCALS",0)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",0)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",0)
 END
