@@ -93,6 +93,7 @@ For each enemy type:
 // See Fire Type Elemental with high resistance, don't use fire spells.
 // General form [EA.GENERAL.RACE.CLASS.SPECIFIC.GENDER.ALIGN].
 IF
+    ActionListEmpty()
     OR(9)
         Detect([ENEMY.0.0.ELEMENTAL_FIRE.0])
         Detect([ENEMY.0.0.GREY_OOZE])
@@ -111,6 +112,7 @@ THEN
 END
 
 IF
+    ActionListEmpty()
     ActuallyInCombat()
     OR(8)
         See(NearestEnemyOfType([ENEMY.0.0.MAGE_ALL]))
@@ -130,6 +132,7 @@ END
 
 // Detect Troll-type enemies, prepare to use anti-Troll strategies.
 IF
+    ActionListEmpty()
     Detect([ENEMY.0.0.TROLL.0])
     !GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
 THEN
@@ -139,6 +142,7 @@ THEN
 END
 
 IF
+    ActionListEmpty()
     Detect([ENEMY.0.0.GREEN_SLIME])
     !GlobalTimerNotExpired("SLIME_ENEMIES","LOCALS")
 THEN
@@ -149,6 +153,7 @@ END
 
 
 IF
+    ActionListEmpty()
     OR(2)
         Detect([ENEMY.0.0.UMBERHULK.0])
         Detect([ENEMY.0.0.MIND_FLAYER.0])
@@ -196,6 +201,7 @@ END
 // Cast Zone of Sweet Air if affected by Stinking Cloud
 // This section casts Zone of Sweet Air if the wizard or party members are affected by Stinking Cloud.
 IF
+    ActionListEmpty()
     OR(4)
         SpellCast([ENEMY.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
         SpellCast([ENEMY.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
@@ -1136,6 +1142,19 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SUMMON","LOCALS")
+    HaveSpell(CLERIC_ANIMATE_DEAD)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_ANIMATE_DEAD)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
