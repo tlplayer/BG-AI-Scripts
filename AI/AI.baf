@@ -189,12 +189,13 @@ IF
         SpellCast([ANYONE.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
         SpellCast([ANYONE.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
     See([ANYONE])
-    Range(LastSeenBy(Myself),6)
+    Range([ANYONE],20)
 THEN
     RESPONSE #100
         SetGlobalTimer("USE_RANGE","LOCALS",ONE_TURN)
-        RunAwayFrom(LastSeenBy(Myself),7)
-        Continue()
+        SetInterrupt(FALSE)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        SetInterrupt(TRUE)
 END
 
 
@@ -213,6 +214,86 @@ THEN
         Spell(Myself,CLERIC_ZONE_OF_SWEET_AIR)  // Cast Zone of Sweet Air to counteract Stinking Cloud
 END
 
+
+// ======================================================
+// SECTION: RETREAT CONDITION
+// ======================================================
+
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(LastSeenBy(Myself),15)
+    AttackedBy([ENEMY],DEFAULT)
+    HPPercentLT(Myself,60)
+    HaveSpell(WIZARD_SHADOW_DOOR)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        FaceObject(LastSeenBy(Myself))
+        Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
+        RunAwayFrom(NearestEnemyOf(Myself),10)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    Range(LastSeenBy(Myself),10)
+    AttackedBy([ENEMY],DEFAULT)
+    HPPercentLT(Myself,80)
+    HaveSpell(WIZARD_MISLEAD)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        FaceObject(LastSeenBy(Myself))
+        Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
+        RunAwayFrom(NearestEnemyOf(Myself),15)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,60)
+    AttackedBy([ENEMY],DEFAULT)
+    !StateCheck(Myself,STATE_INVISIBLE)
+    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
+        RunAwayFrom(NearestEnemyOf(Myself),30)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    Delay(18)
+    OR(4)
+        Class(Myself,THIEF_ALL)
+        Class(Myself,RANGER_ALL)
+        Class(Myself,MONK)
+        Class(Myself,BARD_ALL)
+    !StateCheck(Myself,STATE_INVISIBLE)
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself),75)
+        Hide()
+        EquipMostDamagingMelee()
+        AttackOneRound(NearestEnemyOf(Myself))
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    AttackedBy([ENEMY],DEFAULT)
+    Delay(18)
+    OR(2)
+        Class(Myself,MAGE_ALL)
+        Class(Myself,SORCERER)
+    Range([ENEMY],15)
+THEN
+    RESPONSE #100
+        RunAwayFrom(NearestEnemyOf(Myself),30)
+END
 
 // ======================================================
 // SECTION: Heal SPELLS (CLERIC)
@@ -512,107 +593,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
-// ======================================================
-// SECTION: RETREAT CONDITION
-// ======================================================
-
-
-IF
-    ActionListEmpty()
-    OR(2)
-        SpellCastOnMe([ENEMY],WIZARD_WEB)
-        SpellCastOnMe([ENEMY],VORTEX)
-THEN
-    RESPONSE #100
-        DisplayStringHead(1)
-        RunAwayFrom([ALLY],60)
-        GlobalShout(2000) // WEB Shout
-END
-
-
-IF
-    ActionListEmpty()
-    Heard([GOODCUTOFF],2000)
-THEN
-    RESPONSE #100
-        DisplayStringHead(1)
-        RunAwayFrom(LastHeardBy(),30)
-END
-
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    Range(LastSeenBy(Myself),15)
-    AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,60)
-    HaveSpell(WIZARD_SHADOW_DOOR)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        FaceObject(LastSeenBy(Myself))
-        Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),10)
-END
-
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    Range(LastSeenBy(Myself),7)
-    AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,80)
-    HaveSpell(WIZARD_MISLEAD)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        FaceObject(LastSeenBy(Myself))
-        Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),15)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentLT(Myself,60)
-    AttackedBy([ENEMY],DEFAULT)
-    !StateCheck(Myself,STATE_INVISIBLE)
-    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
-        RunAwayFrom(NearestEnemyOf(Myself),15)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    Delay(18)
-    OR(4)
-        Class(Myself,THIEF_ALL)
-        Class(Myself,RANGER_ALL)
-        Class(Myself,MONK)
-        Class(Myself,BARD_ALL)
-    !StateCheck(Myself,STATE_INVISIBLE)
-THEN
-    RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),13)
-        Hide()
-        EquipMostDamagingMelee()
-        AttackOneRound(NearestEnemyOf(Myself))
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    AttackedBy([ENEMY],DEFAULT)
-    Delay(18)
-    OR(2)
-        Class(Myself,MAGE_ALL)
-        Class(Myself,SORCERER)
-    Range([ENEMY],6)
-THEN
-    RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),10)
-END
 
 
 // ======================================================
@@ -2350,6 +2330,21 @@ THEN
         Spell(FarthestEnemyOf(Myself),WIZARD_WEB)  // Cast Web on any visible enemies
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_STINKING_CLOUD)  // SPWI206.SPL (Web)
+    !Range(FarthestEnemyOf(Myself),20)
+    Range(FarthestEnemyOf(NearestEnemyOf(Myself)),15)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_STINKING_CLOUD)  // Cast Web on any visible enemies
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 
 IF
     ActionListEmpty()
