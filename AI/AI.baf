@@ -519,6 +519,28 @@ END
 
 IF
     ActionListEmpty()
+    OR(2)
+        SpellCastOnMe([ENEMY],WIZARD_WEB)
+        SpellCastOnMe([ENEMY],VORTEX)
+THEN
+    RESPONSE #100
+        DisplayStringHead(1)
+        RunAwayFrom([ALLY],60)
+        GlobalShout(2000) // WEB Shout
+END
+
+
+IF
+    ActionListEmpty()
+    Heard([GOODCUTOFF],2000)
+THEN
+    RESPONSE #100
+        DisplayStringHead(1)
+        RunAwayFrom(LastHeardBy(),30)
+END
+
+IF
+    ActionListEmpty()
     See(NearestEnemyOf(Myself))
     Range(LastSeenBy(Myself),15)
     AttackedBy([ENEMY],DEFAULT)
@@ -2320,8 +2342,8 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race(FarthestEnemyOf(Myself),SPIDER)  // Exclude spiders
-    !Range(FarthestEnemyOf(Myself),10)
-    Range(FarthestEnemyOf(NearestEnemyOf(Myself)),14)
+    !Range(FarthestEnemyOf(Myself),20)
+    Range(FarthestEnemyOf(NearestEnemyOf(Myself)),15)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
