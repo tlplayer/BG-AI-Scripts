@@ -180,15 +180,15 @@ IF
     CheckStatLT(Myself,1,SHIELDGLOBE)
     CheckStatGT(Myself,2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     OR(8)
-        CheckStat([ANY],1,WEB)
-        CheckStat([ANY],1,GREASE)
-        StateCheck([ANY],STATE_HELPLESS) // Check if the wizard is helpless
-        SpellCast([ANY],WIZARD_WEB)  // SPWI215.SPL (Web)
-        SpellCast([ANY.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
-        SpellCast([ANY.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
-        SpellCast([ANY.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
-        SpellCast([ANY.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
-    See([ANY])
+        CheckStat([ANYONE],1,WEB)
+        CheckStat([ANYONE],1,GREASE)
+        StateCheck([ANYONE],STATE_HELPLESS) // Check if the wizard is helpless
+        SpellCast([ANYONE],WIZARD_WEB)  // SPWI215.SPL (Web)
+        SpellCast([ANYONE.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
+        SpellCast([ANYONE.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
+        SpellCast([ANYONE.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
+        SpellCast([ANYONE.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
+    See([ANYONE])
     Range(LastSeenBy(Myself),6)
 THEN
     RESPONSE #100
@@ -2242,6 +2242,7 @@ IF
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_SLEEP)  // SPWI101.SPL (Sleep)
     Range(NearestEnemyOf(Myself),30)
+    HPLT(NearestEnemyOf(Myself),30)
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
     !Race(NearestEnemyOf(Myself),ELF)  // Exclude elves
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
