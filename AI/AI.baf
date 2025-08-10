@@ -19,7 +19,6 @@ END
 // The timer is set to two rounds initially and updated to one round when a hotkey is pressed.
 IF
     ActuallyInCombat()
-    GlobalTimerExpired("SHORT_BUFF","LOCALS")
 THEN
     RESPONSE #100
         SetGlobalTimer("SHORT_BUFF","LOCALS",FIVE_ROUNDS)
@@ -181,19 +180,20 @@ IF
     CheckStatLT(Myself,1,SHIELDGLOBE)
     CheckStatGT(Myself,2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     OR(8)
-        CheckStat([PC],1,WEB)
-        CheckStat([PC],1,GREASE)
-        StateCheck([PC],STATE_HELPLESS) // Check if the wizard is helpless
-        SpellCast([ENEMY],WIZARD_WEB)  // SPWI215.SPL (Web)
-        SpellCast([ENEMY.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
-        SpellCast([ENEMY.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
-        SpellCast([ENEMY.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
-        SpellCast([ENEMY.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
-    See([ENEMY])
+        CheckStat([ANY],1,WEB)
+        CheckStat([ANY],1,GREASE)
+        StateCheck([ANY],STATE_HELPLESS) // Check if the wizard is helpless
+        SpellCast([ANY],WIZARD_WEB)  // SPWI215.SPL (Web)
+        SpellCast([ANY.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
+        SpellCast([ANY.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
+        SpellCast([ANY.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
+        SpellCast([ANY.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
+    See([ANY])
+    Range(LastSeenBy(Myself),6)
 THEN
     RESPONSE #100
         SetGlobalTimer("USE_RANGE","LOCALS",ONE_TURN)
-        RunAwayFrom(LastSeenBy(Myself),16)
+        RunAwayFrom(LastSeenBy(Myself),7)
         Continue()
 END
 
@@ -522,7 +522,7 @@ IF
     See(NearestEnemyOf(Myself))
     Range(LastSeenBy(Myself),15)
     AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,100)
+    HPPercentLT(Myself,60)
     HaveSpell(WIZARD_SHADOW_DOOR)
 THEN
     RESPONSE #100
@@ -535,9 +535,9 @@ END
 IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
-    Range(LastSeenBy(Myself),15)
+    Range(LastSeenBy(Myself),7)
     AttackedBy([ENEMY],DEFAULT)
-    HPPercentLT(Myself,100)
+    HPPercentLT(Myself,80)
     HaveSpell(WIZARD_MISLEAD)
 THEN
     RESPONSE #100
@@ -550,7 +550,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HPPercentLT(Myself,37)
+    HPPercentLT(Myself,60)
     AttackedBy([ENEMY],DEFAULT)
     !StateCheck(Myself,STATE_INVISIBLE)
     HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
@@ -586,6 +586,7 @@ IF
     OR(2)
         Class(Myself,MAGE_ALL)
         Class(Myself,SORCERER)
+    Range([ENEMY],6)
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),10)
@@ -1823,7 +1824,6 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_MELF_METEOR)  // Ensure Melf's Minute Meteors spell is available
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure previous spell cast timer has expired
 THEN
     RESPONSE #100
@@ -2444,33 +2444,33 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),20)
-    !HasBounceEffects(NearestEnemyOf(Myself))
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
-    !StateCheck(NearestEnemyOf(Myself),STATE_BLIND)
+    !StateCheck(LastSeenBy(Myself),STATE_BLIND)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
+        Spell(LastSeenBy(Myself),WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),20)
-    !HasBounceEffects(NearestEnemyOf(Myself))
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
+        Spell(LastSeenBy(Myself),WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2509,20 +2509,20 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPPercentGT(NearestEnemyOf(Myself),90)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    General(NearestEnemyOf(Myself),HUMANOID)
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    !AttackedBy(NearestEnemyOf(Myself),DEFAULT) // Skip if any PC attacked recently
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    General(LastSeenBy(Myself),HUMANOID)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     HaveSpell(WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
-    !AttackedBy(NearestEnemyOf(Myself),DEFAULT) // Skip if any PC attacked recently
+    !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
+        Spell(LastSeenBy(Myself),WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2535,17 +2535,17 @@ END
 // Lasts for 1 turn.
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    HPPercentGT(NearestEnemyOf(Myself),70)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    General(NearestEnemyOf(Myself),HUMANOID)
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),HUMANOID)
     HaveSpell(CLERIC_HOLD_PERSON)  // SPPR012.SPL (Hold Person)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_HOLD_PERSON)  // Cast Hold Person to incapacitate the enemy
+        Spell(LastSeenBy(Myself),CLERIC_HOLD_PERSON)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2567,32 +2567,32 @@ END
 
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPPercentGT(NearestEnemyOf(Myself),90)
-    HPGT(NearestEnemyOf(Myself),30)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    General(NearestEnemyOf(Myself),HUMANOID)
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    HPGT(LastSeenBy(Myself),30)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),HUMANOID)
     HaveSpell(CLERIC_CHARM_PERSON)  // SPPR012.SPL (Hold Person)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_CHARM_PERSON)  // Cast Hold Person to incapacitate the enemy
+        Spell(LastSeenBy(Myself),CLERIC_CHARM_PERSON)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    General(NearestEnemyOf(Myself),HUMANOID)
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),30)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),HUMANOID)
     HaveSpell(CLERIC_COMMAND)  // SPPR012.SPL (Hold Person)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_COMMAND)  // Cast Hold Person to incapacitate the enemy
+        Spell(LastSeenBy(Myself),CLERIC_COMMAND)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2802,18 +2802,18 @@ END
 /* Melf's Acid Arrow for enemies with 20-40 HP */
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
+    See([ENEMY])
     HaveSpell(WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
     OR(2)
-        HPGT(NearestEnemyOf(Myself),20)
+        HPGT(LastSeenBy(Myself),20)
         GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
-    !HasBounceEffects(NearestEnemyOf(Myself))
+    !HasBounceEffects(LastSeenBy(Myself))
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
+        Spell(LastSeenBy(Myself),WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3272,62 +3272,6 @@ IF
 
 
 // ======================================================
-// SECTION: COMBAT ACTIONS - RANGED ATTACKS
-// ======================================================
-
-
-// Use special bow ability
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    HaveSpell(ARCHER_CALL_SHOT) // Check if special ability is available
-    OR(6)
-        See([ENEMY])
-        See([ENEMY.0.0.BARD_ALL]) // Default target
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.SORCERER]) // Highest priority
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    OR(2)
-        WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-        !IsWeaponRanged(Myself)
-    CanEquipRanged()
-    !Range(LastSeenBy(Myself),4)
-    CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
-THEN
-    RESPONSE #100
-        EquipRanged()  // Equip ranged weapon
-        Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
-        Continue()
-END
-
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    OR(6)
-        See([ENEMY])
-        See([ENEMY.0.0.BARD_ALL]) // Default target
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.SORCERER]) // Highest priority
-    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-    OR(2)
-        WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
-        !IsWeaponRanged(Myself)
-    CanEquipRanged()
-    !Range(LastSeenBy(Myself),4)  // If the enemy is within melee range (4 search squares)
-    CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
-THEN
-    RESPONSE #100
-        EquipRanged()  // Equip ranged weapon
-        AttackOneRound(LastSeenBy(Myself))
-        Continue()
-END
-
-// ======================================================
 // SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
 
@@ -3390,6 +3334,63 @@ END
 
 
 
+
+// ======================================================
+// SECTION: COMBAT ACTIONS - RANGED ATTACKS
+// ======================================================
+
+
+// Use special bow ability
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(ARCHER_CALL_SHOT) // Check if special ability is available
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
+    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
+    OR(2)
+        WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
+        !IsWeaponRanged(Myself)
+    CanEquipRanged()
+    !Range(LastSeenBy(Myself),4)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
+THEN
+    RESPONSE #100
+        EquipRanged()  // Equip ranged weapon
+        Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
+        Continue()
+END
+
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY])
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
+    !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
+    OR(2)
+        WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
+        !IsWeaponRanged(Myself)
+    CanEquipRanged()
+    !Range(LastSeenBy(Myself),7)  // If the enemy is within melee range (4 search squares)
+    CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+THEN
+    RESPONSE #100
+        EquipRanged()  // Equip ranged weapon
+        AttackOneRound(LastSeenBy(Myself))
+        Continue()
+END
+
 // ======================================================
 // SECTION: COMBAT ACTIONS - MELEE ATTACKS
 // ======================================================
@@ -3436,7 +3437,6 @@ THEN
     RESPONSE #100
         MoveToObject(NearestEnemyOf(Myself))
 END
-
 
 
 // RESET TIMERS IF WE'RE at the bottom
