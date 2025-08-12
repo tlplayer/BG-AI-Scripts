@@ -232,7 +232,9 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),10)
+        SetInterrupt(FALSE)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        SetInterrupt(TRUE)
 END
 
 IF
@@ -247,7 +249,9 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
-        RunAwayFrom(NearestEnemyOf(Myself),15)
+        SetInterrupt(FALSE)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        SetInterrupt(TRUE)
 END
 
 IF
@@ -447,8 +451,6 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-
-
 IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -557,8 +559,6 @@ THEN
         Spell(LastSeenBy(Myself),CLERIC_CURE_CRITICAL_WOUNDS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
-
-
 
 IF
     ActionListEmpty()
@@ -1558,6 +1558,19 @@ END
 
 IF
     ActionListEmpty()
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    HaveSpell(WIZARD_MINOR_GLOBE_OF_INVULNERABILITY)  // SPWI604.SPL (Globe of Invulnerability)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_MINOR_GLOBE_OF_INVULNERABILITY)  // Cast Globe of Invulnerability for spell protection
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     HaveSpell(WIZARD_MINOR_SPELL_DEFLECTION)  // SPWI318.SPL (Minor Spell Deflection)
     !HasBounceEffects(Myself)
     !HasImmunityEffects(Myself)
@@ -1701,19 +1714,6 @@ IF
             Spell(Myself,WIZARD_SHAPECHANGE)  // Cast WIZARD_SHAPECHANGE
             Spell(Myself,WIZARD_TENSERS_TRANSFORMATION)  // Cast WIZARD_TENSERS_TRANSFORMATION
             SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
-    HaveSpell(WIZARD_MINOR_GLOBE_OF_INVULNERABILITY)  // SPWI604.SPL (Globe of Invulnerability)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_MINOR_GLOBE_OF_INVULNERABILITY)  // Cast Globe of Invulnerability for spell protection
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
@@ -2083,6 +2083,20 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    HaveSpell(CLERIC_SANCTUARY)  // SPPR109.SPL (Sanctuary)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HPPercentLT([PC],50)  // Party member's HP is below 25%
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_SANCTUARY)  // Cast Sanctuary on the party member with low HP
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
     See(NearestEnemyOf(Myself))
     HaveSpell(CLERIC_PROTECTION_FROM_EVIL_10_FOOT)  // SPPR107.SPL (Protection from Evil, 10' Radius)
     !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Same state as Protection from Evil
@@ -2242,6 +2256,21 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_EMOTION_HOPELESSNESS)
+    HPGT(NearestEnemyOf(Myself),40)
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(NearestEnemyOf(Myself),WIZARD_EMOTION_HOPELESSNESS)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_SLEEP)  // SPWI101.SPL (Sleep)
     Range(NearestEnemyOf(Myself),30)
     HPLT(NearestEnemyOf(Myself),30)
@@ -2261,25 +2290,26 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_RAY_OF_ENFEEBLEMENT)  // SPWI103.SPL (Ray of Enfeeblement)
+    !See([ENEMY.0.0.MAGE_ALL])  // exclude enemy mages
+    HaveSpell(WIZARD_RAY_OF_ENFEEBLEMENT) 
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
-    THEN
-        RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_RAY_OF_ENFEEBLEMENT)  // Cast Ray of Enfeeblement
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),WIZARD_RAY_OF_ENFEEBLEMENT) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
 
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_SLOW)  // SPWI103.SPL (Ray of Enfeeblement)
+    See([ENEMY])
+    HaveSpell(WIZARD_SLOW)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_SLOW)  // Cast Ray of Enfeeblement
+        Spell(NearestEnemyOf(Myself),WIZARD_SLOW)  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2300,19 +2330,18 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
+    See([ENEMY])
+    ImmuneToSpellLevel(LastSeenBy(Myself),2)
     HaveSpell(WIZARD_HORROR)  // SPWI102.SPL (Horror)
-    Range(NearestEnemyOf(Myself),30)
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    !Race(NearestEnemyOf(Myself),ELF)  // Exclude elves
-    !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
-    !Race(NearestEnemyOf(Myself),GOLEM)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_HORROR)  // Cast Horror
+        Spell(LastSeenBy(Myself),WIZARD_HORROR)  // Cast Horror
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2335,13 +2364,13 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    HaveSpell(WIZARD_STINKING_CLOUD)  // SPWI206.SPL (Web)
+    HaveSpell(WIZARD_STINKING_CLOUD)  
     !Range(FarthestEnemyOf(Myself),20)
     Range(FarthestEnemyOf(NearestEnemyOf(Myself)),15)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_STINKING_CLOUD)  // Cast Web on any visible enemies
+        Spell(FarthestEnemyOf(Myself),WIZARD_STINKING_CLOUD)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2464,6 +2493,8 @@ IF
     ActuallyInCombat()
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
+    ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    CheckStatGT(LastSeenBy(Myself),2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
     !StateCheck(LastSeenBy(Myself),STATE_BLIND)
@@ -2480,7 +2511,8 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
+    ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    HPGT(LastSeenBy(Myself),40)
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2496,7 +2528,8 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),20)
+    HPGT(NearestEnemyOf(Myself),40)
+    ImmuneToSpellLevel(LastSeenBy(Myself),4)
     !HasBounceEffects(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2785,22 +2818,6 @@ END
 // ======================================================
 
 
-/* Magic Missile for enemies with more than 20 HP and no bounce effects */
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
-    HPGT(NearestEnemyOf(Myself),10)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
 /* Chromatic Orb for enemies with 10-20 HP, using level 1 spell */
 IF
     ActionListEmpty()
@@ -2820,7 +2837,15 @@ END
 /* Melf's Acid Arrow for enemies with 20-40 HP */
 IF
     ActionListEmpty()
-    See([ENEMY])
+    OR(8)
+        See([ENEMY])
+        See([ENEMY.0.0.RANGER]) // Default target
+        See([ENEMY.0.0.THIEF]) // Default target
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
     HaveSpell(WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
     OR(2)
         HPGT(LastSeenBy(Myself),20)
@@ -2878,19 +2903,22 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-/* Magic Missile as a fallback if all else fails */
+/* Magic Missile for enemies with more than 20 HP and no bounce effects */
 IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
+    HPGT(NearestEnemyOf(Myself),10)
+    !HasBounceEffects(NearestEnemyOf(Myself))
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
 
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
@@ -3467,3 +3495,4 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",0)
         SetGlobalTimer("CLERIC_CAST","LOCALS",0)
 END
+
