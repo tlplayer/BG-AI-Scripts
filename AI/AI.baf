@@ -2739,7 +2739,8 @@ IF
     ActionListEmpty()
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     HaveSpell(WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
-    !Range(FarthestEnemyOf(Myself),10)
+    !Range(FarthestEnemyOf(Myself),14)
+    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),10)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -2908,8 +2909,9 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
-    HPGT(NearestEnemyOf(Myself),10)
+    HPGT(NearestEnemyOf(Myself),15)
     !HasBounceEffects(NearestEnemyOf(Myself))
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -3318,6 +3320,89 @@ IF
 
 
 // ======================================================
+// SECTION: Wands
+// ======================================================
+
+// Wand of Frost
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !StateCheck(Myself,STATE_MIRRORIMAGE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    CheckStatLT([ENEMY],100,RESISTCOLD)
+    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    HPGT([ENEMY],40)
+    HasItemEquiped("WAND06",Myself)  
+THEN
+    RESPONSE #100
+      UseItem("WAND06",[ENEMY]) 
+END
+
+
+//Wand of Fear
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    StateCheck([ENEMY],STATE_PANIC)
+    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    HPGT([ENEMY],30)
+    NumCreatureGT([ENEMY],2)
+    HasItemEquiped("WAND02",Myself)  
+    Delay(60)
+THEN
+    RESPONSE #100
+      UseItem("WAND02",[ENEMY]) 
+END
+
+// Wand of Fireball
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Range(FarthestEnemyOf(Myself),14)
+    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),10)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
+    HPGT(FarthestEnemyOf(Myself),40)
+    NumCreatureGT([ENEMY],2)
+    HasItemEquiped("WAND05",Myself)  
+    Delay(60)
+THEN
+    RESPONSE #100
+        UseItem("WAND05",FarthestEnemyOf(Myself)) 
+END
+
+
+
+//Wand of Fear
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckSpellState([ENEMY],HELD)
+    !CheckSpellState([ENEMY],FREE_ACTION)
+    HPGT([ENEMY],50)
+    HasItemEquiped("WAND04",Myself)  
+    Delay(60)
+THEN
+    RESPONSE #100
+      UseItem("WAND04",[ENEMY]) 
+END
+
+// Wand of Magic Missile
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    !HaveSpell(WIZARD_MAGIC_MISSILE)  
+    HPGT([ENEMY],20)
+    HasItemEquiped("WAND03",Myself)  
+THEN
+    RESPONSE #100
+      UseItem("WAND03",[ENEMY]) 
+END
+
+// ======================================================
 // SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
 
@@ -3379,8 +3464,6 @@ THEN
 END
 
 
-
-
 // ======================================================
 // SECTION: COMBAT ACTIONS - RANGED ATTACKS
 // ======================================================
@@ -3430,6 +3513,7 @@ IF
     CanEquipRanged()
     !Range(LastSeenBy(Myself),7)  // If the enemy is within melee range (4 search squares)
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
 THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
