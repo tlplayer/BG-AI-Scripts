@@ -271,9 +271,8 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     Delay(18)
-    OR(4)
+    OR(3)
         Class(Myself,THIEF_ALL)
-        Class(Myself,RANGER_ALL)
         Class(Myself,MONK)
         Class(Myself,BARD_ALL)
     !StateCheck(Myself,STATE_INVISIBLE)
@@ -417,7 +416,7 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],50) // Heal when HP is below 70
+    HPPercentLT([PC],50) // Heal when HP is below 50%
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_CURE_SERIOUS_WOUNDS)
 THEN
@@ -429,7 +428,7 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],70) // Heal when HP is below 70
+    HPPercentLT([PC],70) // Heal when HP is below 70%
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_AID)
 THEN
@@ -484,7 +483,6 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
-    Allegiance(Myself,GOODCUTOFF)
     See([PC])
     OR(4)
         StateCheck(LastSeenBy(Myself),STATE_CHARMED)
@@ -499,7 +497,7 @@ THEN
 END
 
 IF
-    HaveSpell(CLERIC_FREE_ACTION)  // SPPR403.SPL (Free Action)
+    HaveSpell(CLERIC_FREE_ACTION) 
     OR(3)
         CheckStatGT(LastHeardBy(Myself),0,HELD)
         CheckStatGT(LastHeardBy(Myself),0,GREASE)
@@ -509,7 +507,7 @@ IF
         Global("FRIEND_DEBUFFED","LOCALS",1)
 THEN
     RESPONSE #70
-        Spell(LastHeardBy(Myself),CLERIC_FREE_ACTION)  // SPPR403.SPL (Free Action)
+        Spell(LastHeardBy(Myself),CLERIC_FREE_ACTION)  
         SetGlobal("MYSELF_DEBUFFED","LOCALS",0)
         SetGlobal("FRIEND_DEBUFFED","LOCALS",0)
     RESPONSE #30
@@ -523,27 +521,27 @@ IF
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
         CheckStatGT([PC],0,LEVELDRAIN)
-    HaveSpell(CLERIC_RESTORATION)  // 1713 (CLERIC_RESTORATION)
+    HaveSpell(CLERIC_RESTORATION) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_RESTORATION)  // Cast CLERIC_RESTORATION
+        Spell(LastSeenBy(Myself),CLERIC_RESTORATION)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     See([PC])
-    HaveSpell(CLERIC_LESSER_RESTORATION)  // 1713 (CLERIC_RESTORATION)
+    HaveSpell(CLERIC_LESSER_RESTORATION)
     OR(3)
-        StateCheck([GOODCUTOFF],STATE_STUNNED)
-        CheckStatGT([GOODCUTOFF],0,HELD)
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
         CheckStatGT([PC],0,LEVELDRAIN)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_LESSER_RESTORATION)  // Cast CLERIC_RESTORATION
+        Spell([PC],CLERIC_LESSER_RESTORATION)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -556,7 +554,7 @@ IF
     HaveSpell(CLERIC_CURE_CRITICAL_WOUNDS)
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CURE_CRITICAL_WOUNDS)
+        Spell([PC],CLERIC_CURE_CRITICAL_WOUNDS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
@@ -568,7 +566,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),PALADIN_LAY_ON_HANDS)  // Cast PALADIN_LAY_ON_HANDS
+        Spell([PC],PALADIN_LAY_ON_HANDS)  // Cast PALADIN_LAY_ON_HANDS
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -579,14 +577,13 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
-    Allegiance(Myself,GOODCUTOFF)
     See([PC])
     OR(4)
         StateCheck(LastSeenBy(Myself),STATE_CHARMED)
         StateCheck(LastSeenBy(Myself),STATE_CONFUSED)
         StateCheck(LastSeenBy(Myself),STATE_STUNNED)
         CheckStatGT(LastSeenBy(Myself),0,HELD)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell(LastSeenBy(Myself),WIZARD_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
@@ -599,35 +596,35 @@ END
 // SECTION: Heal ITEMS 
 // ======================================================
 
-
+// potion of superior healing
 IF
     ActionListEmpty()
-    HPPercentLT(Myself,50)
-    PartyHasItem("POTN55")  // Potion of Superior Healing
+    HPPercentLT(Myself,25)
+    PartyHasItem("POTN55")  
 THEN
     RESPONSE #100
-        TakePartyItem("POTN55")
-        UseItem("POTN55",Myself)  // Potion of Superior Healing
+        TakePartyItemNum("POTN55",1)
+        UseItem("POTN55",Myself)  
 END
 
 IF
     ActionListEmpty()
     HPPercentLT(Myself,50)
-    PartyHasItem("POTN52")  // Potion of Superior Healing
+    PartyHasItem("POTN52")  
 THEN
     RESPONSE #100
-        TakePartyItem("POTN52")
-        UseItem("POTN52",Myself)  // Potion of Superior Healing
+        TakePartyItemNum("POTN52")
+        UseItem("POTN52",Myself) 
 END
 
 IF
     ActionListEmpty()
     HPPercentLT(Myself,50)
-    PartyHasItem("POTN08")  // Potion of Superior Healing
+    PartyHasItem("POTN08") 
 THEN
     RESPONSE #100
-        TakePartyItem("POTN08")
-        UseItem("POTN08",Myself)  // Potion of Superior Healing
+        TakePartyItemNum("POTN08",1)
+        UseItem("POTN08",Myself)
 END
 
 IF
@@ -637,8 +634,9 @@ IF
     PartyHasItem("POTN10")  // Potion of Invisibility
 THEN
     RESPONSE #100
-        TakePartyItem("POTN10")
+        TakePartyItemNum("POTN10",1)
         UseItem("POTN10",Myself)  
+        RunAwayFrom(NearestEnemyOf(Myself),75)
 END
 
 IF
@@ -648,12 +646,81 @@ IF
     CheckStatLT(Myself,1,CLERIC_CHAOTIC_COMMANDS)    
     GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
     PartyHasItem("POTN21")  // Potion of Clarity
-    Delay(100)
+    OR(2)
+        Class(Myself,FIGHTER)
+        Class(Myself,PALADIN)
+    Delay(60)
 THEN
     RESPONSE #100
-        //TakePartyItem("POTN21")
+        TakePartyItemNum("POTN21",1)
         UseItem("POTN21",Myself)  
 END
+
+//Potion of Speed
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !StateCheck(Myself,STATE_HASTED)
+    PartyHasItem("POTN14")
+    HPGT([ENEMY],60)
+    OR(2)
+        NumCreatureGT([ENEMY],4)
+        LevelGT([ENEMY],5)
+    OR(4)
+        Class(Myself,FIGHTER)
+        Class(Myself,RANGER)
+        Class(Myself,THIEF)
+        Class(Myself,PALADIN)
+    Delay(60)
+THEN
+    RESPONSE #50
+        Continue()
+    RESPONSE #50
+        TakePartyItemNum("POTN14",1)
+        UseItem("POTN14",Myself)  
+END
+
+//Potion of Heroism 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    PartyHasItem("POTN09")
+    LevelGT([ENEMY],7)
+    HPGT([ENEMY],70)
+    OR(4)
+        Class(Myself,FIGHTER)
+        Class(Myself,RANGER)
+        Class(Myself,THIEF)
+        Class(Myself,PALADIN)
+    Delay(60)
+THEN
+    RESPONSE #50
+        Continue()
+    RESPONSE #50
+        TakePartyItemNum("POTN09",1)
+        UseItem("POTN09",Myself)  
+END
+
+// Potion of Defence (24)
+
+//Potion of Heroism 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    PartyHasItem("POTN24")
+    LevelGT([ENEMY],7)
+    HPGT([ENEMY],70)
+    CheckStatGT(Myself,0,ARMORCLASS)
+    Delay(60)
+THEN
+    RESPONSE #50
+        Continue()
+    RESPONSE #50
+        TakePartyItemNum("POTN24",1)
+        UseItem("POTN24",Myself)  
+END
+
+
 
 IF
     ActionListEmpty()
@@ -664,7 +731,7 @@ IF
     PartyHasItem("POTN45")  // Potion of Freedom
 THEN
     RESPONSE #100
-        //TakePartyItem("POTN45")
+        TakePartyItemNum("POTN45",1)
         UseItem("POTN45",Myself)  
 END
 
@@ -674,7 +741,7 @@ IF
     PartyHasItem("POTN20") // Antidote
 THEN
     RESPONSE #100
-        TakePartyItem("POTN20")
+        TakePartyItemNum("POTN20",1)
         UseItem("POTN20",Myself) // Antidote
 END
 
@@ -709,12 +776,14 @@ END
 
 IF
     ActionListEmpty()
-    StateCheck(Myself,STATE_POISONED)
-    HPPercentLT(Myself,76)
+    ActuallyInCombat()
+    OR(2)
+        HPPercentLT(Myself,60)
+        StateCheck(Myself,STATE_POISONED)
     PartyHasItem("POTN17") // Elixir of Health
 THEN
     RESPONSE #100
-        TakePartyItem("POTN17")
+        TakePartyItemNum("POTN17",1)
         UseItem("POTN17",Myself) // Elixir of Health
 END
 
@@ -2715,6 +2784,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(WIZARD_SKULL_TRAP)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     !Range(FarthestEnemyOf(Myself),13)  // Ensure the enemy is within medium range
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -2725,7 +2795,7 @@ END
 /* Ice Storm for enemies with more than 60 HP at medium range */
 IF
     ActionListEmpty()
-    HPGT(NearestEnemyOf(Myself),20)
+    HPGT(NearestEnemyOf(Myself),40)
     HaveSpell(WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
     !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2734,6 +2804,7 @@ THEN
         Spell(FarthestEnemyOf(Myself),WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
 /* Fireball for enemies at a safe distance (30 search squares) */
 IF
     ActionListEmpty()
@@ -2753,10 +2824,10 @@ END
 IF
     ActionListEmpty()
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
-    HPGT(NearestEnemyOf(Myself),20)
     !HasBounceEffects(NearestEnemyOf(Myself))
+    NumCreatureGT([ENEMY],2)
     HaveSpell(WIZARD_BURNING_HANDS)  // SPWI103.SPL (Burning Hands)
-    Range(NearestEnemyOf(Myself),4)  // Ensure the enemy is close enough
+    Range(NearestEnemyOf(Myself),6)  // Ensure the enemy is close enough
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2770,10 +2841,10 @@ END
 IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),10)
+    NumCreatureGT([ENEMY],4)
     !HasBounceEffects(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_COLOR_SPRAY)  // SPWI105.SPL (Color Spray)
-    Range(NearestEnemyOf(Myself),4)  // Ensure the enemy is close enough
+    Range(NearestEnemyOf(Myself),6)  // Ensure the enemy is close enough
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2784,6 +2855,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_CONE_OF_COLD)  // SPWI608.SPL (Cone of Cold)
+    CheckStatLT([ENEMY],100,RESISTCOLD)
     Range(NearestEnemyOf(Myself),4)  // Ensure the enemies are close enough
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -3354,6 +3426,22 @@ THEN
       UseItem("WAND02",[ENEMY]) 
 END
 
+//Wand of Fear
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    StateCheck([ENEMY],STATE_PANIC)
+    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    HPGT([ENEMY],30)
+    !ImmuneToSpellLevel([ENEMY],4)
+    NumCreatureGT([ENEMY],2)
+    HasItemEquiped("WAND02",Myself)  
+    Delay(60)
+THEN
+    RESPONSE #100
+      UseItem("WAND02",[ENEMY]) 
+END
+
 // Wand of Fireball
 IF
     ActionListEmpty()
@@ -3374,12 +3462,13 @@ END
 
 
 
-//Wand of Fear
+//Wand of Paralyzation
 IF
     ActionListEmpty()
     ActuallyInCombat()
     CheckSpellState([ENEMY],HELD)
     !CheckSpellState([ENEMY],FREE_ACTION)
+    !ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],50)
     HasItemEquiped("WAND04",Myself)  
     Delay(60)
@@ -3395,6 +3484,7 @@ IF
     CheckStatLT([ENEMY],100,RESISTMAGIC)
     CheckSpellState([ENEMY],WIZARD_SHIELD)
     !HaveSpell(WIZARD_MAGIC_MISSILE)  
+    ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],20)
     HasItemEquiped("WAND03",Myself)  
 THEN
