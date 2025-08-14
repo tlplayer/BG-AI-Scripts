@@ -25,6 +25,8 @@ END
 // The timer is set to two rounds initially and updated to one round when a hotkey is pressed.
 IF
     ActuallyInCombat()
+    ActionListEmpty()
+    Delay(30)
 THEN
     RESPONSE #100
         SetGlobalTimer("SHORT_BUFF","LOCALS",FIVE_ROUNDS)
@@ -99,6 +101,7 @@ For each enemy type:
 // General form [EA.GENERAL.RACE.CLASS.SPECIFIC.GENDER.ALIGN].
 IF
     ActionListEmpty()
+    Delay(30)
     OR(9)
         Detect([ENEMY.0.0.ELEMENTAL_FIRE.0])
         Detect([ENEMY.0.0.GREY_OOZE])
@@ -119,6 +122,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    Delay(30)
     OR(8)
         See(NearestEnemyOfType([ENEMY.0.0.MAGE_ALL]))
         See(NearestEnemyOfType([ENEMY.0.0.CLERIC_ALL]))
@@ -138,6 +142,7 @@ END
 // Detect Troll-type enemies, prepare to use anti-Troll strategies.
 IF
     ActionListEmpty()
+    Delay(30)
     Detect([ENEMY.0.0.TROLL.0])
     !GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
 THEN
@@ -148,6 +153,7 @@ END
 
 IF
     ActionListEmpty()
+    Delay(30)
     Detect([ENEMY.0.0.GREEN_SLIME])
     !GlobalTimerNotExpired("SLIME_ENEMIES","LOCALS")
 THEN
@@ -165,6 +171,7 @@ IF
         Detect([ENEMY.0.0.MIND_FLAYER.0])
         Detect([ENEMY.0.0.MIND_FLAYER.0])
     !GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
+    Delay(30)
 THEN
     RESPONSE #100
         SetGlobalTimer("PSYCHIC_ENEMIES","LOCALS",ONE_TURN)
@@ -188,17 +195,14 @@ IF
     OR(8)
         CheckStat([ANYONE],1,WEB)
         CheckStat([ANYONE],1,GREASE)
-        StateCheck([ANYONE],STATE_HELPLESS) // Check if the wizard is helpless
         SpellCast([ANYONE],WIZARD_WEB)  // SPWI215.SPL (Web)
         SpellCast([ANYONE.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
         SpellCast([ANYONE.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
-    See([ANYONE])
-    Range([ANYONE],20)
 THEN
     RESPONSE #100
-        SetGlobalTimer("USE_RANGE","LOCALS",ONE_TURN)
+        SetGlobalTimer("USE_RANGE","LOCALS",FIVE_ROUNDS)
         SetInterrupt(FALSE)
         RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
         SetInterrupt(TRUE)
