@@ -3,7 +3,8 @@
 // SECTION:GLOBALS
 // ======================================================
 
-// Reset daily use items to 0
+// Reset daily use items and timers to 0 because when first AI first turned on the timer's 
+// value is unintialized and can be large.
 IF
     PartyRested()
 THEN
@@ -11,6 +12,11 @@ THEN
         SetGlobal("USED_RING33","LOCALS",0)
         SetGlobal("USED_STAF21","LOCALS",0)
         SetGlobal("USED_SW1H26","LOCALS",0)
+        SetGlobalTimer("FIRE_ENEMIES","LOCALS",0)
+        SetGlobalTimer("CASTER_ENEMY","LOCALS",0)
+        SetGlobalTimer("TROLL_ENEMIES","LOCALS",0)
+        SetGlobalTimer("USE_RANGE","LOCALS",0)
+        SetGlobalTimer("PSYCHIC_ENEMIES","LOCALS",0)
         Continue()
 END
 
@@ -29,7 +35,7 @@ END
 IF
     Delay(60)
     OR(4)
-        Exists([EVILCUTOFF])
+        Exists([ENEMY])
         AreaCheck("OH8200")
         AreaCheck("OH8300")
         AreaCheck("OH8400")
