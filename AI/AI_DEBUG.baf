@@ -2835,6 +2835,24 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_SPOOK)  // SPWI101.SPL (Sleep)
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
+    !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
+    !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        DisplayStringHead(Myself,180)
+        DisplayStringHead(Myself,160)
+        Spell([ENEMY],WIZARD_SPOOK)  // Cast Sleep
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
 // ======================================================
@@ -2854,7 +2872,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,180)
+        DisplayStringHead(Myself,181)
         Spell(LastSeenBy(Myself),CLERIC_HOLD_PERSON)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2871,7 +2889,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,181)
+        DisplayStringHead(Myself,182)
         Spell(NearestEnemyOf(Myself),RANGER_CHARM_ANIMAL)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2888,7 +2906,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,182)
+        DisplayStringHead(Myself,183)
         Spell(LastSeenBy(Myself),CLERIC_CHARM_PERSON)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2904,7 +2922,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,183)
+        DisplayStringHead(Myself,184)
         Spell(LastSeenBy(Myself),CLERIC_COMMAND)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2919,7 +2937,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,184)
+        DisplayStringHead(Myself,185)
         Spell(LastSeenBy(Myself),LATHANDER_HOLD_UNDEAD)  // Cast Hold Person to incapacitate the enemy
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2932,7 +2950,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,185)
+        DisplayStringHead(Myself,186)
         Spell(NearestEnemyOf(Myself),CLERIC_INSECT_PLAGUE)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2946,7 +2964,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,186)
+        DisplayStringHead(Myself,187)
         Spell(NearestEnemyOf(Myself),CLERIC_SUMMON_INSECTS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -2962,7 +2980,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,187)
+        DisplayStringHead(Myself,188)
         Spell(FarthestEnemyOf(Myself), WIZARD_COMET)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -2974,7 +2992,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,188)
+        DisplayStringHead(Myself,189)
         Spell(FarthestEnemyOf(Myself),WIZARD_DRAGONS_BREATH)  // Cast Dragon's Breath
 END
 
@@ -2987,7 +3005,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,189)
+        DisplayStringHead(Myself,190)
         Spell(FarthestEnemyOf(Myself),WIZARD_SKULL_TRAP)  // Cast Dragon's Breath
 END
 
@@ -3000,7 +3018,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,190)
+        DisplayStringHead(Myself,191)
         Spell(FarthestEnemyOf(Myself),WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3016,7 +3034,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,191)
+        DisplayStringHead(Myself,192)
         Spell(FarthestEnemyOf(Myself),WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3034,7 +3052,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,192)
+        DisplayStringHead(Myself,193)
         Spell(NearestEnemyOf(Myself),WIZARD_BURNING_HANDS)  // SPWI103.SPL (Burning Hands)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3050,7 +3068,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,193)
+        DisplayStringHead(Myself,194)
         Spell(NearestEnemyOf(Myself),WIZARD_COLOR_SPRAY)  // SPWI105.SPL (Color Spray)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3063,7 +3081,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,194)
+        DisplayStringHead(Myself,195)
         Spell(NearestEnemyOf(Myself),WIZARD_CONE_OF_COLD)  // SPWI608.SPL (Cone of Cold)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3085,7 +3103,7 @@ IF
 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,195)
+        DisplayStringHead(Myself,196)
         Spell(FarthestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 
@@ -3108,7 +3126,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,196)
+        DisplayStringHead(Myself,197)
         Spell(NearestEnemyOf(Myself),WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3135,7 +3153,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,197)
+        DisplayStringHead(Myself,198)
         Spell(LastSeenBy(Myself),WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3152,7 +3170,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,198)
+        DisplayStringHead(Myself,199)
         Spell(NearestEnemyOf(Myself),WIZARD_FLAME_ARROW)  // SPWI304.SPL (Flame Arrow)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3164,7 +3182,7 @@ IF
     HaveSpell(WIZARD_POWER_WORD_KILL)  // SPWI910.SPL (Power Word Kill)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,199)
+        DisplayStringHead(Myself,200)
         Spell(NearestEnemyOf(Myself), WIZARD_POWER_WORD_KILL)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3181,7 +3199,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,200)
+        DisplayStringHead(Myself,201)
         Spell(NearestEnemyOf(Myself),WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3199,7 +3217,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,201)
+        DisplayStringHead(Myself,202)
         Spell(NearestEnemyOf(Myself),WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3223,7 +3241,7 @@ IF
 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,202)
+        DisplayStringHead(Myself,203)
         Spell(NearestEnemyOf(Myself),CLERIC_FLAME_STRIKE)  // Cast Flame Strike for vertical fire damage
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3241,7 +3259,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,203)
+        DisplayStringHead(Myself,204)
         Spell(NearestEnemyOf(Myself),CLERIC_HARM)  // Cast Harm to significantly reduce enemy's HP
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3263,7 +3281,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,204)
+        DisplayStringHead(Myself,205)
         Spell(Myself, WARRIOR_GREATER_WHIRLWIND)  // Perform Greater Whirlwind Attack
         AttackOneRound(NearestEnemyOf(Myself))
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
@@ -3280,7 +3298,7 @@ IF
 
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,205)
+        DisplayStringHead(Myself,206)
         Spell(Myself,MINSC_BERSERK)  // Cast MINSC_BERSERK
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3293,7 +3311,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,206)
+        DisplayStringHead(Myself,207)
         Spell(Myself,BERSERKER_RAGE)  // Cast MINSC_BERSERK
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3305,7 +3323,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,207)
+        DisplayStringHead(Myself,208)
         Spell(Myself,BARBARIAN_RAGE)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3318,7 +3336,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,208)
+        DisplayStringHead(Myself,209)
         Spell(Myself,KENSAI_KIA)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3337,7 +3355,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,209)
+        DisplayStringHead(Myself,210)
         Spell(Myself,WIZARD_CONTINGENCY)  // Cast Spirit Armor for increased defense
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3350,7 +3368,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,210)
+        DisplayStringHead(Myself,211)
         Spell(Myself,WIZARD_MINOR_SEQUENCER)  // Cast Spirit Armor for increased defense
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3365,7 +3383,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,211)
+        DisplayStringHead(Myself,212)
         Spell(Myself,WIZARD_SPIRIT_ARMOR)  // Cast Spirit Armor for increased defense
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3382,7 +3400,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,212)
+        DisplayStringHead(Myself,213)
         Spell(Myself,WIZARD_STONE_SKIN)  // Cast Stoneskin for increased damage resistance
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3399,7 +3417,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,213)
+        DisplayStringHead(Myself,214)
         Spell(Myself,WIZARD_GHOST_ARMOR)  // Cast Ghost Armor for improved defense
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3416,7 +3434,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,214)
+        DisplayStringHead(Myself,215)
         Spell(Myself,WIZARD_ARMOR)  // Cast Armor for increased protection before combat
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3433,7 +3451,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,215)
+        DisplayStringHead(Myself,216)
         Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3448,7 +3466,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,216)
+        DisplayStringHead(Myself,217)
         Spell(Myself,WIZARD_SHIELD)  // Cast Shield for added protection
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3465,7 +3483,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure the spell is not recently cast
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,217)
+        DisplayStringHead(Myself,218)
         Spell(Myself,WIZARD_RESIST_FEAR)  // Cast Resist Fear for protection against fear
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3482,7 +3500,7 @@ IF
     GlobalTimerExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,218)
+        DisplayStringHead(Myself,219)
         Spell(Myself,WIZARD_PROTECTION_FROM_PETRIFICATION)  // Cast Protection from Petrification
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
@@ -3499,7 +3517,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,219)
+        DisplayStringHead(Myself,220)
         Spell(Myself,SET_SNARE_TRAP) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3512,7 +3530,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,220)
+        DisplayStringHead(Myself,221)
         Spell(Myself,SET_SPECIAL_SNARE_TRAP) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3525,7 +3543,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,221)
+        DisplayStringHead(Myself,222)
         Spell(Myself,ROGUE_SET_SPIKE_TRAP) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3538,7 +3556,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,222)
+        DisplayStringHead(Myself,223)
         Spell(Myself,ROGUE_SET_EXPLODING_TRAP)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3551,7 +3569,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        DisplayStringHead(Myself,223)
+        DisplayStringHead(Myself,224)
         Spell(Myself,ROGUE_SET_TIME_TRAP)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
@@ -3573,7 +3591,7 @@ IF
     Delay(24)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,224)
+        DisplayStringHead(Myself,225)
         Hide()  // Hide in Shadows if not in combat and no enemies nearby
         Continue()
 END
@@ -3587,7 +3605,7 @@ IF
     Delay(24)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,225)
+        DisplayStringHead(Myself,226)
         FindTraps()  // Detect Traps if hidden and not in combat
         Wait(6)
         Continue()
@@ -3602,7 +3620,7 @@ IF
     Delay(24)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,226)
+        DisplayStringHead(Myself,227)
         BattleSong()
         Wait(18)
         Continue()
@@ -3621,7 +3639,7 @@ IF
         Class(Myself,CLERIC_ALL)
   THEN
     RESPONSE #100
-        DisplayStringHead(Myself,227)
+        DisplayStringHead(Myself,228)
       Turn()
       Wait(12)
       Continue()
@@ -3644,7 +3662,7 @@ IF
     HasItemEquiped("WAND06",Myself)  
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,228)
+        DisplayStringHead(Myself,229)
       UseItem("WAND06",[ENEMY]) 
 END
 
@@ -3661,7 +3679,7 @@ IF
     Delay(60)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,229)
+        DisplayStringHead(Myself,230)
       UseItem("WAND02",[ENEMY]) 
 END
 
@@ -3678,7 +3696,7 @@ IF
     Delay(60)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,230)
+        DisplayStringHead(Myself,231)
       UseItem("WAND02",[ENEMY]) 
 END
 
@@ -3697,7 +3715,7 @@ IF
     Delay(60)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,231)
+        DisplayStringHead(Myself,232)
         UseItem("WAND05",FarthestEnemyOf(Myself)) 
 END
 
@@ -3715,7 +3733,7 @@ IF
     Delay(60)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,232)
+        DisplayStringHead(Myself,233)
       UseItem("WAND04",[ENEMY]) 
 END
 
@@ -3731,7 +3749,7 @@ IF
     HasItemEquiped("WAND03",Myself)  
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,233)
+        DisplayStringHead(Myself,234)
       UseItem("WAND03",[ENEMY]) 
 END
 
@@ -3748,7 +3766,7 @@ IF
     HasItemEquiped("SW1H26",Myself)  
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,234)
+        DisplayStringHead(Myself,235)
       SetInterrupt(FALSE)
       UseItem("SW1H26",Myself) 
       SetInterrupt(TRUE)
@@ -3763,7 +3781,7 @@ IF
     HasItemEquiped("RING33",Myself) 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,235)
+        DisplayStringHead(Myself,236)
       SetInterrupt(FALSE)
       UseItem("RING33",NearestEnemyOf(Myself)) 
       SetInterrupt(TRUE)
@@ -3777,7 +3795,7 @@ IF
     HasItemEquiped("STAF21",Myself) 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,236)
+        DisplayStringHead(Myself,237)
       SetInterrupt(FALSE)
       UseItem("STAF21",NearestEnemyOf(Myself))  
       SetInterrupt(TRUE)
@@ -3793,7 +3811,7 @@ IF
     HasItemEquiped("SW1H31",Myself) 
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,237)
+        DisplayStringHead(Myself,238)
       SetInterrupt(FALSE)
       UseItem("SW1H31",Myself)  
       SetInterrupt(TRUE)
@@ -3823,11 +3841,12 @@ IF
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
+    Class(Myself,RANGER)
     !Range(LastSeenBy(Myself),4)
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,238)
+        DisplayStringHead(Myself,239)
         EquipRanged()  // Equip ranged weapon
         Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
         Continue()
@@ -3849,12 +3868,13 @@ IF
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
-    !Range(LastSeenBy(Myself),7)  // If the enemy is within melee range (4 search squares)
+    GlobalTimerNotExpired("USE_RANGE","LOCALS")
+    !Range(LastSeenBy(Myself),10)  // If the enemy is within melee range (4 search squares)
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,239)
+        DisplayStringHead(Myself,240)
         EquipRanged()  // Equip ranged weapon
         AttackOneRound(LastSeenBy(Myself))
         Continue()
@@ -3875,7 +3895,7 @@ IF
         !Class(Myself,CLERIC_ALL)
         !Class(Myself,MAGE_ALL)
         !Class(Myself,DRUID_ALL)
-        Range([ENEMY],4)
+        Range([ENEMY],10)
         RandomNum(1,3)
         LevelLT(Myself,9)
     OR(8)
@@ -3892,7 +3912,7 @@ IF
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,240)
+        DisplayStringHead(Myself,241)
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
         AttackOneRound(LastSeenBy(Myself))
         Continue()
@@ -3905,7 +3925,7 @@ IF
     !Detect([ENEMY])
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,241)
+        DisplayStringHead(Myself,242)
         MoveToObject(NearestEnemyOf(Myself))
 END
 
@@ -3917,7 +3937,7 @@ IF
     True()
 THEN
     RESPONSE #100
-        DisplayStringHead(Myself,242)
+        DisplayStringHead(Myself,243)
         SetGlobalTimer("WIZARD_CAST","LOCALS",0)
         SetGlobalTimer("CLERIC_CAST","LOCALS",0)
 END

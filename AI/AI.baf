@@ -295,6 +295,20 @@ THEN
 END
 
 IF
+    Exists(LastAttackerOf(Myself))
+    OR(3)
+        Class(Myself,MAGE)
+        Class(Myself,THIEF)
+        Class(Myself,BARD)
+        Delay(3)
+THEN
+    RESPONSE #100
+        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),30)
+        Continue()
+END
+
+
+IF
     ActionListEmpty()
     ActuallyInCombat()
     AttackedBy([ENEMY],DEFAULT)
