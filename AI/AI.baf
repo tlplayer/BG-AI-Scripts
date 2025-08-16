@@ -282,7 +282,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Delay(18)
+    Delay(10)
     OR(3)
         Class(Myself,THIEF_ALL)
         Class(Myself,MONK)
@@ -305,7 +305,8 @@ IF
         Class(Myself,MAGE)
         Class(Myself,THIEF)
         Class(Myself,BARD)
-        Delay(10)
+    Delay(8)
+    HPPercentLT(Myself,80)
 THEN
     RESPONSE #100
         RunAwayFromNoLeaveArea(LastAttackerOf(Myself),45)
@@ -322,6 +323,7 @@ IF
         Class(Myself,MAGE_ALL)
         Class(Myself,SORCERER)
     Range([ENEMY],8)
+    HPPercentLT(Myself,80)
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),30)
@@ -2034,27 +2036,31 @@ END
 
 IF
     ActionListEmpty()
-    ActuallyInCombat()
+    OR(2)
+        ActuallyInCombat()
+        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CHANT)  
-    StateCheck(Myself,STATE_CHANT)
+    StateCheck([PC],STATE_CHANT)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_CHANT)  // Cast Protection from Fire on yourself
+        Spell([PC],CLERIC_CHANT)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
-    ActuallyInCombat()
-    StateCheck(Myself,STATE_BLESS)
+    OR(2)
+        ActuallyInCombat()
+        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
+    StateCheck([PC],STATE_BLESS)
     HaveSpell(CLERIC_BLESS)  
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_BLESS)  // Cast Protection from Fire on yourself
+        Spell([PC],CLERIC_BLESS)  // Cast Protection from Fire on yourself
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2411,14 +2417,12 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    !See([ENEMY.0.0.MAGE_ALL])  // exclude enemy mages
+    !Detect([ENEMY.0.0.MAGE_ALL])  // exclude enemy mages
     HaveSpell(WIZARD_RAY_OF_ENFEEBLEMENT) 
-    Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_RAY_OF_ENFEEBLEMENT) 
+        Spell([ENEMY],WIZARD_RAY_OF_ENFEEBLEMENT) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2431,21 +2435,19 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_SLOW)  
+        Spell([ENEMY],WIZARD_SLOW)  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_CONTAGION)  // SPWI104.SPL (Contagion)
-    Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_CONTAGION)  // Cast Contagion
+        Spell([ENEMY],WIZARD_CONTAGION)  // Cast Contagion
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2453,7 +2455,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See([ENEMY])
-    ImmuneToSpellLevel(LastSeenBy(Myself),2)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
     HaveSpell(WIZARD_HORROR)  // SPWI102.SPL (Horror)
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
@@ -2500,7 +2502,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),12)
+    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),20)
     HaveSpell(WIZARD_GREASE)  // SPWI101.SPL (Grease)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -2615,7 +2617,7 @@ IF
     ActuallyInCombat()
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
-    ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
     CheckStatGT(LastSeenBy(Myself),2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
@@ -2633,7 +2635,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     See([ENEMY])
-    ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
     HPGT(LastSeenBy(Myself),40)
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
@@ -2651,7 +2653,7 @@ IF
     ActuallyInCombat()
     See(NearestEnemyOf(Myself))
     HPGT(NearestEnemyOf(Myself),40)
-    ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
     !HasBounceEffects(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2974,6 +2976,79 @@ IF
 THEN
     RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    OR(8)
+        See([ENEMY])
+        See([ENEMY.0.0.RANGER]) // Default target
+        See([ENEMY.0.0.THIEF]) // Default target
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
+    HaveSpell(WIZARD_AGANNAZAR_SCORCHER) 
+    OR(2)
+        HPGT(LastSeenBy(Myself),20)
+        GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_AGANNAZAR_SCORCHER) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    OR(8)
+        See([ENEMY])
+        See([ENEMY.0.0.RANGER]) // Default target
+        See([ENEMY.0.0.THIEF]) // Default target
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
+    HaveSpell(WIZARD_AGANNAZAR_SCORCHER) 
+    OR(2)
+        HPGT(LastSeenBy(Myself),20)
+        GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_AGANNAZAR_SCORCHER) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    OR(8)
+        See([ENEMY])
+        See([ENEMY.0.0.RANGER]) // Default target
+        See([ENEMY.0.0.THIEF]) // Default target
+        See([ENEMY.0.0.BARD_ALL]) // Default target
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER]) // Highest priority
+    HaveSpell(WIZARD_GHOUL_TOUCH) 
+    HPGT(LastSeenBy(Myself),15)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_GHOUL_TOUCH) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3469,11 +3544,9 @@ IF
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    !StateCheck(Myself,STATE_MIRRORIMAGE)
     CheckStatLT([ENEMY],100,RESISTMAGIC)
     CheckStatLT([ENEMY],100,RESISTCOLD)
-    CheckSpellState([ENEMY],WIZARD_SHIELD)
-    HPGT([ENEMY],40)
+    HPGT([ENEMY],30)
     HasItemEquiped("WAND06",Myself)  
 THEN
     RESPONSE #100
@@ -3486,7 +3559,6 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     StateCheck([ENEMY],STATE_PANIC)
-    CheckSpellState([ENEMY],WIZARD_SHIELD)
     HPGT([ENEMY],30)
     NumCreatureGT([ENEMY],2)
     HasItemEquiped("WAND02",Myself)  
@@ -3501,7 +3573,6 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     StateCheck([ENEMY],STATE_PANIC)
-    CheckSpellState([ENEMY],WIZARD_SHIELD)
     HPGT([ENEMY],30)
     !ImmuneToSpellLevel([ENEMY],4)
     NumCreatureGT([ENEMY],2)
@@ -3521,7 +3592,7 @@ IF
     !HasBounceEffects(FarthestEnemyOf(Myself))
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
-    HPGT(FarthestEnemyOf(Myself),40)
+    HPGT(FarthestEnemyOf(Myself),20)
     NumCreatureGT([ENEMY],2)
     HasItemEquiped("WAND05",Myself)  
     Delay(60)
@@ -3554,7 +3625,7 @@ IF
     CheckStatLT([ENEMY],100,RESISTMAGIC)
     CheckSpellState([ENEMY],WIZARD_SHIELD)
     !HaveSpell(WIZARD_MAGIC_MISSILE)  
-    ImmuneToSpellLevel([ENEMY],4)
+    !ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],20)
     HasItemEquiped("WAND03",Myself)  
 THEN
@@ -3623,6 +3694,39 @@ THEN
       IncrementGlobal("USED_SW1H31","LOCALS",1)
 END
 
+// Cast Stoneskin Gargoyle Boots
+// Casts Stoneskin to grant the wizard protection from physical damage by turning their skin to stone.
+// Lasts for 1 turn per caster level.
+IF
+    ActionListEmpty()
+    GlobalLT("USED_BOOT12","LOCALS",1)
+    HasItemEquiped("BOOT12",Myself) 
+    CheckStatLT(Myself,1,STONESKINS)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("BOOT12",Myself)  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_BOOT12","LOCALS",1)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    GlobalLT("USED_BOOT11","LOCALS",1)
+    HasItemEquiped("BOOT11",Myself) 
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_WEAPONS)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("BOOT11",Myself)  
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_BOOT11","LOCALS",1)
+END
 
 // ======================================================
 // SECTION: COMBAT ACTIONS - RANGED ATTACKS
