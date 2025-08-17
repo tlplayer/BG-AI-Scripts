@@ -3732,6 +3732,8 @@ END
 // SECTION: COMBAT ACTIONS - RANGED ATTACKS
 // ======================================================
 
+//AMMO TYPE SELECTION
+
 
 // Use special bow ability
 IF
@@ -3759,6 +3761,8 @@ THEN
         Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
         Continue()
 END
+
+
 
 
 IF
@@ -3794,17 +3798,13 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(2)
+    OR(5)
         Class(Myself,FIGHTER_ALL)
         Class(Myself,PALADIN_ALL)
+        RandomNum(1,4)
+        LevelLT(Myself,5)
+        Range([ENEMY],7)
     //Return true if I'm a caster but only if there's a 25% chance
-    OR(6)
-        !Class(Myself,CLERIC_ALL)
-        !Class(Myself,MAGE_ALL)
-        !Class(Myself,DRUID_ALL)
-        Range([ENEMY],10)
-        RandomNum(1,2)
-        LevelLT(Myself,9)
     OR(8)
         See([ENEMY])
         See([ENEMY.0.0.RANGER]) // Default target
