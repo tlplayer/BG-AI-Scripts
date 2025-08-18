@@ -290,7 +290,7 @@ IF
     !StateCheck(Myself,STATE_INVISIBLE)
 THEN
     RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),50)
+        RunAwayFrom(NearestEnemyOf(Myself),30)
         Hide()
         EquipMostDamagingMelee()
         AttackOneRound(NearestEnemyOf(Myself))
@@ -309,25 +309,10 @@ IF
     HPPercentLT(Myself,80)
 THEN
     RESPONSE #100
-        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),45)
+        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),30)
         Continue()
 END
 
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    AttackedBy([ENEMY],MELEE)
-    Delay(10)
-    OR(2)
-        Class(Myself,MAGE_ALL)
-        Class(Myself,SORCERER)
-    Range([ENEMY],8)
-    HPPercentLT(Myself,80)
-THEN
-    RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),30)
-END
 
 // ======================================================
 // SECTION: Heal SPELLS (CLERIC)
@@ -660,6 +645,7 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     HPPercentLT(Myself,35)
     !StateCheck(Myself,STATE_INVISIBLE)
     PartyHasItem("POTN10")  // Potion of Invisibility
@@ -3812,6 +3798,7 @@ IF
     OR(2)
         WeaponCanDamage(LastSeenBy(Myself),BOTH)
         !IsWeaponRanged(Myself)
+    !OutOfAmmo()
     CanEquipRanged()
     Class(Myself,RANGER)
     !Range(LastSeenBy(Myself),4)
