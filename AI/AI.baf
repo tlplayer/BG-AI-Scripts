@@ -2040,7 +2040,7 @@ IF
         ActuallyInCombat()
         GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CHANT)  
-    StateCheck([PC],STATE_CHANT)
+    !StateCheck([PC],STATE_CHANT)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -2054,13 +2054,24 @@ IF
     OR(2)
         ActuallyInCombat()
         GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
-    StateCheck([PC],STATE_BLESS)
+    !StateCheck([PC],STATE_BLESS)
     HaveSpell(CLERIC_BLESS)  
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell([PC],CLERIC_BLESS)  // Cast Protection from Fire on yourself
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("ohtmps2")
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("ohtmps2",Myself)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2173,8 +2184,9 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_FLAME_BLADE)  
-    CheckStatGT(Myself,3,THAC0)
-    GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
+    OR(2)
+        GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
+        LevelLT(Myself,8)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -2186,22 +2198,44 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_SPIRITUAL_HAMMER)  
-    CheckStatGT(Myself,3,THAC0)
+    OR(3)
+        HasItemEquiped("HAMM01",Myself) // Basic War Hammer
+        HasItemEquiped("HAMM02",Myself) // War Hammer +1 (if you also want to replace this)
+        HasItemEquiped("IHAMM01",Myself) // Improved hammer, only from beregost smith after nashkel mine quest
+    InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_SPIRITUAL_HAMMER)  // Cast Protection from Fire on yourself
+        Spell(Myself,CLERIC_SPIRITUAL_HAMMER)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpellRES("SPIN113")
+    OR(3)
+        HasItemEquiped("HAMM01",Myself) // Basic War Hammer
+        HasItemEquiped("HAMM02",Myself) // War Hammer +1 (if you also want to replace this)
+        HasItemEquiped("IHAMM01",Myself) // Improved hammer, only from beregost smith after nashkel mine quest
+    InWeaponRange(NearestEnemyOf(Myself))  
+    CheckStatGT(Myself,3,THAC0)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    Delay(30)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPIN113",Myself)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HaveSpell(CLERIC_SANCTUARY)  // SPPR109.SPL (Sanctuary)
+    HaveSpell(CLERIC_SANCTUARY)  
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    HPPercentLT(Myself,50)  // Party member's HP is below 25%
+    HPPercentLT(Myself,50)  
 THEN
     RESPONSE #100
         Spell(Myself,CLERIC_SANCTUARY)  // Cast Sanctuary on the party member with low HP
@@ -2398,19 +2432,17 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_SLEEP)  // SPWI101.SPL (Sleep)
-    Range(NearestEnemyOf(Myself),30)
-    HPLT(NearestEnemyOf(Myself),30)
+    LevelLT([ENEMY],5)
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    !Race(NearestEnemyOf(Myself),ELF)  // Exclude elves
+    !Race([ENEMY],ELF)  // Exclude elves
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_SLEEP)  // Cast Sleep
+        Spell([ENEMY],WIZARD_SLEEP)  // Cast Sleep
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2966,16 +2998,14 @@ END
 /* Chromatic Orb for enemies with 10-20 HP, using level 1 spell */
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
-    HPGT(NearestEnemyOf(Myself),10)
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    LevelGT([ENEMY],2)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
+        Spell([ENEMY],WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3138,6 +3168,20 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_LARLOCH_MINOR_DRAIN) 
+    HPPercentLT(Myself,80)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_LARLOCH_MINOR_DRAIN) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
@@ -3633,6 +3677,22 @@ THEN
       UseItem("WAND03",[ENEMY]) 
 END
 
+
+// Wand of Magic Missile
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    !HaveSpell(WIZARD_MAGIC_MISSILE)  
+    !ImmuneToSpellLevel([ENEMY],4)
+    HPGT([ENEMY],20)
+    HasItemEquiped("WAND99",Myself)  
+THEN
+    RESPONSE #100
+      UseItem("WAND99",[ENEMY]) 
+END
+
 // ======================================================
 // SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
@@ -3735,6 +3795,7 @@ END
 //AMMO TYPE SELECTION
 
 
+
 // Use special bow ability
 IF
     ActuallyInCombat()
@@ -3780,10 +3841,10 @@ IF
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
-    GlobalTimerNotExpired("USE_RANGE","LOCALS")
-    !Range(LastSeenBy(Myself),10)  // If the enemy is within melee range (4 search squares)
+    !Range(LastSeenBy(Myself),5)  // If the enemy is within melee range (4 search squares)
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
+    !StateCheck(Myself,STATE_INVISIBLE)
 THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
@@ -3798,12 +3859,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(5)
-        Class(Myself,FIGHTER_ALL)
-        Class(Myself,PALADIN_ALL)
-        RandomNum(1,4)
-        LevelLT(Myself,5)
-        Range([ENEMY],7)
+    Range([ENEMY],5)
     //Return true if I'm a caster but only if there's a 25% chance
     OR(8)
         See([ENEMY])
@@ -3838,7 +3894,7 @@ END
 // RESET TIMERS IF WE'RE at the bottom
 IF
     ActuallyInCombat()
-    Delay(40)
+    Delay(20)
     True()
 THEN
     RESPONSE #100
