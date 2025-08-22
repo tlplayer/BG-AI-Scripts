@@ -616,6 +616,7 @@ END
 // potion of superior healing
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     HPPercentLT(Myself,25)
     PartyHasItem("POTN55")  
 THEN
@@ -626,6 +627,7 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     HPPercentLT(Myself,50)
     PartyHasItem("POTN52")  
 THEN
@@ -636,6 +638,7 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     HPPercentLT(Myself,50)
     PartyHasItem("POTN08") 
 THEN
@@ -761,8 +764,6 @@ THEN
         TakePartyItemNum("POTN24",1)
         UseItem("POTN24",Myself)  
 END
-
-
 
 IF
     ActionListEmpty()
@@ -2202,13 +2203,12 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(AURA_OF_DESPAIR)  
-    Delay(30)
     OR(2)
         LevelGT([ENEMY],3)
         NumCreatureGT([ENEMY],3)
-    Range([ENEMY],6)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    Range([ENEMY],8)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
 THEN
     RESPONSE #100
         Spell(Myself,AURA_OF_DESPAIR)  
