@@ -2186,12 +2186,9 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Delay(30)
     HaveSpell(ASSASSIN_POISON)  
-    OR(2)
-        LevelGT([ENEMY],2)
-        NumCreatureGT([ENEMY],2)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    Delay(30)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2204,9 +2201,9 @@ IF
     ActuallyInCombat()
     HaveSpell(AURA_OF_DESPAIR)  
     OR(2)
-        LevelGT([ENEMY],3)
-        NumCreatureGT([ENEMY],3)
-    Range([ENEMY],8)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     Delay(10)
 THEN
@@ -2342,6 +2339,32 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,CLERIC_HOLY_POWER)  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("ohtmps1")  
+    !CheckSpellState(Myself,HOLY_POWER)  // State 9 for Holy Power
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("ohtmps1",Myself)  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN103")  
+    !CheckSpellState(Myself,HOLY_POWER)  // State 9 for Holy Power
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPIN103",Myself)  // Cast Holy Power for increased strength
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3917,7 +3940,7 @@ IF
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
-    !Range(LastSeenBy(Myself),5)  // If the enemy is within melee range (4 search squares)
+    !Range(LastSeenBy(Myself),6)  // If the enemy is within melee range (4 search squares)
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
     !StateCheck(Myself,STATE_INVISIBLE)
@@ -3935,8 +3958,12 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Range([ENEMY],5)
-    //Return true if I'm a caster but only if there's a 25% chance
+    OR(4)
+        Range([ENEMY],8)
+        Class(Myself,PALADIN_ALL)
+        Class(Myself,FIGHTER_ALL)
+        Class(Myself,RANGER)
+     //Return true if I'm a caster but only if there's a 25% chance
     OR(8)
         See([ENEMY])
         See([ENEMY.0.0.RANGER]) // Default target
