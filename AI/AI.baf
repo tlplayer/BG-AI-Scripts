@@ -3735,6 +3735,19 @@ THEN
       UseItem("WAND04",[ENEMY]) 
 END
 
+//Wand of the heavens 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !ImmuneToSpellLevel([ENEMY],4)
+    HPGT([ENEMY],50)
+    HasItemEquiped("WAND11",Myself)  
+    Delay(60)
+THEN
+    RESPONSE #100
+      UseItem("WAND11",[ENEMY]) 
+END
+
 // Wand of Magic Missile
 IF
     ActionListEmpty()
