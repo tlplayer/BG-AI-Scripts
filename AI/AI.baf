@@ -2142,6 +2142,17 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+//Long term buff, remove fear works for 1 hour and removes the fear and blocks it.
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_REMOVE_FEAR) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")  
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_REMOVE_FEAR)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_PIXIE_DUST)  
@@ -2765,7 +2776,6 @@ IF
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     HaveSpell(WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
-    !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2835,7 +2845,6 @@ IF
     ActionListEmpty()
     See([ENEMY])
     HPPercentGT(LastSeenBy(Myself),90)
-    HPGT(LastSeenBy(Myself),30)
     !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     General(LastSeenBy(Myself),HUMANOID)
@@ -2931,7 +2940,8 @@ IF
     ActuallyInCombat()
     HaveSpell(WIZARD_SKULL_TRAP)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),13)  // Ensure the enemy is within medium range
+    !Range(FarthestEnemyOf(Myself),17)  // Ensure the enemy is within medium range
+    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2959,6 +2969,7 @@ IF
     HPGT(NearestEnemyOf(Myself),40)
     HaveSpell(WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
     !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
+    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2972,7 +2983,7 @@ IF
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     HaveSpell(WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
     !Range(FarthestEnemyOf(Myself),14)
-    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),10)
+    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -3678,21 +3689,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    StateCheck([ENEMY],STATE_PANIC)
-    HPGT([ENEMY],30)
-    NumCreatureGT([ENEMY],2)
-    HasItemEquiped("WAND02",Myself)  
-    Delay(60)
-THEN
-    RESPONSE #100
-      UseItem("WAND02",[ENEMY]) 
-END
-
-//Wand of Fear
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    StateCheck([ENEMY],STATE_PANIC)
+    !StateCheck([ENEMY],STATE_PANIC)
     HPGT([ENEMY],30)
     !ImmuneToSpellLevel([ENEMY],4)
     NumCreatureGT([ENEMY],2)
@@ -3708,7 +3705,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     !Range(FarthestEnemyOf(Myself),14)
-    !Range(FarthestEnemyOf(NearestEnemyOf(Myself)),10)
+    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
@@ -3727,10 +3724,10 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    CheckSpellState([ENEMY],HELD)
+    !CheckSpellState([ENEMY],HELD)
     !CheckSpellState([ENEMY],FREE_ACTION)
     !ImmuneToSpellLevel([ENEMY],4)
-    HPGT([ENEMY],50)
+    HPGT([ENEMY],40)
     HasItemEquiped("WAND04",Myself)  
     Delay(60)
 THEN
@@ -3743,7 +3740,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    !CheckSpellState([ENEMY],WIZARD_SHIELD)
     !HaveSpell(WIZARD_MAGIC_MISSILE)  
     !ImmuneToSpellLevel([ENEMY],4)
     LevelGT([ENEMY],2)
@@ -3759,7 +3756,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    CheckSpellState([ENEMY],WIZARD_SHIELD)
+    !CheckSpellState([ENEMY],WIZARD_SHIELD)
     !HaveSpell(WIZARD_MAGIC_MISSILE)  
     !ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],20)
@@ -3780,11 +3777,10 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See([ENEMY])
-    HPPercentGT(LastSeenBy(Myself),90)
+    HPPercentGT(LastSeenBy(Myself),50)
     !HasBounceEffects(LastSeenBy(Myself))
     General(LastSeenBy(Myself),HUMANOID)
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     GlobalLT("USED_clck08","GLOBAL",1)
