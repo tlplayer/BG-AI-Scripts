@@ -2736,33 +2736,30 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),40)
+    LevelGT([ENEMY],4)
     !ImmuneToSpellLevel(LastSeenBy(Myself),4)
-    !HasBounceEffects(NearestEnemyOf(Myself))
+    !HasBounceEffects([ENEMY])
     HaveSpell(WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
+        Spell([ENEMY],WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),20)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_LOWER_RESISTANCE)  // SPWI106.SPL (Blindness)
+    CheckStatGT([ENEMY],0,RESISTMAGIC)
+    HaveSpell(WIZARD_LOWER_RESISTANCE)  
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_LOWER_RESISTANCE)  // SPWI106.SPL (Blindness)
+        Spell([ENEMY],WIZARD_LOWER_RESISTANCE) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3985,6 +3982,7 @@ IF
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponCanDamage(LastSeenBy(Myself),BOTH)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
+    HPPercentGT(Myself,30)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
