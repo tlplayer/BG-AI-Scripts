@@ -1,3 +1,20 @@
-SAMPLES
-scripts
+# Ignore .SAMPLES folder
+.SAMPLES/
+
+# Ignore .scripts folder
+.scripts/
+
+# Ignore any file/folder matching *__py*
 *__py*
+
+# Ignore .IDS folder
+.IDS/
+
+# Ignore files starting with .enhanced
+.enhanced*
+
+# Ignore .CONDITIONS folder
+.CONDITIONS/
+
+# Ignore .Compiler folder
+.Compiler/
