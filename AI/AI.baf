@@ -478,55 +478,48 @@ THEN
     RESPONSE #100
         SetInterrupt(FALSE)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        Spell(NearestAllyOf(Myself),CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
+        Spell([PC],CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
         SetInterrupt(TRUE)
 END
 
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_CHAOTIC_COMMANDS)  // SPPR303.SPL (Dispel Magic)
-    Allegiance(Myself,GOODCUTOFF)
-    See([PC])
     OR(2)
-        StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-        StateCheck(LastSeenBy(Myself),STATE_CONFUSED)
+        StateCheck([PC],STATE_CHARMED)
+        StateCheck([PC],STATE_CONFUSED)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CHAOTIC_COMMANDS)  // SPPR303.SPL (Dispel Magic)
+        Spell([PC],CLERIC_CHAOTIC_COMMANDS)  // SPPR303.SPL (Dispel Magic)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
 IF
     ActionListEmpty()
-    HaveSpell(CLERIC_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
+    HaveSpell(CLERIC_DISPEL_MAGIC)  
     See([PC])
     OR(4)
-        StateCheck(LastSeenBy(Myself),STATE_CHARMED)
-        StateCheck(LastSeenBy(Myself),STATE_CONFUSED)
-        StateCheck(LastSeenBy(Myself),STATE_STUNNED)
-        CheckStatGT(LastSeenBy(Myself),0,HELD)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+        StateCheck([PC],STATE_CHARMED)
+        StateCheck([PC],STATE_CONFUSED)
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_DISPEL_MAGIC)  // SPPR303.SPL (Dispel Magic)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+        Spell([PC],CLERIC_DISPEL_MAGIC)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
 END
 
 IF
     HaveSpell(CLERIC_FREE_ACTION) 
     OR(3)
-        CheckStatGT(LastHeardBy(Myself),0,HELD)
-        CheckStatGT(LastHeardBy(Myself),0,GREASE)
-        CheckStatGT(LastHeardBy(Myself),0,WEB)
-    OR(2)
-        Global("MYSELF_DEBUFFED","LOCALS",1)
-        Global("FRIEND_DEBUFFED","LOCALS",1)
+        CheckStatGT([PC],0,HELD)
+        CheckStatGT([PC],0,GREASE)
+        CheckStatGT([PC],0,WEB)
 THEN
     RESPONSE #70
-        Spell(LastHeardBy(Myself),CLERIC_FREE_ACTION)  
-        SetGlobal("MYSELF_DEBUFFED","LOCALS",0)
-        SetGlobal("FRIEND_DEBUFFED","LOCALS",0)
+        Spell([PC],CLERIC_FREE_ACTION)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
     RESPONSE #30
         Continue()
 END
