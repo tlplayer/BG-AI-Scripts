@@ -13,6 +13,7 @@ THEN
         SetGlobal("USED_STAF21","LOCALS",0)
         SetGlobal("USED_SW1H26","LOCALS",0)
         SetGlobal("USED_clck08","LOCALS",0)
+        SetGlobal("USED_BOOT12","LOCALS",0)
         SetGlobalTimer("FIRE_ENEMIES","LOCALS",0)
         SetGlobalTimer("CASTER_ENEMY","LOCALS",0)
         SetGlobalTimer("TROLL_ENEMIES","LOCALS",0)
@@ -3856,16 +3857,14 @@ END
 // Lasts for 1 turn per caster level.
 IF
     ActionListEmpty()
-    GlobalLT("USED_BOOT12","LOCALS",1)
+    GlobalLT("USED_BOOT12","LOCALS",3)
     HasItemEquiped("BOOT12",Myself) 
     CheckStatLT(Myself,1,STONESKINS)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
 THEN
     RESPONSE #100
-      SetInterrupt(FALSE)
       UseItem("BOOT12",Myself)  
-      SetInterrupt(TRUE)
       IncrementGlobal("USED_BOOT12","LOCALS",1)
 END
 
