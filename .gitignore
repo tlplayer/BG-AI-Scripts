@@ -1,20 +1,14 @@
-# Ignore .SAMPLES folder
-.SAMPLES/
+# Ignore folders
+CONDITIONS/
+Compiler/
+IDS/
+SAMPLES/
+enhanced-powergaming-scripts/
+scripts/
 
-# Ignore .scripts folder
-.scripts/
+# Ignore installer file
+setup-enhanced-powergaming-scripts.exe
 
-# Ignore any file/folder matching *__py*
+# (Optional) keep Python cache/junk ignored
 *__py*
-
-# Ignore .IDS folder
-.IDS/
-
-# Ignore files starting with .enhanced
-.enhanced*
-
-# Ignore .CONDITIONS folder
-.CONDITIONS/
-
-# Ignore .Compiler folder
-.Compiler/
+*.pyc
