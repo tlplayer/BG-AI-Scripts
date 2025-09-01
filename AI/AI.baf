@@ -468,6 +468,21 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+//Innate cure light wounds
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN101")  
+    HPPercentLT([PC],70) // Heal when HP is below 70%
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPIN101",[PC])  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+
 IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -809,6 +824,20 @@ THEN
       UseItem("AMUL22",LastSeenBy(Myself))  
       SetInterrupt(TRUE)
       IncrementGlobal("USED_AMUL22","LOCALS",1)
+END
+
+//Innate cure poison
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN102")  
+    StateCheck([PC],STATE_POISONED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPIN102",[PC])  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
@@ -1576,6 +1605,18 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,WIZARD_ANIMATE_DEAD)  // Create undead allies
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+//Summon Ghast Tiax!
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN115")
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPIN115",[ANYONE])  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3670,6 +3711,7 @@ IF
     CheckStatLT([ENEMY],100,RESISTCOLD)
     HPGT([ENEMY],30)
     HasItemEquiped("WAND06",Myself)  
+    Delay(20)
 THEN
     RESPONSE #100
       UseItem("WAND06",[ENEMY]) 
@@ -3685,7 +3727,7 @@ IF
     !ImmuneToSpellLevel([ENEMY],4)
     NumCreatureGT([ENEMY],2)
     HasItemEquiped("WAND02",Myself)  
-    Delay(60)
+    Delay(10)
 THEN
     RESPONSE #100
       UseItem("WAND02",[ENEMY]) 
@@ -3703,7 +3745,7 @@ IF
     HPGT(FarthestEnemyOf(Myself),20)
     NumCreatureGT([ENEMY],2)
     HasItemEquiped("WAND05",Myself)  
-    Delay(60)
+    Delay(20)
 THEN
     RESPONSE #100
         UseItem("WAND05",FarthestEnemyOf(Myself)) 
@@ -3720,7 +3762,7 @@ IF
     !ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],40)
     HasItemEquiped("WAND04",Myself)  
-    Delay(60)
+    Delay(20)
 THEN
     RESPONSE #100
       UseItem("WAND04",[ENEMY]) 
@@ -3733,7 +3775,7 @@ IF
     !ImmuneToSpellLevel([ENEMY],4)
     HPGT([ENEMY],50)
     HasItemEquiped("WAND11",Myself)  
-    Delay(60)
+    Delay(20)
 THEN
     RESPONSE #100
       UseItem("WAND11",[ENEMY]) 
