@@ -194,7 +194,7 @@ IF
     CheckStatLT(Myself,1,MINORGLOBE)
     CheckStatLT(Myself,1,SHIELDGLOBE)
     CheckStatGT(Myself,2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
-    OR(8)
+    OR(7)
         CheckStat([ANYONE],1,WEB)
         CheckStat([ANYONE],1,GREASE)
         SpellCast([ANYONE],WIZARD_WEB)  // SPWI215.SPL (Web)
@@ -478,7 +478,7 @@ IF
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        SpellRES("SPIN101",[PC])  // Cast Holy Power for increased strength
+        SpellRES("SPIN101",[PC]) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2401,6 +2401,7 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+//Holy might power
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -2408,6 +2409,7 @@ IF
     !CheckSpellState(Myself,HOLY_POWER)  // State 9 for Holy Power
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(20)
 THEN
     RESPONSE #100
         SpellRES("SPIN103",Myself)  // Cast Holy Power for increased strength
@@ -2806,7 +2808,6 @@ IF
     !HasBounceEffects(LastSeenBy(Myself))
     General(LastSeenBy(Myself),HUMANOID)
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !AttackedBy(LastSeenBy(Myself),DEFAULT) // Skip if any PC attacked recently
     HaveSpell(WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
@@ -2817,6 +2818,22 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+//Safana's charm
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN119")  
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    General(LastSeenBy(Myself),HUMANOID)
+    !Race([ENEMY],ELF)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+THEN
+    RESPONSE #100
+        SpellRES("SPIN119",LastSeenBy(Myself))  // Cast Holy Power for increased strength
+END
 
 IF
     ActuallyInCombat()
