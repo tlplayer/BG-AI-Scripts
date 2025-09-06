@@ -917,6 +917,31 @@ IF
     !StateCheck(Myself,STATE_SILENCED)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpellRES("SPWI302") //Use spell res here, otherwise the game can't find the id in bgee 1. In 2 it exists. 
+    THEN
+        RESPONSE #100
+        SetInterrupt(FALSE)
+        SpellRES("SPWI302",LastSeenBy(Myself))  
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        SetInterrupt(TRUE)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    !StateCheck(LastSeenBy(Myself),STATE_NOT_TARGETABLE)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    OR(5)
+        CheckStatGT(LastSeenBy(Myself),0,STONESKINS)
+        CheckSpellState(LastSeenBy(Myself),PROTECTION_FROM_MAGICAL_WEAPONS)
+        CheckSpellState(LastSeenBy(Myself),MANTLE)
+        CheckSpellState(LastSeenBy(Myself),IMPROVED_MANTLE)
+        CheckSpellState(LastSeenBy(Myself),ABSOLUTE_IMMUNITY)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     HaveSpell(WIZARD_DISPEL_MAGIC)
     THEN
         RESPONSE #100
@@ -1108,6 +1133,23 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     OR(6)
+        SpellCast([GOODCUTOFF],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
+        SpellCast([GOODCUTOFF],WIZARD_SIMULACRUM)  // SPWI804.SPL (Simulacrum)
+        SpellCast([GOODCUTOFF],WIZARD_MISLEAD)  // SPWI607.SPL (Mislead)
+        SpellCast([GOODCUTOFF],WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
+        SpellCast([GOODCUTOFF],WIZARD_IMPROVED_INVISIBILITY)  // SPWI405.SPL (Improved Invisibility)
+        SpellCast([GOODCUTOFF],WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+    HaveSpell(CLERIC_INVISIBILITY_PURGE)
+    THEN
+        RESPONSE #100
+        Spell([GOODCUTOFF],CLERIC_INVISIBILITY_PURGE)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.BARD_ALL])
@@ -1143,18 +1185,11 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_DOOM)  // 4231 (INQUIS_DISPEL_MAGIC)
+    HaveSpell(CLERIC_DOOM)  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_DOOM)  // Cast INQUIS_DISPEL_MAGIC
+        Spell([ENEMY],CLERIC_DOOM)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1168,11 +1203,31 @@ IF
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_SILENCE_15_FOOT)  // 4231 (INQUIS_DISPEL_MAGIC)
+    HaveSpell(CLERIC_SILENCE_15_FOOT)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  // Cast INQUIS_DISPEL_MAGIC
+        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_MISCAST_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_MISCAST_MAGIC)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -4041,16 +4096,13 @@ THEN
         Continue()
 END
 
-
 IF
-    ActionListEmpty()
-    ActuallyInCombat()
+    Heard([ENEMY],125)
     !Detect([ENEMY])
-THEN
+  THEN
     RESPONSE #100
-        MoveToObject(NearestEnemyOf(Myself))
+        AttackOneRound(LastHeardBy(Myself))
 END
-
 
 // RESET TIMERS IF WE'RE at the bottom
 IF
