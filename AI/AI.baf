@@ -298,6 +298,7 @@ THEN
         AttackOneRound(NearestEnemyOf(Myself))
 END
 
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -1757,6 +1758,20 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) 
 END
 
+// Cast Haste if conditions are met
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_HASTE)  // Ensure the Haste spell is available
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure previous spell cast timer has expired
+    !StateCheck(Myself,STATE_HASTED)  // Ensure Haste is not already active
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_HASTE)  // Cast Haste on Myself
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
+END
+
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
@@ -1963,19 +1978,6 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-
-// Cast Haste if conditions are met
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_HASTE)  // Ensure the Haste spell is available
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure previous spell cast timer has expired
-    !StateCheck(Myself,STATE_HASTED)  // Ensure Haste is not already active
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_HASTE)  // Cast Haste on Myself
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
-END
 
 IF
     ActuallyInCombat()
@@ -4096,12 +4098,69 @@ THEN
         Continue()
 END
 
+//If I'm in combat, and not near an ally go to them. Note, we can't evaluate this to attack nearest because we need to see what is nearest the player...
 IF
-    Heard([ENEMY],125)
-    !Detect([ENEMY])
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player1,30)
   THEN
     RESPONSE #100
-        AttackOneRound(LastHeardBy(Myself))
+        MoveToObject(Player1)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player2,30)
+  THEN
+    RESPONSE #100
+        MoveToObject(Player2)
+END
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player3,30)
+  THEN
+    RESPONSE #100
+        MoveToObject(Player3)
+END
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player4,30)
+  THEN
+    RESPONSE #100
+        MoveToObject(Player4)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player5,30)
+  THEN
+    RESPONSE #100
+        MoveToObject(Player5)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentGT(Myself,35)
+    !Range([ENEMY],30)
+    !Range(Player6,30)
+  THEN
+    RESPONSE #100
+        MoveToObject(Player6)
 END
 
 // RESET TIMERS IF WE'RE at the bottom
