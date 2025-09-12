@@ -4037,8 +4037,6 @@ THEN
 END
 
 
-
-
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -4103,64 +4101,24 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HPPercentGT(Myself,35)
-    !Range([ENEMY],30)
-    !Range(Player1,30)
+    Range([ENEMY],30)
   THEN
     RESPONSE #100
-        MoveToObject(Player1)
+        GlobalShout(124)
 END
+
+
 
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    Heard([PC],ASSIST)
     HPPercentGT(Myself,35)
     !Range([ENEMY],30)
-    !Range(Player2,30)
+    !Range(LastHeardBy(Myself),30)
   THEN
     RESPONSE #100
-        MoveToObject(Player2)
-END
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentGT(Myself,35)
-    !Range([ENEMY],30)
-    !Range(Player3,30)
-  THEN
-    RESPONSE #100
-        MoveToObject(Player3)
-END
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentGT(Myself,35)
-    !Range([ENEMY],30)
-    !Range(Player4,30)
-  THEN
-    RESPONSE #100
-        MoveToObject(Player4)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentGT(Myself,35)
-    !Range([ENEMY],30)
-    !Range(Player5,30)
-  THEN
-    RESPONSE #100
-        MoveToObject(Player5)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HPPercentGT(Myself,35)
-    !Range([ENEMY],30)
-    !Range(Player6,30)
-  THEN
-    RESPONSE #100
-        MoveToObject(Player6)
+        AttackOneRound(NearestEnemyOf(LastHeardBy(Myself)))
 END
 
 // RESET TIMERS IF WE'RE at the bottom
