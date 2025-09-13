@@ -19,3 +19,6 @@ C:StartStore("BPXITH03")
 C:StartStore("BPDEVL03")
 C:StartStore("BPCONC03")
 C:StartStore("BPELAN03")
+
+TODO:
+Handle insect plague bricking my characters lol

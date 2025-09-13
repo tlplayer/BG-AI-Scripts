@@ -193,10 +193,10 @@ IF
     CheckStatLT(Myself,1,CLERIC_FREE_ACTION) // Check if party is being crowd-controlled
     CheckStatLT(Myself,1,MINORGLOBE)
     CheckStatLT(Myself,1,SHIELDGLOBE)
-    CheckStatGT(Myself,2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     OR(7)
         CheckStat([ANYONE],1,WEB)
         CheckStat([ANYONE],1,GREASE)
+        CheckSpellState([ANYONE],PRONE)
         SpellCast([ANYONE],WIZARD_WEB)  // SPWI215.SPL (Web)
         SpellCast([ANYONE.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
@@ -218,7 +218,6 @@ IF
     CheckStatLT(Myself,1,CLERIC_FREE_ACTION) // Check if party is being crowd-controlled
     CheckStatLT(Myself,1,MINORGLOBE)
     CheckStatLT(Myself,1,SHIELDGLOBE)
-    CheckStatGT(Myself,2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     OR(1)
         SpellCastOnMe([ANYONE],WIZARD_WEB)
   THEN
@@ -312,7 +311,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Delay(10)
+    Delay(18)
     OR(3)
         Class(Myself,THIEF_ALL)
         Class(Myself,MONK)
@@ -344,6 +343,18 @@ THEN
         Continue()
 END
 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    AttackedBy([ENEMY],DEFAULT)
+    Exists(LastAttackerOf(Myself))
+    Class(Myself,MAGE)
+    Delay(10)
+THEN
+    RESPONSE #100
+        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),30)
+        Continue()
+END
 
 // ======================================================
 // SECTION: Heal SPELLS (CLERIC)
@@ -1033,7 +1044,13 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()  
-    See([ENEMY])
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])    
     HaveSpell(WIZARD_GLITTERDUST)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
@@ -1046,12 +1063,12 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     OR(6)
-    See([ENEMY.0.0.MAGE_ALL])
-    See([ENEMY.0.0.CLERIC_ALL])
-    See([ENEMY.0.0.BARD_ALL])
-    See([ENEMY.0.0.DRUID_ALL])
-    See([ENEMY.0.0.SORCERER])
-    See([ENEMY.0.0.RAKSHASA])    
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])    
     HaveSpell(WIZARD_PIERCE_MAGIC)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
@@ -1064,12 +1081,12 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     OR(6)
-    See([ENEMY.0.0.MAGE_ALL])
-    See([ENEMY.0.0.CLERIC_ALL])
-    See([ENEMY.0.0.BARD_ALL])
-    See([ENEMY.0.0.DRUID_ALL])
-    See([ENEMY.0.0.SORCERER])
-    See([ENEMY.0.0.RAKSHASA])    
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])    
     HaveSpell(WIZARD_WARDING_WHIP)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
@@ -1082,12 +1099,12 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     OR(6)
-    See([ENEMY.0.0.MAGE_ALL])
-    See([ENEMY.0.0.CLERIC_ALL])
-    See([ENEMY.0.0.BARD_ALL])
-    See([ENEMY.0.0.DRUID_ALL])
-    See([ENEMY.0.0.SORCERER])
-    See([ENEMY.0.0.RAKSHASA])    
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])    
     HaveSpell(WIZARD_PIERCE_MAGIC)  // 2608 (WIZARD_PIERCE_MAGIC)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
@@ -1147,21 +1164,21 @@ END
 
 IF
     ActionListEmpty()
-    See([ENEMY])
-    OR(6)
+    OR(7)
         Gender(LastSeenBy(Myself),ILLUSIONARY)
-        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
-        SpellCast([ENEMY],WIZARD_SIMULACRUM)  // SPWI804.SPL (Simulacrum)
-        SpellCast([ENEMY],WIZARD_MISLEAD)  // SPWI607.SPL (Mislead)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE) 
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)  
+        SpellCast([ENEMY],WIZARD_MISLEAD)  
         StateCheck(LastSeenBy(Myself),STATE_BLUR)
         StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
+        Class([ENEMY],THIEF_ALL)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     Delay(30)
-    HaveSpell(INQUIS_TRUE_SIGHT)  // 4232 (INQUIS_TRUE_SIGHT)
+    HaveSpell(INQUIS_TRUE_SIGHT) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,INQUIS_TRUE_SIGHT)  // Cast INQUIS_TRUE_SIGHT
+        Spell(Myself,INQUIS_TRUE_SIGHT)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1246,8 +1263,6 @@ IF
         Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
-
-
 
 IF
     ActionListEmpty()
@@ -1807,6 +1822,32 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
 END
 
+// Cast Protection from Normal Missiles
+// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
+// Lasts for 1 hour
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
+    OR(3)
+        LevelLT([ENEMY],12)
+        !ActuallyInCombat()
+        HitBy([ENEMY],MISSILE)
+    //Check if missiles are normal 
+    OR(4)
+        !ActuallyInCombat() 
+        HasItemEquiped("BULL01",[ENEMY])
+        HasItemEquiped("AROW01",[ENEMY])
+        HasItemEquiped("BOLT01",[ENEMY])
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
@@ -1918,6 +1959,8 @@ IF
     HaveSpell(WIZARD_IMPROVED_INVISIBILITY)  // SPWI206.SPL (Invisibility)
     !StateCheck(Myself,STATE_IMPROVEDINVISIBILITY)
     !StateCheck(Myself,STATE_INVISIBLE)
+    DamageTaken(10)
+    HPPercentLT(Myself,90)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2630,6 +2673,8 @@ IF
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
+    !CheckSpellState([ENEMY],BERSERKER_RAGE)
+    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     Delay(12)
     THEN
@@ -2655,7 +2700,7 @@ IF
     ActionListEmpty()
     See([ENEMY])
     HaveSpell(WIZARD_SLOW)  
-    Range(NearestAlly(LastSeenBy(Myself)))
+    StateCheck([ENEMY],STATE_SLOWED)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -2679,9 +2724,31 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(WIZARD_CHAOS)  // SPWI102.SPL (Horror)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_CHAOS)  // Cast Horror
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),2)
     HaveSpell(WIZARD_HORROR)  // SPWI102.SPL (Horror)
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
     !Race(LastSeenBy(Myself),GOLEM)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2699,9 +2766,9 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
-    !Range(FarthestEnemyOf(Myself),18)
+    !Range(FarthestEnemyOf(Myself),24)
     // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2741,16 +2808,21 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     LevelGT([ENEMY],7)
+    See([ENEMY])
+    HPGT([ENEMY],50)
+    HPPercentGT([ENEMY],80)
     !HasBounceEffects([ENEMY])
     !HasImmunityEffects([ENEMY])
     !StateCheck([ENEMY],STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     HaveSpell(WIZARD_HOLD_MONSTER)  // SPWI507.SPL (Hold Monster)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(HasImmunityEffects,WIZARD_HOLD_MONSTER)  // Cast Hold Monster
+        Spell([ENEMY],WIZARD_HOLD_MONSTER)  // Cast Hold Monster
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2773,6 +2845,8 @@ IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_SYMBOL_FEAR)  // SPWI109.SPL (Symbol of Fear)
+    !CheckSpellState([ENEMY],BERSERKER_RAGE)
+    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 
@@ -2843,6 +2917,7 @@ IF
     ActuallyInCombat()
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
+    NumCreatureLT([ENEMY],3)
     !ImmuneToSpellLevel(LastSeenBy(Myself),1)
     CheckStatGT(LastSeenBy(Myself),2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     !HasBounceEffects(LastSeenBy(Myself))
@@ -2969,6 +3044,8 @@ IF
     HPPercentGT(LastSeenBy(Myself),70)
     !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     General(LastSeenBy(Myself),HUMANOID)
     HaveSpell(CLERIC_HOLD_PERSON)  // SPPR012.SPL (Hold Person)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -3012,7 +3089,8 @@ END
 IF
     ActionListEmpty()
     See([ENEMY])
-    HPGT(LastSeenBy(Myself),30)
+    HPGT(LastSeenBy(Myself),20)
+    LevelLT([ENEMY],6)
     !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     General(LastSeenBy(Myself),HUMANOID)
@@ -3105,6 +3183,21 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    HaveSpell(WIZARD_CLOUDKILL)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTPOISON)
+    !Range(FarthestEnemyOf(Myself),16)  // Ensure the enemy is within medium range
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_CLOUDKILL)  // Cast Dragon's Breath
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
     OR(2)
         CheckSpellState(Myself,CHAOS_SHIELD)
         CheckSpellState(Myself,IMPROVED_CHAOS_SHIELD)
@@ -3122,6 +3215,8 @@ IF
     ActionListEmpty()
     HPGT(NearestEnemyOf(Myself),40)
     HaveSpell(WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
+    CheckStatLT([ENEMY],100,RESISTCOLD)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
     // How close is the closest ally 
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
@@ -3137,6 +3232,8 @@ IF
     ActionListEmpty()
     !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     HaveSpell(WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
+    CheckStatLT([ENEMY],100,RESISTFIRE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     !Range(FarthestEnemyOf(Myself),14)
     // How close is the closest ally 
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
@@ -3187,6 +3284,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_CONE_OF_COLD)  // SPWI608.SPL (Cone of Cold)
     CheckStatLT([ENEMY],100,RESISTCOLD)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     Range(NearestEnemyOf(Myself),10)  // Ensure the enemies are close enough
     !Range(NearestEnemyOf(NearestEnemyOf(Myself)),10)  // Ensure the enemy is close enough
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -3204,12 +3302,11 @@ END
 
 IF
     ActionListEmpty()
-    !Range(FarthestEnemyOf(Myself),18)
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
+    !Range(FarthestEnemyOf(Myself),22)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     HaveSpell(CLERIC_HOLY_SMITE)  // SPPR009.SPL (Flame Strike)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-
 THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),CLERIC_HOLY_SMITE)  // Cast Flame Strike for vertical fire damage
@@ -3226,6 +3323,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
+    CheckStatLT([ENEMY],100,RESISTACID)
     LevelGT([ENEMY],2)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -3323,6 +3421,8 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     HaveSpell(WIZARD_MELF_ACID_ARROW)  // SPWI205.SPL (Melf's Acid Arrow)
+    CheckStatLT([ENEMY],100,RESISTACID)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     OR(2)
         LevelGT(LastSeenBy(Myself),2)
         GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
@@ -3340,6 +3440,8 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_FLAME_ARROW)  // SPWI304.SPL (Flame Arrow)
+    CheckStatLT([ENEMY],100,RESISTFIRE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     LevelGT([ENEMY],3)
     !HasBounceEffects([ENEMY])
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -3365,9 +3467,8 @@ END
 /* Finger of Death for enemies with more than 100 HP */
 IF
     ActionListEmpty()
-    See([ENEMY])
     HaveSpell(WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
-    HPGT([ENEMY],100)
+    HPGT([ENEMY],60)
     !HasBounceEffects([ENEMY])
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -3419,15 +3520,12 @@ END
 // Lasts for 1 turn.
 IF
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    !HasBounceEffects(NearestEnemyOf(Myself))
+    HPGT([ENEMY],30)
     HaveSpell(CLERIC_FLAME_STRIKE)  // SPPR009.SPL (Flame Strike)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_FLAME_STRIKE)  // Cast Flame Strike for vertical fire damage
+        Spell([ENEMY],CLERIC_FLAME_STRIKE)  // Cast Flame Strike for vertical fire damage
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3436,10 +3534,10 @@ IF
     ActuallyInCombat()
     HaveSpell(BLACKGUARD_ABSORB_HEALTH)  
     OR(2)
-        LevelGT([ENEMY],3)
+        LevelGT([ENEMY],2)
         NumCreatureGT([ENEMY],3)
     Range([ENEMY],6)
-    HPPercentLT(Myself,70)
+    HPPercentLT(Myself,90)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -3453,7 +3551,7 @@ END
 // Lasts for 1 turn.
 IF
     ActionListEmpty()
-    See([ENEMY])
+    LevelGT([ENEMY],5)
     HaveSpell(CLERIC_HARM)  // SPPR010.SPL (Harm)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -3480,7 +3578,6 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself, WARRIOR_GREATER_WHIRLWIND)  // Perform Greater Whirlwind Attack
-        AttackOneRound(NearestEnemyOf(Myself))
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
         Continue()
 END
@@ -3626,21 +3723,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-// Cast Protection from Normal Missiles
-// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
-// Lasts for 1 hour
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
-    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
 // Cast Shield
 // Casts Shield to provide a magical shield that improves the wizard's armor class and grants a +4 bonus to AC.
 // Lasts for 1 turn per caster level.
@@ -4106,7 +4188,7 @@ IF
 THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
-        AttackOneRound(LastSeenBy(Myself))
+        AttackReevaluate(LastSeenBy(Myself),30)
         Continue()
 END
 
@@ -4117,11 +4199,14 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(4)
+    OR(7)
         Range([ENEMY],8)
         Class(Myself,PALADIN_ALL)
         Class(Myself,FIGHTER_ALL)
         Class(Myself,RANGER)
+        Class(Myself,CLERIC_ALL)
+        !WeaponEffectiveVs([ENEMY],MAINHAND)
+        !WeaponCanDamage([ENEMY],MAINHAND)
      //Return true if I'm a caster but only if there's a 25% chance
     OR(8)
         See([ENEMY])
@@ -4134,12 +4219,19 @@ IF
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
     WeaponCanDamage(LastSeenBy(Myself),BOTH)
+    OR(6)
+        CheckStat([ENEMY],0,WEB)
+        CheckStatGT(Myself,0,CLERIC_FREE_ACTION) // Check if party is being crowd-controlled
+        CheckSpellState(Myself,FREE_ACTION)
+        CheckStatGT(Myself,0,MINORGLOBE)
+        CheckStatGT(Myself,0,SHIELDGLOBE)
+        Range([ENEMY],4)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
     HPPercentGT(Myself,30)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(LastSeenBy(Myself))
+        AttackReevaluate(LastSeenBy(Myself),30)
         Continue()
 END
 
