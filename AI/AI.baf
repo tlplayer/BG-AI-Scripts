@@ -317,6 +317,7 @@ IF
         Class(Myself,MONK)
         Class(Myself,BARD_ALL)
     !StateCheck(Myself,STATE_INVISIBLE)
+    !GlobalTimerNotExpired("USE_RANGE","LOCALS")
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),30)
@@ -559,6 +560,7 @@ IF
         StateCheck([PC],STATE_CHARMED)
         StateCheck([PC],STATE_CONFUSED)
         StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,CLERIC_INSECT_PLAGUE)
         CheckStatGT([PC],0,HELD)
 THEN
     RESPONSE #100
@@ -1822,31 +1824,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)  // Set timer to prevent repeated casting
 END
 
-// Cast Protection from Normal Missiles
-// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
-// Lasts for 1 hour
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
-    OR(3)
-        LevelLT([ENEMY],12)
-        !ActuallyInCombat()
-        HitBy([ENEMY],MISSILE)
-    //Check if missiles are normal 
-    OR(4)
-        !ActuallyInCombat() 
-        HasItemEquiped("BULL01",[ENEMY])
-        HasItemEquiped("AROW01",[ENEMY])
-        HasItemEquiped("BOLT01",[ENEMY])
-    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
 
 IF
     ActionListEmpty()
@@ -3169,20 +3146,6 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HaveSpell(WIZARD_SKULL_TRAP)
-    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),16)  // Ensure the enemy is within medium range
-    // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_SKULL_TRAP)  // Cast Dragon's Breath
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
     HaveSpell(WIZARD_CLOUDKILL)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTPOISON)
@@ -3193,6 +3156,20 @@ IF
 THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),WIZARD_CLOUDKILL)  // Cast Dragon's Breath
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_SKULL_TRAP)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)  // Ensure the enemy is within medium range
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_SKULL_TRAP)  // Cast Dragon's Breath
 END
 
 IF
@@ -3738,6 +3715,32 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+// Cast Protection from Normal Missiles
+// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
+// Lasts for 1 hour
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
+    OR(3)
+        LevelLT([ENEMY],12)
+        !ActuallyInCombat()
+        HitBy([ENEMY],MISSILE)
+    //Check if missiles are normal 
+    OR(4)
+        !ActuallyInCombat() 
+        HasItemEquiped("BULL01",[ENEMY])
+        HasItemEquiped("AROW01",[ENEMY])
+        HasItemEquiped("BOLT01",[ENEMY])
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 // Cast Resist Fear
 // Casts Resist Fear to grant the wizard immunity to fear effects.
 // Lasts for 1 turn per caster level.
@@ -4188,7 +4191,7 @@ IF
 THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
-        AttackReevaluate(LastSeenBy(Myself),30)
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
@@ -4231,7 +4234,7 @@ IF
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackReevaluate(LastSeenBy(Myself),30)
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
