@@ -14,6 +14,7 @@ THEN
         SetGlobal("USED_SW1H26","LOCALS",0)
         SetGlobal("USED_clck08","LOCALS",0)
         SetGlobal("USED_BOOT12","LOCALS",0)
+        SetGlobal("USED_ohbrew06","LOCALS",0)
         SetGlobalTimer("FIRE_ENEMIES","LOCALS",0)
         SetGlobalTimer("CASTER_ENEMY","LOCALS",0)
         SetGlobalTimer("TROLL_ENEMIES","LOCALS",0)
@@ -28,7 +29,7 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    Delay(30)
+    Delay(12)
 THEN
     RESPONSE #100
         SetGlobalTimer("SHORT_BUFF","LOCALS",FIVE_ROUNDS)
@@ -37,8 +38,9 @@ END
 
 // This section sets a global timer for casting area-of-effect spells if there are more than 3 enemies nearby.
 IF
-    Delay(60)
-    OR(4)
+    Delay(12)
+    OR(5)
+        ActuallyInCombat()
         Exists([ENEMY])
         AreaCheck("OH8200")
         AreaCheck("OH8300")
@@ -164,7 +166,6 @@ THEN
         Continue()
 END
 
-
 IF
     ActionListEmpty()
     OR(2)
@@ -198,6 +199,7 @@ IF
         CheckStat([ANYONE],1,GREASE)
         CheckSpellState([ANYONE],PRONE)
         SpellCast([ANYONE],WIZARD_WEB)  // SPWI215.SPL (Web)
+        SpellCast([ANYONE],WIZARD_DEATH_FOG)
         SpellCast([ANYONE.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
@@ -208,7 +210,7 @@ THEN
     RESPONSE #100
         SetGlobalTimer("USE_RANGE","LOCALS",FIVE_ROUNDS)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],90)
         SetInterrupt(TRUE)
 END
 
@@ -255,6 +257,76 @@ THEN
         Spell(Myself,CLERIC_ZONE_OF_SWEET_AIR)  // Cast Zone of Sweet Air to counteract Stinking Cloud
 END
 
+// ======================================================
+// SECTION: IMMUNITIES (WIZARD)
+// ======================================================
+
+/*
+Protection From Magical Weapons
+(Abjuration)
+
+Level: 6
+Range: 0
+Duration: 4 rounds
+Casting Time: 1
+Area of Effect: The caster
+Saving Throw: None 
+
+When the spell is cast, it confers complete invulnerability to all magical weapons. 
+This includes weapons that are blessed or enchanted. 
+The attacks of powerful monsters are also considered magical weapons. 
+This spell cannot be cast on anyone who is protected from normal weapons as well as anyone protected by 
+Mantle, Improved Mantle, or Absolute Immunity. Due to the nature of this spell, with the short casting time and duration, 
+it is mainly used to buy the wizard a few rounds in the thick of combat. 
+This effect lasts for the duration of the spell or until dispelled.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_MAGIC_WEAPONS)
+    TookDamage()
+    !CheckSpellState(Myself,PROTECTION_FROM_MAGICAL_WEAPONS)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_MAGIC_WEAPONS) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+/*
+Protection From Magic Energy
+(Abjuration)
+
+Level: 6
+Range: Touch
+Duration: 1 turn/level
+Casting Time: 6
+Area of Effect: 1 creature
+Saving Throw: None
+
+When the spell is cast, it confers 100% invulnerability to all 
+magic-based attacks such as Magic Missile or Abi-Dalzim's Horrid Wilting.
+This effect lasts for the duration of the spell or until dispelled.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_MAGIC_ENERGY)
+    OR(6)
+        HitBy([ANYONE],ACID)
+        HitBy([ANYONE],COLD)
+        HitBy([ANYONE],ELECTRICITY)
+        HitBy([ANYONE],FIRE)
+    !CheckStat(Myself,1,WIZARD_PROTECTION_FROM_MAGIC_ENERGY)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_MAGIC_ENERGY) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 // ======================================================
 // SECTION: RETREAT CONDITION
@@ -358,6 +430,176 @@ THEN
 END
 
 // ======================================================
+// SECTION: PRE-COMBAT BUFFING (WIZARD)
+// ======================================================
+// Cast Spirit Armor
+// Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
+// Lasts for 1 hour per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_CONTINGENCY)  // SPWI414.SPL (Spirit Armor)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_CONTINGENCY)  // Cast Spirit Armor for increased defense
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_MINOR_SEQUENCER) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_MINOR_SEQUENCER) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+// Cast Spirit Armor
+// Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
+// Lasts for 1 hour per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_SPIRIT_ARMOR)  // SPWI414.SPL (Spirit Armor)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SPIRIT_ARMOR)  // Cast Spirit Armor for increased defense
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Stoneskin
+// Casts Stoneskin to grant the wizard protection from physical damage by turning their skin to stone.
+// Lasts for 1 turn per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_STONE_SKIN)  // SPWI408.SPL (Stoneskin)
+    CheckStatLT(Myself,1,STONESKINS)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_STONE_SKIN)  // Cast Stoneskin for increased damage resistance
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Ghost Armor
+// Casts Ghost Armor to provide an ethereal shield that grants a bonus to armor class.
+// Lasts for 1 round per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_GHOST_ARMOR)  // SPWI317.SPL (Ghost Armor)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)  
+    CheckStatLT(Myself,1,DEAD_MAGIC)   
+    CheckStatGT(Myself,2,ARMORCLASS)   
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_GHOST_ARMOR)  // Cast Ghost Armor for improved defense
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Armor
+// Casts Armor to provide a magical armor that improves the wizard's armor class.
+// Lasts for 1 hour per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_ARMOR)  // SPWI102.SPL (Armor)
+    CheckStatGT(Myself,6,ARMORCLASS)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_ARMOR)  // Cast Armor for increased protection before combat
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Shield
+// Casts Shield to provide a magical shield that improves the wizard's armor class and grants a +4 bonus to AC.
+// Lasts for 1 turn per caster level.
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_SHIELD)  // SPWI114.SPL (Shield)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SHIELD)  // Cast Shield for added protection
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Protection from Normal Missiles
+// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
+// Lasts for 1 hour
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
+    OR(3)
+        LevelLT([ENEMY],12)
+        !ActuallyInCombat()
+        HitBy([ENEMY],MISSILE)
+    //Check if missiles are normal 
+    OR(4)
+        !ActuallyInCombat() 
+        HasItemEquiped("BULL01",[ENEMY])
+        HasItemEquiped("AROW01",[ENEMY])
+        HasItemEquiped("BOLT01",[ENEMY])
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// Cast Resist Fear
+// Casts Resist Fear to grant the wizard immunity to fear effects.
+// Lasts for 1 turn per caster level.
+IF
+    !ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_RESIST_FEAR)  // SPWI103.SPL (Resist Fear)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure the spell is not recently cast
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_RESIST_FEAR)  // Cast Resist Fear for protection against fear
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+// Cast Protection from Petrification
+// Casts Protection from Petrification to grant immunity to petrification attacks.
+// Lasts for 1 hour
+IF
+    ActionListEmpty()
+    !ActuallyInCombat()
+    HaveSpell(WIZARD_PROTECTION_FROM_PETRIFICATION)  // SPWI212.SPL (Protection from Petrification)
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_PETRIFICATION)  // Check if Protection from Petrification is already active
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_PETRIFICATION)  // Cast Protection from Petrification
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+// ======================================================
+// SECTION: PRE-COMBAT BUFFING (CLERIC)
+// ======================================================
+
+
+// ======================================================
 // SECTION: Heal SPELLS (CLERIC)
 // ======================================================
 
@@ -428,6 +670,17 @@ IF
 THEN
     RESPONSE #100
         Spell(LastSeenBy(Myself),CLERIC_HEAL)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+IF
+    ActionListEmpty()
+    StateCheck([PC],STATE_POISONED)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_SLOW_POISON)
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_SLOW_POISON)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
@@ -1142,25 +1395,56 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
+    OR(7)
+        See([ENEMY])
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.BARD_ALL])
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
-    OR(5)
+    OR(7)
         CheckStatGT(LastSeenBy(Myself),0,STONESKINS)
         CheckSpellState(LastSeenBy(Myself),PROTECTION_FROM_MAGICAL_WEAPONS)
         CheckSpellState(LastSeenBy(Myself),MANTLE)
         CheckSpellState(LastSeenBy(Myself),IMPROVED_MANTLE)
         CheckSpellState(LastSeenBy(Myself),ABSOLUTE_IMMUNITY)
+        CheckSpellState(LastSeenBy(Myself),RED_FIRESHIELD)
+        CheckSpellState(LastSeenBy(Myself),BLUE_FIRESHIELD)
 
     HaveSpell(INQUIS_DISPEL_MAGIC)  // 4231 (INQUIS_DISPEL_MAGIC)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
         Spell(LastSeenBy(Myself),INQUIS_DISPEL_MAGIC)  // Cast INQUIS_DISPEL_MAGIC
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(7)
+        See([ENEMY])
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    OR(7)
+        CheckStatGT(LastSeenBy(Myself),0,STONESKINS)
+        CheckSpellState(LastSeenBy(Myself),PROTECTION_FROM_MAGICAL_WEAPONS)
+        CheckSpellState(LastSeenBy(Myself),MANTLE)
+        CheckSpellState(LastSeenBy(Myself),IMPROVED_MANTLE)
+        CheckSpellState(LastSeenBy(Myself),ABSOLUTE_IMMUNITY)
+        CheckSpellState(LastSeenBy(Myself),RED_FIRESHIELD)
+        CheckSpellState(LastSeenBy(Myself),BLUE_FIRESHIELD)
+
+        HaveSpellRES("SPIN112")  // 4231 (INQUIS_DISPEL_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        SpellRES("SPIN112",LastSeenBy(Myself))  // Cast INQUIS_DISPEL_MAGIC
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1241,6 +1525,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(CLERIC_DOOM)  
+    CheckSpellState([ENEMY],DOOM)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -1638,7 +1923,8 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_CACOFIEND)  // SPWI615.SPL (Summon Hakeashar)
+    HaveSpell(WIZARD_CACOFIEND) 
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckSpellState(Myself,PROTECTION_FROM_EVIL)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1649,24 +1935,67 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_CARRION)  // SPWI615.SPL (Summon Hakeashar)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],6)
+    HaveSpell(WIZARD_CONJURE_EARTH_ELEMENTAL) 
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_CARRION)  // Summon Hakeashar to disrupt enemy spellcasting
+        Spell(Myself,WIZARD_CONJURE_EARTH_ELEMENTAL) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_WYVERN_CALL)  // SPWI615.SPL (Summon Hakeashar)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],6)
+    HaveSpell(WIZARD_CONJURE_AIR_ELEMENTAL) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_CONJURE_AIR_ELEMENTAL) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SUMMON","LOCALS")
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],6)
+    HaveSpell(WIZARD_CONJURE_FIRE_ELEMENTAL) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_CONJURE_FIRE_ELEMENTAL) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SUMMON","LOCALS")
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    HaveSpell(WIZARD_CARRION) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_CARRION) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SUMMON","LOCALS")
+    HaveSpell(WIZARD_WYVERN_CALL) 
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -1679,26 +2008,28 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_SUMMON_NISHRUU)  // SPWI514.SPL (Summon Nishruu)
+    HaveSpell(WIZARD_SUMMON_NISHRUU)  
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_SUMMON_NISHRUU)  // Summon Nishruu to absorb enemy magic
+        Spell(Myself,WIZARD_SUMMON_NISHRUU) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_INVISIBLE_STALKER)  // SPWI514.SPL (Summon Nishruu)
+    HaveSpell(WIZARD_INVISIBLE_STALKER) 
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_INVISIBLE_STALKER)  // Summon Nishruu to absorb enemy magic
+        Spell(Myself,WIZARD_INVISIBLE_STALKER)  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1706,13 +2037,14 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_ANIMATE_DEAD)  // SPWI501.SPL (Animate Dead)
+    HaveSpell(WIZARD_ANIMATE_DEAD)  
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_ANIMATE_DEAD)  // Create undead allies
+        Spell(Myself,WIZARD_ANIMATE_DEAD) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1721,6 +2053,7 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpellRES("SPIN115")
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -1731,20 +2064,22 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_MONSTER_SUMMONING_3)  // SPWI611.SPL (Monster Summoning III)
+    HaveSpell(WIZARD_MONSTER_SUMMONING_3) 
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_MONSTER_SUMMONING_3)  // Summon powerful monsters to assist in combat
+        Spell(Myself,WIZARD_MONSTER_SUMMONING_3) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
-    HaveSpell(WIZARD_SPIDER_SPAWN)  // SPWI423.SPL (Spider Spawn)
+    HaveSpell(WIZARD_SPIDER_SPAWN)  
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -1846,7 +2181,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_GLOBE_OF_INVULNERABILITY)  // 2602 (WIZARD_GLOBE_OF_INVULNERABILITY)
+    HaveSpell(WIZARD_GLOBE_OF_INVULNERABILITY)  
     //If any spell is cast by an enemy then this is useful
     OR(2)
         SpellCast([ENEMY],0)
@@ -1855,26 +2190,44 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,WIZARD_GLOBE_OF_INVULNERABILITY)  // Cast WIZARD_GLOBE_OF_INVULNERABILITY
+        Spell(Myself,WIZARD_GLOBE_OF_INVULNERABILITY) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
-    HaveSpell(WIZARD_MINOR_SPELL_DEFLECTION)  // SPWI318.SPL (Minor Spell Deflection)
+    HaveSpell(WIZARD_MINOR_SPELL_DEFLECTION) 
     !HasBounceEffects(Myself)
     !HasImmunityEffects(Myself)
         //If any spell is cast by an enemy then this is useful
     OR(2)
         SpellCast([ENEMY],0)
-        !GlobalTimerNotExpired("CASTER_ENEMY","LOCALS")
+        GlobalTimerNotExpired("CASTER_ENEMY","LOCALS")
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerNotExpired("CASTER_ENEMY","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,WIZARD_MINOR_SPELL_DEFLECTION)  // Cast Minor Spell Deflection
+        Spell(Myself,WIZARD_MINOR_SPELL_DEFLECTION)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_SPELL_DEFLECTION)  
+    !HasBounceEffects(Myself)
+    !HasImmunityEffects(Myself)
+        //If any spell is cast by an enemy then this is useful
+    OR(2)
+        SpellCast([ENEMY],0)
+        GlobalTimerNotExpired("CASTER_ENEMY","LOCALS")
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SPELL_DEFLECTION)  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2022,6 +2375,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_FIRE_SHIELD_RED)  
+    TookDamage()
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
@@ -2033,6 +2387,7 @@ END
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_PROTECTION_FROM_FIRE)  
+    HitBy([ANYONE],FIRE)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
@@ -2151,14 +2506,14 @@ END
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_DEFENSIVE_HARMONY)  
-    See([PC])
-    !CheckStatLT(LastSeenBy(Myself),1,CLERIC_DEFENSIVE_HARMONY)
+
+    !CheckStatLT([PC],1,CLERIC_DEFENSIVE_HARMONY)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_DEFENSIVE_HARMONY)  // Cast Protection from Fire on yourself
+        Spell([PC],CLERIC_DEFENSIVE_HARMONY)  // Cast Protection from Fire on yourself
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2248,18 +2603,22 @@ IF
     ActionListEmpty()
     HaveSpell(PALADIN_PROTECTION_FROM_EVIL)  // SPPR107.SPL (Protection from Evil)
     !CheckSpellState(Myself,PROTECTION_FROM_EVIL)
+    !CheckStatGT(Myself,0,PROTECTION_FROM_EVIL)
     CheckStatLT(Myself,1,DEAD_MAGIC)  
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(60)//Wait a minute because this spell doesn't set the protection from evil flag correctly
 THEN
     RESPONSE #100
         Spell(Myself,PALADIN_PROTECTION_FROM_EVIL)  // Cast Protection from Evil
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
     ActionListEmpty()
     HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
+    HitBy([ANYONE],FIRE)
     GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -2439,19 +2798,6 @@ THEN
 END
 
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(CLERIC_PROTECTION_FROM_EVIL_10_FOOT)  // SPPR107.SPL (Protection from Evil, 10' Radius)
-    !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Same state as Protection from Evil
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,CLERIC_PROTECTION_FROM_EVIL_10_FOOT)  // Cast Protection from Evil 10' Radius
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
 
 IF
     ActionListEmpty()
@@ -2625,17 +2971,39 @@ END
 // IN COMBAT SPELLCASTING - Crowd Control (WIZARD)
 // ======================================================
 
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    LevelGT([ENEMY],4)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    !HasBounceEffects([ENEMY])
+    HaveSpell(WIZARD_GREATER_MALISON) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_GREATER_MALISON)  
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
+    See(LastSeenBy(Myself))
+    LevelGT([ENEMY],4)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
     HaveSpell(WIZARD_EMOTION_HOPELESSNESS)
-    HPGT(NearestEnemyOf(Myself),40)
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    HPGT(LastSeenBy(Myself),40)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_EMOTION_HOPELESSNESS)
+        Spell(LastSeenBy(Myself),WIZARD_EMOTION_HOPELESSNESS)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2702,18 +3070,40 @@ IF
     ActionListEmpty()
     See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),5)
-    HaveSpell(WIZARD_CHAOS)  // SPWI102.SPL (Horror)
+    HaveSpell(WIZARD_CONFUSION)  
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
     !Race(LastSeenBy(Myself),GOLEM)
+    !Race(LastSeenBy(Myself),SWORD)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_CHAOS)  // Cast Horror
+        Spell(LastSeenBy(Myself),WIZARD_CONFUSION)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(WIZARD_CHAOS)  
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
+    !Race(LastSeenBy(Myself),SWORD)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_CHAOS) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2722,7 +3112,7 @@ IF
     ActionListEmpty()
     See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),2)
-    HaveSpell(WIZARD_HORROR)  // SPWI102.SPL (Horror)
+    HaveSpell(WIZARD_HORROR) 
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
@@ -2733,7 +3123,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_HORROR)  // Cast Horror
+        Spell(LastSeenBy(Myself),WIZARD_HORROR) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2752,7 +3142,6 @@ THEN
         Spell(FarthestEnemyOf(Myself),WIZARD_WEB)  // Cast Web on any visible enemies
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
-
 
 IF
     ActuallyInCombat()
@@ -2810,7 +3199,6 @@ IF
     HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI108.SPL (Power Word: Stun)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_POWER_WORD_STUN)  // Cast Power Word: Stun
@@ -2840,7 +3228,6 @@ IF
     HaveSpell(WIZARD_SYMBOL_STUN)  // SPWI110.SPL (Symbol of Stun)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_SYMBOL_STUN)  // Cast Symbol of Stun
@@ -2854,7 +3241,6 @@ IF
     HaveSpell(WIZARD_SYMBOL_DEATH)  // SPWI111.SPL (Symbol of Death)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_SYMBOL_DEATH)  // Cast Symbol of Death
@@ -2868,7 +3254,6 @@ IF
     HaveSpell(WIZARD_POWER_WORD_KILL)  // SPWI112.SPL (Power Word: Kill)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_POWER_WORD_KILL)  // Cast Power Word: Kill
@@ -2882,41 +3267,40 @@ IF
     HaveSpell(WIZARD_ENERGY_DRAIN)  // SPWI113.SPL (Energy Drain)
     Range(NearestEnemyOf(Myself),30)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(NearestEnemyOf(Myself),WIZARD_ENERGY_DRAIN)  // Cast Energy Drain
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
-    NumCreatureLT([ENEMY],3)
-    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
-    CheckStatGT(LastSeenBy(Myself),2,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
-    !HasBounceEffects(LastSeenBy(Myself))
-    HaveSpell(WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
-    !StateCheck(LastSeenBy(Myself),STATE_BLIND)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_BLINDNESS)  // SPWI106.SPL (Blindness)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
+/*
+Level: 4
+Range: 40 ft.
+Duration: Permanent
+Casting Time: 4
+Area of Effect: 1 creature
+Saving Throw: Neg. 
 
+The Polymorph Other spell is a powerful magic that permanently alters the form of 
+the creature affected. Mental attributes are not affected, and the target does not 
+receive the special abilities of the new form. However all physical attributes are 
+changed to adhere to the new form. This is a specific version of the spell in that the
+ recipient will be transformed into a squirrel unless a Save vs. Petrification/Polymorph 
+ is made successfully. The transformation is instant and permanent until a Dispel Magic 
+ is cast successfully upon the affected creature. The natural attacks of the new form 
+ also become available and all clothes and equipment that the target was wearing will mold into the new form.
+*/
 IF
     ActionListEmpty()
     ActuallyInCombat()
     See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),4)
-    HPGT(LastSeenBy(Myself),40)
+    LevelGT(LastSeenBy(Myself),4)
     !HasBounceEffects(LastSeenBy(Myself))
-    HaveSpell(WIZARD_POLYMORPH_OTHER)  // SPWI106.SPL (Blindness)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),10,SAVEVSPOLY) //Atleast 50% chance 
+    !Race(LastSeenBy(Myself),SWORD)
+    HaveSpell(WIZARD_POLYMORPH_OTHER) 
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2926,70 +3310,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    LevelGT([ENEMY],4)
-    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
-    !HasBounceEffects([ENEMY])
-    HaveSpell(WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],WIZARD_GREATER_MALISON)  // SPWI106.SPL (Blindness)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    CheckStatGT([ENEMY],0,RESISTMAGIC)
-    HaveSpell(WIZARD_LOWER_RESISTANCE)  
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],WIZARD_LOWER_RESISTANCE) 
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    See([ENEMY])
-    HPPercentGT(LastSeenBy(Myself),90)
-    !HasBounceEffects(LastSeenBy(Myself))
-    General(LastSeenBy(Myself),HUMANOID)
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    HaveSpell(WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_CHARM_PERSON)  // SPWI104.SPL (Charm Person)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-
-//Safana's charm
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpellRES("SPIN119")  
-    See([ENEMY])
-    HPPercentGT(LastSeenBy(Myself),90)
-    !HasBounceEffects(LastSeenBy(Myself))
-    General(LastSeenBy(Myself),HUMANOID)
-    !Race([ENEMY],ELF)
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-THEN
-    RESPONSE #100
-        SpellRES("SPIN119",LastSeenBy(Myself))  // Cast Holy Power for increased strength
-END
 
 IF
     ActuallyInCombat()
@@ -3143,14 +3463,48 @@ THEN
         Spell(FarthestEnemyOf(Myself),WIZARD_DRAGONS_BREATH)  // Cast Dragon's Breath
 END
 
+/*
+Death Fog
+(Evocation)
+
+Level: 6
+Range: 30 ft.
+Duration: 1 turn
+Casting Time: 6
+Area of Effect: 15-ft. radius
+Saving Throw: None
+
+The casting of a Death Fog spell creates an area of solid fog that has the additional property of being highly acidic.
+All animal life not immune to acid suffers 8 points of damage for each round they are exposed to the vapors of the
+Death Fog. Death Fog will also instantly kill all summoned creatures, regardless of their Hit Dice and immunities.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_DEATH_FOG) 
+    CheckStatLT([ENEMY],100,RESISTACID)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    !ImmuneToSpellLevel([ENEMY],1)
+    !CheckSpellState([ENEMY],SI_EVOCATION)
+    !Range(FarthestEnemyOf(Myself),30)  
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],1)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_DEATH_FOG)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(WIZARD_CLOUDKILL)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTPOISON)
-    !Range(FarthestEnemyOf(Myself),16)  // Ensure the enemy is within medium range
-    // How close is the closest ally 
+    !Range(FarthestEnemyOf(Myself),16)  
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
@@ -3187,23 +3541,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) 
 END
 
-/* Ice Storm for enemies with more than 60 HP at medium range */
-IF
-    ActionListEmpty()
-    HPGT(NearestEnemyOf(Myself),40)
-    HaveSpell(WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
-    CheckStatLT([ENEMY],100,RESISTCOLD)
-    CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
-    // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
 /* Fireball for enemies at a safe distance (30 search squares) */
 IF
     ActionListEmpty()
@@ -3221,6 +3558,25 @@ THEN
         Spell(FarthestEnemyOf(Myself),WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
+/* Ice Storm for enemies with more than 60 HP at medium range */
+IF
+    ActionListEmpty()
+    HPGT(FarthestEnemyOf(Myself),40)
+    HaveSpell(WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
+    CheckStatLT([ENEMY],100,RESISTCOLD)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),10)  // Ensure the enemy is within medium range
+    // How close is the closest ally 
+    Range(FarthestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_ICE_STORM)  // SPWI409.SPL (Ice Storm)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
 
 /* Burning Hands for nearby enemies with more than 20 HP */
 IF
@@ -3276,7 +3632,6 @@ END
 // SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
 
-
 IF
     ActionListEmpty()
     !Range(FarthestEnemyOf(Myself),22)
@@ -3296,12 +3651,39 @@ END
 // ======================================================
 
 
-/* Chromatic Orb for enemies with 10-20 HP, using level 1 spell */
+/* 
+Chromatic Orb 
+(Evocation)
+
+Level: 1
+Range: 90 ft.
+Duration: Special
+Casting Time: 1
+Area of Effect: 1 creature
+Saving Throw: Special
+
+This spell causes a 2-ft. diameter sphere to appear in the caster's hand. When thrown, the sphere heads unerringly to its target. The effect the orb has upon the target varies with the level of the caster. 
+Each orb will do damage to the target against which there is no save and an effect against which the target must save vs. Spell with a +6 bonus:
+ 1st Level: 1d4 damage and blinds the target for 1 round.
+ 2nd Level: 1d4 damage and inflicts pain (-1 penalty to Strength, Dexterity, AC, and THAC0) upon the victim.
+ 3rd Level: 1d6 damage and burns the victim for an additional 1d8 damage.
+ 4th Level: 1d6 damage and blinds the target for 1 turn.
+ 5th Level: 1d8 damage and stuns the target for 3 rounds.
+ 6th Level: 1d8 damage and causes weakness (-4 penalty to THAC0) in the victim.
+ 7th Level: 1d10 damage and paralyzes the victim for 2 turns.
+ 10th Level: 1d12 acid damage and turns the victim to stone.
+ 12th Level: 2d8 acid damage and instantly kills the victim.
+
+NOTE: The victim saves vs. Spell with a +6 bonus against all the effects and gets no save against the damage.
+*/
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_CHROMATIC_ORB)  // SPWI103.SPL (Chromatic Orb)
     CheckStatLT([ENEMY],100,RESISTACID)
-    LevelGT([ENEMY],2)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    LevelGT([ENEMY],1)
+    !ImmuneToSpellLevel([ENEMY],1)
+    !CheckSpellState([ENEMY],SI_EVOCATION)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -3324,35 +3706,11 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     HaveSpell(WIZARD_AGANNAZAR_SCORCHER) 
-    OR(2)
-        HPGT(LastSeenBy(Myself),20)
-        GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
+    !CheckSpellState(LastSeenBy(Myself),SI_EVOCATION)
     !HasBounceEffects(LastSeenBy(Myself))
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_AGANNAZAR_SCORCHER) 
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    OR(8)
-        See([ENEMY])
-        See([ENEMY.0.0.RANGER]) // Default target
-        See([ENEMY.0.0.THIEF]) // Default target
-        See([ENEMY.0.0.BARD_ALL]) // Default target
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.SORCERER]) // Highest priority
-    HaveSpell(WIZARD_AGANNAZAR_SCORCHER) 
-    OR(2)
-        HPGT(LastSeenBy(Myself),20)
-        GlobalTimerNotExpired("TROLL_ENEMIES","LOCALS")
-    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTFIRE)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -3381,7 +3739,7 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_GHOUL_TOUCH) 
+        Spell(Myself,WIZARD_GHOUL_TOUCH) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3430,32 +3788,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-/* Power Word Kill for enemies with low HP */
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    HaveSpell(WIZARD_POWER_WORD_KILL)  // SPWI910.SPL (Power Word Kill)
-THEN
-    RESPONSE #100
-        Spell([ENEMY], WIZARD_POWER_WORD_KILL)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-/* Finger of Death for enemies with more than 100 HP */
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
-    HPGT([ENEMY],60)
-    !HasBounceEffects([ENEMY])
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
 /* Magic Missile for enemies with more than 20 HP and no bounce effects */
 IF
     ActionListEmpty()
@@ -3486,6 +3818,213 @@ THEN
         Spell([ENEMY],WIZARD_LARLOCH_MINOR_DRAIN) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
+// ======================================================
+// IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
+// ======================================================
+
+/*
+Lower Resistance
+(Abjuration)
+
+Level: 5
+Range: 40 ft.
+Duration: 9 rounds + 1 round/level after 9th
+Casting Time: 5
+Area of Effect: 1 creature
+Saving Throw: None
+
+When cast upon a target creature, this spell will lower the Magic Resistance of this creature by 10% + 1% per level of the caster. 
+There is no Saving Throw, and the target's Magic Resistance, if any, does not affect this spell. 
+For example, if a creature has 60% Magic Resistance and this spell is cast on it by a 15th-level Mage, 
+then the target's Magic Resistance would be lowered by 25% automatically. This effect is cumulative for 
+ each casting of this spell: If Lower Resistance was cast upon the same creature again, the creature's 
+ Magic Resistance would be 60% - 25% (initial casting) - 25% (current casting), which would leave the creature with 10% Magic Resistance. 
+ This spell will last until its duration expires and cannot be dispelled.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckStatGT([ENEMY],50,RESISTMAGIC)
+    HaveSpell(WIZARD_LOWER_RESISTANCE)  
+    !ImmuneToSpellLevel([ENEMY],5)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_LOWER_RESISTANCE) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/* 
+Finger of Death
+(Necromancy)
+
+Level: 7
+Range: Visual range of the caster 
+Duration: Permanent
+Casting Time: 5
+Area of Effect: 1 creature
+Saving Throw: Neg.
+
+The Finger of Death spell snuffs out the victim's life force. The caster points <PRO_HISHER>
+ finger at the victim after the incantation is complete, effectively ripping the life out of 
+ its body unless a Save vs. Spell is made with a -2 penalty. A creature that successfully 
+ saves still receives 2d8+1 points of damage.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+    LevelGT([ENEMY],6)
+    !HasBounceEffects([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),7)
+    CheckStatGT(LastSeenBy(Myself),7,SAVEVSSPELL) //50% chance that they get got
+    !CheckSpellState([ENEMY],SI_NECROMANCY)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/* 
+Power Word, Kill
+(Conjuration/Summoning) 
+
+Level: 9
+Range: Visual range of the caster 
+Duration: Instant
+Casting Time: 1 
+Area of Effect: 1 creature 
+Saving Throw: None
+
+When a Power Word, Kill spell is uttered, one creature within the spell range is slain.
+The creature must have 60 or fewer current Hit Points, otherwise the spell has no effect. There is no Saving Throw.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    CheckStatLT([ENEMY],100,RESISTFIRE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    !ImmuneToSpellLevel([ENEMY],9)
+    !CheckSpellState([ENEMY],SI_CONJURATION)
+    HPLT([ENEMY],60)
+    !HasBounceEffects([ENEMY])
+    HaveSpell(WIZARD_POWER_WORD_KILL)  // SPWI910.SPL (Power Word Kill)
+THEN
+    RESPONSE #100
+        Spell([ENEMY], WIZARD_POWER_WORD_KILL)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Disintegrate
+(Alteration)
+
+Level: 6
+Range: Visual range of the caster
+Duration: Instant
+Casting Time: 6
+Area of Effect: 1 creature
+Saving Throw: Neg.
+
+When this spell is cast at another creature, a thin green ray is shot out. 
+Upon contact with the ray, the creature must make a Saving Throw vs. Spell 
+or be transformed into dust. This transformation is instantaneous and irreversible. 
+There is also a good chance that this will destroy some if not all of the items that the creature is carrying.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_DISINTEGRATE)
+    LevelGT([ENEMY],6)
+    !HasBounceEffects([ENEMY])
+    !ImmuneToSpellLevel([ENEMY],6)
+    !CheckSpellState([ENEMY],SI_ABJURATION)
+    CheckStatGT([ENEMY],10,SAVEVSSPELL) //50% chance that they get got
+    !HasBounceEffects([ENEMY])
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_DISINTEGRATE)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    General(LastSeenBy(Myself),HUMANOID)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    HaveSpell(WIZARD_CHARM_PERSON) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_CHARM_PERSON) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+//Safana's charm
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPIN119")  
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    General(LastSeenBy(Myself),HUMANOID)
+    !Race([ENEMY],ELF)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+THEN
+    RESPONSE #100
+        SpellRES("SPIN119",LastSeenBy(Myself))  
+END
+
+/*
+Blindness
+(Illusion/Phantasm)
+
+Level: 1
+Range: 40 ft.
+Duration: 2 hours
+Casting Time: 2
+Area of Effect: 1 creature
+Saving Throw: Neg.
+
+This 1st-level spell temporarily blinds its target. 
+A Saving Throw is allowed and, if successful, there are no harmful effects. 
+If a victim is blinded, <PRO_HESHE> receives a -4 penalty to <PRO_HISHER> attack rolls and Armor Class.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    NumCreatureLT([ENEMY],3)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    CheckStatGT(LastSeenBy(Myself),10,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
+    !HasBounceEffects(LastSeenBy(Myself))
+    HaveSpell(WIZARD_BLINDNESS)  
+    !StateCheck(LastSeenBy(Myself),STATE_BLIND)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_BLINDNESS)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
@@ -3559,6 +4098,38 @@ THEN
         Continue()
 END
 
+
+IF
+    HaveSpell(WARRIOR_POWER_ATTACK)
+    !CheckStat(Myself,5,DEFENSIVE_MODIFIER)
+    See([ENEMY])
+    !General(LastSeenBy(Myself),UNDEAD)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    CheckStatGT(LastSeenBy(Myself),-4,SAVEVSDEATH)
+    !CheckStatGT(LastSeenBy(Myself),0,CLERIC_CHAOTIC_COMMANDS)
+    !CheckStatGT(LastSeenBy(Myself),0,CLERIC_FREE_ACTION)
+    !CheckStat(LastSeenBy(Myself),1,OFFENSIVE_MODIFIER)
+    !HasItem("MORSWORD",LastSeenBy(Myself))  // Mordenkainen's Sword
+    !HasItemEquipedReal("NPSW01",LastSeenBy(Myself))  // Sword of Arvoreen +2
+    !HasItemEquipedReal("SW1H27",LastSeenBy(Myself))  // Arbane's Sword of Agility +2
+    !HasItemEquiped("RING09",LastSeenBy(Myself))  // Edventar's Gift
+    !HasItemEquipedReal("SW2H06",LastSeenBy(Myself))  // Spider's Bane +2
+    !StateCheck(Myself,STATE_SILENCED)
+THEN
+    RESPONSE #100
+        Spell(Myself,WARRIOR_POWER_ATTACK) 
+        AttackReevaluate(LastSeenBy(Myself),45)
+END
+
+IF
+    HaveSpell(WARRIOR_CRITICAL_STRIKE) 
+    !CheckStat(Myself,3,OFFENSIVE_MODIFIER)
+    Range(NearestEnemyOf(Myself),6)
+THEN
+    RESPONSE #100
+        Spell(Myself,WARRIOR_CRITICAL_STRIKE)  
+END
+
 IF
     ActuallyInCombat()
     ActionListEmpty()
@@ -3606,171 +4177,6 @@ IF
         RESPONSE #100
         Spell(Myself,KENSAI_KIA)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-// ======================================================
-// SECTION: PRE-COMBAT BUFFING (WIZARD)
-// ======================================================
-// Cast Spirit Armor
-// Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
-// Lasts for 1 hour per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_CONTINGENCY)  // SPWI414.SPL (Spirit Armor)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_CONTINGENCY)  // Cast Spirit Armor for increased defense
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_MINOR_SEQUENCER)  // SPWI414.SPL (Spirit Armor)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_MINOR_SEQUENCER)  // Cast Spirit Armor for increased defense
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-// Cast Spirit Armor
-// Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
-// Lasts for 1 hour per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_SPIRIT_ARMOR)  // SPWI414.SPL (Spirit Armor)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_SPIRIT_ARMOR)  // Cast Spirit Armor for increased defense
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Stoneskin
-// Casts Stoneskin to grant the wizard protection from physical damage by turning their skin to stone.
-// Lasts for 1 turn per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_STONE_SKIN)  // SPWI408.SPL (Stoneskin)
-    CheckStatLT(Myself,1,STONESKINS)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_STONE_SKIN)  // Cast Stoneskin for increased damage resistance
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Ghost Armor
-// Casts Ghost Armor to provide an ethereal shield that grants a bonus to armor class.
-// Lasts for 1 round per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_GHOST_ARMOR)  // SPWI317.SPL (Ghost Armor)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)  
-    CheckStatLT(Myself,1,DEAD_MAGIC)   
-    CheckStatGT(Myself,2,ARMORCLASS)   
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_GHOST_ARMOR)  // Cast Ghost Armor for improved defense
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Armor
-// Casts Armor to provide a magical armor that improves the wizard's armor class.
-// Lasts for 1 hour per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_ARMOR)  // SPWI102.SPL (Armor)
-    CheckStatGT(Myself,6,ARMORCLASS)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_ARMOR)  // Cast Armor for increased protection before combat
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Shield
-// Casts Shield to provide a magical shield that improves the wizard's armor class and grants a +4 bonus to AC.
-// Lasts for 1 turn per caster level.
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_SHIELD)  // SPWI114.SPL (Shield)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_SHIELD)  // Cast Shield for added protection
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Protection from Normal Missiles
-// Casts Protection from Normal Missiles to grant immunity to normal missile attacks.
-// Lasts for 1 hour
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // SPWI107.SPL (Protection from Normal Missiles)
-    OR(3)
-        LevelLT([ENEMY],12)
-        !ActuallyInCombat()
-        HitBy([ENEMY],MISSILE)
-    //Check if missiles are normal 
-    OR(4)
-        !ActuallyInCombat() 
-        HasItemEquiped("BULL01",[ENEMY])
-        HasItemEquiped("AROW01",[ENEMY])
-        HasItemEquiped("BOLT01",[ENEMY])
-    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Cast Protection from Normal Missiles
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-// Cast Resist Fear
-// Casts Resist Fear to grant the wizard immunity to fear effects.
-// Lasts for 1 turn per caster level.
-IF
-    !ActuallyInCombat()
-    ActionListEmpty()
-    HaveSpell(WIZARD_RESIST_FEAR)  // SPWI103.SPL (Resist Fear)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")  // Ensure the spell is not recently cast
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_RESIST_FEAR)  // Cast Resist Fear for protection against fear
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-// Cast Protection from Petrification
-// Casts Protection from Petrification to grant immunity to petrification attacks.
-// Lasts for 1 hour
-IF
-    ActionListEmpty()
-    !ActuallyInCombat()
-    HaveSpell(WIZARD_PROTECTION_FROM_PETRIFICATION)  // SPWI212.SPL (Protection from Petrification)
-    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_PETRIFICATION)  // Check if Protection from Petrification is already active
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    GlobalTimerExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_PROTECTION_FROM_PETRIFICATION)  // Cast Protection from Petrification
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 // ======================================================
@@ -3909,6 +4315,26 @@ IF
 // SECTION: Wands
 // ======================================================
 
+
+IF
+    HasItem("RODS06",Myself)  // Rod of Reversal
+    See([ENEMY])
+    OR(6)
+        CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_DEFLECTION)
+        CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
+        CheckStatGT(LastSeenBy(Myself),0,CLERIC_SHIELD_OF_THE_ARCHONS)
+        CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_IMMUNITY)
+        CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TRAP)
+        CheckStatGT(LastSeenBy(Myself),0,MINORGLOBE)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !StateCheck(Myself,STATE_SILENCED)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+THEN
+    RESPONSE #100
+        DisplayStringHead(Myself,31971)  // *uses a wand*
+        UseItem("RODS06",LastSeenBy(Myself))  // Rod of Reversal
+END
+
 // Wand of Frost
 IF
     ActionListEmpty()
@@ -3943,15 +4369,15 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    !Range(FarthestEnemyOf(Myself),14)
-    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),10)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
     HPGT(FarthestEnemyOf(Myself),20)
     NumCreatureGT([ENEMY],2)
     HasItemEquiped("WAND05",Myself)  
-    Delay(20)
+    Delay(6)
 THEN
     RESPONSE #100
         UseItem("WAND05",FarthestEnemyOf(Myself)) 
@@ -4072,6 +4498,43 @@ THEN
       IncrementGlobal("USED_RING33","LOCALS",1)
 END
 
+//The Victor
+/*
+Charge abilities:
+– Damage: 2d6
+  Range: 100 ft.
+  Area of Effect: 2-ft. by 100-ft. jet
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPGT([ENEMY],24)
+    CheckStatLT([ENEMY])
+    GlobalLT("USED_RING33","LOCALS",1)
+    HasItemEquiped("RING33",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("RING33",[ENEMY]) 
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_RING33","LOCALS",1)
+END
+
+
+//Golden Calf Idol
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    GlobalLT("USED_ohbrew06","LOCALS",1)
+    HasItemEquiped("ohbrew06",Myself) 
+THEN
+    RESPONSE #100
+      SetInterrupt(FALSE)
+      UseItem("ohbrew06",Myself) 
+      SetInterrupt(TRUE)
+      IncrementGlobal("USED_ohbrew06","LOCALS",1)
+END
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -4116,6 +4579,7 @@ THEN
       IncrementGlobal("USED_BOOT12","LOCALS",1)
 END
 
+//Ethereal Boots
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -4188,6 +4652,10 @@ IF
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
     !StateCheck(Myself,STATE_INVISIBLE)
+    !CheckSpellState([ENEMY],PROTECTION_FROM_MAGICAL_WEAPONS)
+    OR(2)
+        !TookDamage()
+        !Class(Myself,MAGE_ALL)
 THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
@@ -4202,12 +4670,13 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(7)
+    OR(8)
         Range([ENEMY],8)
         Class(Myself,PALADIN_ALL)
         Class(Myself,FIGHTER_ALL)
         Class(Myself,RANGER)
         Class(Myself,CLERIC_ALL)
+        Class(Myself,THIEF_ALL)
         !WeaponEffectiveVs([ENEMY],MAINHAND)
         !WeaponCanDamage([ENEMY],MAINHAND)
      //Return true if I'm a caster but only if there's a 25% chance
@@ -4231,6 +4700,12 @@ IF
         Range([ENEMY],4)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
     HPPercentGT(Myself,30)
+    OR(2)
+        !TookDamage()
+        !Class(Myself,MAGE_ALL)
+    !CheckSpellState([ENEMY],PROTECTION_FROM_MAGICAL_WEAPONS)
+    !CheckSpellState([ENEMY],RED_FIRESHIELD)
+    !CheckSpellState([ENEMY],BLUE_FIRESHIELD)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
