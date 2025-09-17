@@ -194,7 +194,7 @@ IF
     CheckStatLT(Myself,1,CLERIC_FREE_ACTION) // Check if party is being crowd-controlled
     CheckStatLT(Myself,1,MINORGLOBE)
     CheckStatLT(Myself,1,SHIELDGLOBE)
-    OR(7)
+    OR(8)
         CheckStat([ANYONE],1,WEB)
         CheckStat([ANYONE],1,GREASE)
         CheckSpellState([ANYONE],PRONE)
@@ -204,6 +204,7 @@ IF
         SpellCast([ANYONE.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
         SpellCast([ANYONE.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
         SpellCast([ANYONE.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
+        SpellCast([ANYONE.0.0.0],WIZARD_ABI_DALZIMS_HORRID_WILTING)
     Range([ANYONE],13)
     Delay(18)
 THEN
@@ -2273,6 +2274,17 @@ END
 
 IF
     ActionListEmpty()
+    HaveSpell(WIZARD_LIMITED_WISH) 
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
+    THEN
+        RESPONSE #100
+        Spell(Myself,WIZARD_LIMITED_WISH)  // Cast WIZARD_LIMITED_WISH
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
     !StateCheck(Myself,STATE_INVISIBLE)
@@ -2324,16 +2336,6 @@ IF
             SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_LIMITED_WISH) 
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
-    THEN
-        RESPONSE #100
-        Spell(Myself,WIZARD_LIMITED_WISH)  // Cast WIZARD_LIMITED_WISH
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
 
 
 IF
@@ -3500,6 +3502,70 @@ THEN
         Continue()
 END
 
+/*
+Sphere of Chaos
+(Alteration)
+
+Level: 7
+Range: 40 ft.
+Duration: 1 turn
+Casting Time: 7
+Area of Effect: 15-ft. radius
+Saving Throw: Special
+
+All enemies within the area of effect must make a Saving Throw vs. Spell every round that they remain in the sphere. 
+If the Saving Throw is failed, one of the following random effects occurs:
+ – target is polymorphed into a squirrel
+ – target confused
+ – target bursts into flames
+ – target is paralyzed
+ – target is disintegrated
+ – target is healed 20 Hit Points
+ – target is randomly teleported
+ – target is rendered unconscious
+ – target is hasted
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_SPHERE_OF_CHAOS)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_SPHERE_OF_CHAOS)  // Cast Dragon's Breath
+END
+
+/*
+Meteor Swarm
+(Evocation)
+
+Level: 9
+Range: 270 ft.
+Duration: 4 rounds
+Casting Time: 9
+Area of Effect: 15-ft. radius
+Saving Throw: None
+
+When the caster utters the words to this powerful spell, <PRO_HESHE> calls upon powerful forces indeed. 
+These forces pull down meteors from above, hurling them randomly at anyone in the area of effect. 
+Anyone caught in the destructive path of the meteors—whether friend or foe—will suffer 4d10 points of damage with no Saving Throw. 
+The caster is well advised to be careful in <PRO_HISHER> use of this spell.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_METEOR_SWARM)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
+    !Range(FarthestEnemyOf(Myself),22)  
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_METEOR_SWARM)  // Cast Dragon's Breath
+END
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -3512,6 +3578,33 @@ IF
 THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),WIZARD_CLOUDKILL)  // Cast Dragon's Breath
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_INCENDIARY_CLOUD)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
+    !Range(FarthestEnemyOf(Myself),16)  
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_INCENDIARY_CLOUD)  // Cast Dragon's Breath
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_ABI_DALZIMS_HORRID_WILTING)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)  
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_ABI_DALZIMS_HORRID_WILTING)  // Cast Dragon's Breath
 END
 
 IF
@@ -3635,7 +3728,7 @@ END
 // ======================================================
 IF
     ActionListEmpty()
-    Range(FarthestEnemyOf(Myself),25)
+    Range([ENEMY],25)
     !General([ENEMY],UNDEAD)  // Exclude undead
     HaveSpell(CLERIC_FALSE_DAWN)  // SPPR009.SPL (Flame Strike)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -3932,6 +4025,52 @@ IF
 THEN
     RESPONSE #100
         Spell([ENEMY], WIZARD_POWER_WORD_KILL)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Maze
+(Conjuration/Summoning)
+
+Level: 8
+Range: Touch 
+Duration: Special
+Casting Time: 3
+Area of Effect: 1 creature 
+Saving Throw: None
+
+An extradimensional space is brought into being upon utterance of a maze spell. 
+The subject vanishes into the shifting labyrinth of force planes for a period 
+of time that is totally dependent upon its Intelligence.
+
+Intelligence of Target    —    Time trapped in maze
+         under 3                —            2d4 turns
+         3 to 5                   —            1d4 turns
+         6 to 8                   —            5d4 rounds
+         9 to 11                 —            4d4 rounds
+         12 to 14               —            3d4 rounds
+         15 to 17               —            2d4 rounds
+         18 and up            —           1d4 rounds
+
+Note that if the 9th-level spell Freedom is cast in the area where a creature is mazed, 
+it will effectively bring <PRO_HIMHER> back to this plane, ending the spell prematurely. 
+Note that a mazed creature is not freed through Dispel Magic.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    LevelGT([ENEMY],6)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),8)
+    CheckStatGT(LastSeenBy(Myself),10,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
+    !HasBounceEffects(LastSeenBy(Myself))
+    HaveSpell(WIZARD_MAZE)  
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_MAZE)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
