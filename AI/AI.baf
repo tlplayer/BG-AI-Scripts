@@ -246,11 +246,13 @@ END
 // This section casts Zone of Sweet Air if the wizard or party members are affected by Stinking Cloud.
 IF
     ActionListEmpty()
-    OR(4)
-        SpellCast([ENEMY.0.0.0],WIZARD_INCENDIARY_CLOUD)  // SPWI810.SPL (Incendiary Cloud)
-        SpellCast([ENEMY.0.0.0],WIZARD_STINKING_CLOUD)  // SPWI213.SPL (Stinking Cloud)
-        SpellCast([ENEMY.0.0.0],WIZARD_CLOUDKILL)  // SPWI502.SPL (Cloudkill)
-        SpellCast([ENEMY.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
+    OR(5)
+        SpellCast([ENEMY.0.0.0],WIZARD_INCENDIARY_CLOUD)  
+        SpellCast([ENEMY.0.0.0],WIZARD_STINKING_CLOUD)  
+        SpellCast([ENEMY.0.0.0],WIZARD_CLOUDKILL) 
+        SpellCast([ENEMY.0.0.0],WIZARD_DEATH_FOG) 
+        SpellCast([ENEMY.0.0.0],WIZARD_ABI_DALZIMS_HORRID_WILTING) 
+
     HaveSpell(CLERIC_ZONE_OF_SWEET_AIR)  // SPPR318.SPL (Zone of Sweet Air)
 THEN
     RESPONSE #100
@@ -1495,11 +1497,11 @@ IF
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_CREEPING_DOOM)  // 4231 (INQUIS_DISPEL_MAGIC)
+    HaveSpell(CLERIC_CREEPING_DOOM) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CREEPING_DOOM)  // Cast INQUIS_DISPEL_MAGIC
+        Spell(LastSeenBy(Myself),CLERIC_CREEPING_DOOM) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -1513,11 +1515,11 @@ IF
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_INSECT_PLAGUE)  // 4231 (INQUIS_DISPEL_MAGIC)
+    HaveSpell(CLERIC_INSECT_PLAGUE) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)  // Cast INQUIS_DISPEL_MAGIC
+        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3631,6 +3633,18 @@ END
 // ======================================================
 // SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
+IF
+    ActionListEmpty()
+    Range(FarthestEnemyOf(Myself),25)
+    !General([ENEMY],UNDEAD)  // Exclude undead
+    HaveSpell(CLERIC_FALSE_DAWN)  // SPPR009.SPL (Flame Strike)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_FALSE_DAWN)  // Cast Flame Strike for vertical fire damage
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
 
 IF
     ActionListEmpty()
