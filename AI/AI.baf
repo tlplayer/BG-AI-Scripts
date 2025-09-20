@@ -1298,23 +1298,53 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         SetInterrupt(TRUE)
 END
+IF
+
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_POWER_WORD_SILENCE)  // SPWI612.SPL (Power Word, Silence)
+    !Difficulty(EASIEST)
+    OR(3)
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
+    !CheckStat(LastSeenBy(Myself),1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    !HasItemEquiped("AMUL21",LastSeenBy(Myself))  // Amulet of Power
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell(LastSeenBy(Myself),WIZARD_POWER_WORD_SILENCE)  // SPWI612.SPL (Power Word, Silence)
+END
 
 IF
     ActuallyInCombat()
     ActionListEmpty()  
-    OR(6)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])    
-    HaveSpell(WIZARD_GLITTERDUST)  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_GLITTERDUST)  
+    HaveSpell(WIZARD_GLITTERDUST)  // SPWI224.SPL (Glitterdust)
+    !See([ENEMY])
+    Detect([ENEMY])
+    Range(LastSeenBy(Myself),12)
+    CheckStatLT(LastSeenBy(Myself),60,STEALTH)
+    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
+    !StateCheck(LastSeenBy(Myself),STATE_NONDETECTION)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+    CheckStatGT(LastSeenBy(Myself),0,SAVEVSSPELL)
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
+    !CheckStat(LastSeenBy(Myself),2,WIZARD_SPELL_IMMUNITY)
+    !HasItemEquiped("NPMISC1",LastSeenBy(Myself))  // Jansen Spectroscopes
+THEN
+    RESPONSE #100
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell(Myself,WIZARD_GLITTERDUST)  // SPWI224.SPL (Glitterdust)
 END
 
 IF
@@ -1475,16 +1505,16 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     OR(6)
-        SpellCast([GOODCUTOFF],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
-        SpellCast([GOODCUTOFF],WIZARD_SIMULACRUM)  // SPWI804.SPL (Simulacrum)
-        SpellCast([GOODCUTOFF],WIZARD_MISLEAD)  // SPWI607.SPL (Mislead)
-        SpellCast([GOODCUTOFF],WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
-        SpellCast([GOODCUTOFF],WIZARD_IMPROVED_INVISIBILITY)  // SPWI405.SPL (Improved Invisibility)
-        SpellCast([GOODCUTOFF],WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)  // SPWI804.SPL (Simulacrum)
+        SpellCast([ENEMY],WIZARD_MISLEAD)  // SPWI607.SPL (Mislead)
+        SpellCast([ENEMY],WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
+        SpellCast([ENEMY],WIZARD_IMPROVED_INVISIBILITY)  // SPWI405.SPL (Improved Invisibility)
+        SpellCast([ENEMY],WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
     HaveSpell(CLERIC_INVISIBILITY_PURGE)
     THEN
         RESPONSE #100
-        Spell([GOODCUTOFF],CLERIC_INVISIBILITY_PURGE)  
+        Spell([ENEMY],CLERIC_INVISIBILITY_PURGE)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2337,7 +2367,6 @@ IF
 END
 
 
-
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
@@ -2355,19 +2384,20 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(WIZARD_SHAPECHANGE)  // 2916 (WIZARD_SHAPECHANGE)
-    HaveSpell(WIZARD_TENSERS_TRANSFORMATION)  // 2603 (WIZARD_TENSERS_TRANSFORMATION)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_SHAPECHANGE)  // Cast WIZARD_SHAPECHANGE
-            Spell(Myself,WIZARD_TENSERS_TRANSFORMATION)  // Cast WIZARD_TENSERS_TRANSFORMATION
             SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_FIRE_SHIELD_BLUE)  
+    OR(2)
+        TookDamage()
+        Range([ENEMY],8)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
@@ -2378,8 +2408,22 @@ END
 
 IF
     ActionListEmpty()
+    HaveSpell(WIZARD_STRENGTH)  
+    Range([ENEMY],8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
+    THEN
+        RESPONSE #100
+            Spell(Myself,WIZARD_STRENGTH)  
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     HaveSpell(WIZARD_FIRE_SHIELD_RED)  
-    TookDamage()
+    OR(2)
+        TookDamage()
+        Range([ENEMY],8)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     THEN
@@ -2476,6 +2520,7 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
+    See([ENEMY])
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     HaveSpell(WIZARD_PROTECTION_FROM_EVIL)  // Ensure the spell is available
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -3197,6 +3242,35 @@ THEN
 END
 
 IF
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+    HPLT([ENEMY],90)
+    See([ENEMY])
+    !StateCheck([ENEMY],STATE_REALLY_DEAD)
+    !StateCheck([ENEMY],STATE_NOT_TARGETABLE)
+    !StateCheck([ENEMY],STATE_HARMLESS)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_DEFLECTION)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TURNING)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TRAP)
+    !CheckStatGT([ENEMY],0,CLERIC_CHAOTIC_COMMANDS)
+    !CheckStatGT([ENEMY],0,CLERIC_FREE_ACTION)
+    !CheckStat([ENEMY],2,WIZARD_SPELL_IMMUNITY)
+    !CheckStat([ENEMY],1,OFFENSIVE_MODIFIER)
+    !CheckStat([ENEMY],1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    !HasItemEquipedReal("NPSW01",[ENEMY])  // Sword of Arvoreen +2
+    !HasItemEquipedReal("SW1H27",[ENEMY])  // Arbane's Sword of Agility +2
+    !HasItemEquiped("RING09",[ENEMY])  // Edventar's Gift
+    !HasItemEquipedReal("SW2H06",[ENEMY])  // Spider's Bane +2
+    CheckStatLT([ENEMY],50,RESISTMAGIC)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell([ENEMY],WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
+END
+IF
     ActuallyInCombat()
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
@@ -3314,6 +3388,56 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_FEEBLEMIND)  // SPWI509.SPL (Feeblemind)
+    See([ENEMY])
+    !StateCheck(LastSeenBy(Myself),STATE_NOT_TARGETABLE)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),-2,SAVEVSSPELL)
+    !CheckStatGT(LastSeenBy(Myself),0,CLERIC_CHAOTIC_COMMANDS)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_DEFLECTION)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TRAP)
+    !CheckStat(LastSeenBy(Myself),1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    !CheckStat(LastSeenBy(Myself),1,OFFENSIVE_MODIFIER)
+    !CheckStat(LastSeenBy(Myself),4,WIZARD_SPELL_IMMUNITY)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell(LastSeenBy(Myself),WIZARD_FEEBLEMIND)  // SPWI509.SPL (Feeblemind)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_EMOTION_HOPELESSNESS)  // SPWI411.SPL (Emotion: Hopelessness)
+    See([EVILCUTOFF.HUMANOID])
+    !Race(LastSeenBy(Myself),ELF)
+    !StateCheck(LastSeenBy(Myself),STATE_NOT_TARGETABLE)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),0,SAVEVSSPELL)
+    !CheckStatGT(LastSeenBy(Myself),0,CLERIC_CHAOTIC_COMMANDS)
+    !CheckStat(LastSeenBy(Myself),4,WIZARD_SPELL_IMMUNITY)
+    !CheckStat(LastSeenBy(Myself),1,OFFENSIVE_MODIFIER)
+    !CheckStatGT(LastSeenBy(Myself),0,MINORGLOBE)
+    !HasItem("MORSWORD",LastSeenBy(Myself))  // Mordenkainen's Sword
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !StateCheck(Myself,STATE_SILENCED)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell(LastSeenBy(Myself),WIZARD_EMOTION_HOPELESSNESS)  // SPWI411.SPL (Emotion: Hopelessness)
+END
 
 IF
     ActuallyInCombat()
@@ -3468,6 +3592,36 @@ THEN
 END
 
 /*
+Meteor Swarm
+(Evocation)
+
+Level: 9
+Range: 270 ft.
+Duration: 4 rounds
+Casting Time: 9
+Area of Effect: 15-ft. radius
+Saving Throw: None
+
+When the caster utters the words to this powerful spell, <PRO_HESHE> calls upon powerful forces indeed. 
+These forces pull down meteors from above, hurling them randomly at anyone in the area of effect. 
+Anyone caught in the destructive path of the meteors—whether friend or foe—will suffer 4d10 points of damage with no Saving Throw. 
+The caster is well advised to be careful in <PRO_HISHER> use of this spell.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_METEOR_SWARM)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
+    !Range(FarthestEnemyOf(Myself),22)  
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_METEOR_SWARM)  // Cast Dragon's Breath
+END
+
+/*
 Death Fog
 (Evocation)
 
@@ -3536,35 +3690,6 @@ THEN
         Spell([ENEMY],WIZARD_SPHERE_OF_CHAOS)  // Cast Dragon's Breath
 END
 
-/*
-Meteor Swarm
-(Evocation)
-
-Level: 9
-Range: 270 ft.
-Duration: 4 rounds
-Casting Time: 9
-Area of Effect: 15-ft. radius
-Saving Throw: None
-
-When the caster utters the words to this powerful spell, <PRO_HESHE> calls upon powerful forces indeed. 
-These forces pull down meteors from above, hurling them randomly at anyone in the area of effect. 
-Anyone caught in the destructive path of the meteors—whether friend or foe—will suffer 4d10 points of damage with no Saving Throw. 
-The caster is well advised to be careful in <PRO_HISHER> use of this spell.
-*/
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpell(WIZARD_METEOR_SWARM)
-    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
-    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTFIRE)
-    !Range(FarthestEnemyOf(Myself),22)  
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_METEOR_SWARM)  // Cast Dragon's Breath
-END
 
 IF
     ActionListEmpty()
@@ -3639,7 +3764,6 @@ END
 /* Fireball for enemies at a safe distance (30 search squares) */
 IF
     ActionListEmpty()
-    !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     HaveSpell(WIZARD_FIREBALL)  // SPWI304.SPL (Fireball)
     CheckStatLT([ENEMY],100,RESISTFIRE)
     CheckStatLT([ENEMY],100,RESISTMAGIC)
@@ -3676,9 +3800,10 @@ END
 /* Burning Hands for nearby enemies with more than 20 HP */
 IF
     ActionListEmpty()
-    !GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")
     !HasBounceEffects(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_BURNING_HANDS)  // SPWI103.SPL (Burning Hands)
+    CheckStatLT([ENEMY],100,RESISTFIRE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     Range(NearestEnemyOf(Myself),6)  // Ensure the enemy is close enough
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -4062,7 +4187,7 @@ IF
     See([ENEMY])
     LevelGT([ENEMY],6)
     !ImmuneToSpellLevel(LastSeenBy(Myself),8)
-    CheckStatGT(LastSeenBy(Myself),10,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
+    CheckStatGT(LastSeenBy(Myself),6,SAVEVSSPELL) //and I got a reasonable chance of failing a save throw (25%+)
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_MAZE)  
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -4230,20 +4355,29 @@ THEN
 END
 
 // ======================================================
-// SECTION: ShapeShift 
-// ======================================================
-
-
-// ======================================================
 // SECTION: BUFFS (FIGHTER)
 // ======================================================
-
 
 IF
     ActionListEmpty()
     HaveSpell(WARRIOR_GREATER_WHIRLWIND)
     ActuallyInCombat()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(30)
+THEN
+    RESPONSE #100
+        Spell(Myself, WARRIOR_GREATER_WHIRLWIND)  // Perform Greater Whirlwind Attack
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) 
+        Continue()
+END
+
+
+IF
+    ActionListEmpty()
+    HaveSpell(WARRIOR_WHIRLWIND)
+    ActuallyInCombat()
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(30)
 THEN
     RESPONSE #100
         Spell(Myself, WARRIOR_GREATER_WHIRLWIND)  // Perform Greater Whirlwind Attack
@@ -4775,6 +4909,7 @@ IF
         !IsWeaponRanged(Myself)
     !OutOfAmmo()
     CanEquipRanged()
+    LevelLT(LastSeenBy(Myself),18)
     Class(Myself,RANGER)
     !Range(LastSeenBy(Myself),4)
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
@@ -4782,6 +4917,21 @@ THEN
     RESPONSE #100
         EquipRanged()  // Equip ranged weapon
         Spell(Myself,ARCHER_CALL_SHOT) // Use special bow ability
+        Continue()
+END
+// Use special bow ability
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    !WeaponCanDamage(LastSeenBy(Myself),BOTH)
+    !IsWeaponRanged(Myself)
+    !OutOfAmmo()
+    CanEquipRanged()
+    !Range(LastSeenBy(Myself),4)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
+THEN
+    RESPONSE #100
+        EquipRanged()  // Equip ranged weapon
         Continue()
 END
 
@@ -4797,6 +4947,7 @@ IF
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.SORCERER]) // Highest priority
     !StateCheck(LastSeenBy(Myself),STATE_CHARMED)
+    LevelLT(LastSeenBy(Myself),21)
     OR(2)
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
@@ -4809,10 +4960,11 @@ IF
     OR(2)
         !TookDamage()
         !Class(Myself,MAGE_ALL)
+    Delay(6)
 THEN
     RESPONSE #100
-        EquipRanged()  // Equip ranged weapon
-        AttackOneRound(LastSeenBy(Myself))
+        EquipRanged()
+        AttackReevaluate(LastSeenBy(Myself),45)
         Continue()
 END
 
@@ -4830,8 +4982,8 @@ IF
         Class(Myself,RANGER)
         Class(Myself,CLERIC_ALL)
         Class(Myself,THIEF_ALL)
-        !WeaponEffectiveVs([ENEMY],MAINHAND)
-        !WeaponCanDamage([ENEMY],MAINHAND)
+        WeaponEffectiveVs([ENEMY],MAINHAND)
+        WeaponCanDamage([ENEMY],MAINHAND)
      //Return true if I'm a caster but only if there's a 25% chance
     OR(8)
         See([ENEMY])
@@ -4852,17 +5004,18 @@ IF
         CheckStatGT(Myself,0,SHIELDGLOBE)
         Range([ENEMY],4)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
-    HPPercentGT(Myself,30)
+    HPPercentGT(Myself,35)
     OR(2)
         !TookDamage()
         !Class(Myself,MAGE_ALL)
     !CheckSpellState([ENEMY],PROTECTION_FROM_MAGICAL_WEAPONS)
     !CheckSpellState([ENEMY],RED_FIRESHIELD)
     !CheckSpellState([ENEMY],BLUE_FIRESHIELD)
+    Delay(3)
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(LastSeenBy(Myself))
+        AttackReevaluate(LastSeenBy(Myself),60)
         Continue()
 END
 
