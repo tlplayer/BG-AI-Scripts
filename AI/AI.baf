@@ -1609,7 +1609,7 @@ END
 // CLERIC_ETHER_GATE
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ETHER_GATE)
     CheckSpellState(Myself,PROTECTION_FROM_EVIL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1623,7 +1623,7 @@ END
 // CLERIC_SUMMON_DEVA
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_SUMMON_DEVA)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1636,21 +1636,20 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    See(NearestEnemyOf(Myself))
     HaveSpell(PALADIN_SUMMON_DEVA)  // 4923 (PALADIN_SUMMON_DEVA)
-    Range(NearestEnemyOf(Myself),30)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 
     THEN
         RESPONSE #100
-        Spell(NearestEnemyOf(Myself),PALADIN_SUMMON_DEVA)  // Cast PALADIN_SUMMON_DEVA
+        Spell(Myself,PALADIN_SUMMON_DEVA)  // Cast PALADIN_SUMMON_DEVA
         SetGlobalTimer("UNKNOWN_CAST","LOCALS",ONE_ROUND)
 END
 
 // CLERIC_SUMMON_FALLEN_DEVA
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_SUMMON_FALLEN_DEVA)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1663,7 +1662,7 @@ END
 // CLERIC_CONJURE_FIRE_ELEMENTAL
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_FIRE_ELEMENTAL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1676,7 +1675,7 @@ END
 // CLERIC_CONJURE_EARTH_ELEMENTAL
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_EARTH_ELEMENTAL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1689,7 +1688,7 @@ END
 // CLERIC_GATE
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     CheckSpellState(Myself,PROTECTION_FROM_EVIL)
     HaveSpell(CLERIC_GATE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -1702,7 +1701,7 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1715,7 +1714,7 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMATE_DEAD)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1728,7 +1727,7 @@ END
 // CLERIC_ANIMAL_SUMMONING_1
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_1)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1741,7 +1740,7 @@ END
 // CLERIC_CALL_WOODLAND_BEINGS
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CALL_WOODLAND_BEINGS)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1754,7 +1753,7 @@ END
 // CLERIC_ANIMAL_SUMMONING_2
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_2)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1767,7 +1766,7 @@ END
 // CLERIC_AERIAL_SERVANT
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_AERIAL_SERVANT)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1780,7 +1779,7 @@ END
 // CLERIC_ANIMAL_SUMMONING_3
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1793,7 +1792,7 @@ END
 // CLERIC_CONJURE_ANIMALS
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_ANIMALS)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1806,7 +1805,7 @@ END
 // CLERIC_ELEMENTAL_SWARM
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ELEMENTAL_SWARM)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1819,7 +1818,7 @@ END
 // CLERIC_GREATER_ELEMENTAL_SWARM
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_GREATER_ELEMENTAL_SWARM)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -2773,6 +2772,22 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    HaveSpell(CLERIC_CLOAK_OF_FEAR)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_CLOAK_OF_FEAR)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
     HaveSpell(AURA_OF_DESPAIR)  
     OR(2)
         LevelGT([ENEMY],2)
@@ -3544,12 +3559,19 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
     HaveSpell(CLERIC_INSECT_PLAGUE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_INSECT_PLAGUE)
+        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -3557,12 +3579,19 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
     HaveSpell(CLERIC_SUMMON_INSECTS)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(NearestEnemyOf(Myself),CLERIC_SUMMON_INSECTS)
+        Spell(LastSeenBy(Myself),CLERIC_SUMMON_INSECTS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
