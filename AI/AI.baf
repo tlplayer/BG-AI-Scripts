@@ -36,20 +36,6 @@ THEN
         Continue()
 END
 
-// This section sets a global timer for casting area-of-effect spells if there are more than 3 enemies nearby.
-IF
-    Delay(12)
-    OR(5)
-        ActuallyInCombat()
-        Exists([ENEMY])
-        AreaCheck("OH8200")
-        AreaCheck("OH8300")
-        AreaCheck("OH8400")
-THEN
-    RESPONSE #100
-        SetGlobalTimer("SUMMON","LOCALS",FIVE_ROUNDS)
-        Continue()
-END
 
 IF
     HotKey(K)  // Detect pressing of the 'B' key
@@ -597,10 +583,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-// ======================================================
-// SECTION: PRE-COMBAT BUFFING (CLERIC)
-// ======================================================
-
 
 // ======================================================
 // SECTION: Heal SPELLS (CLERIC)
@@ -783,9 +765,10 @@ END
 IF
     ActionListEmpty()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    OR(2)
+    OR(3)
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
+        CheckStatGT([PC],0,HELPLESS)
     HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
 THEN
     RESPONSE #100
@@ -812,7 +795,7 @@ IF
     ActionListEmpty()
     HaveSpell(CLERIC_DISPEL_MAGIC)  
     See([PC])
-    OR(4)
+    OR(5)
         StateCheck([PC],STATE_CHARMED)
         StateCheck([PC],STATE_CONFUSED)
         StateCheck([PC],STATE_STUNNED)
@@ -861,6 +844,7 @@ IF
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
         CheckStatGT([PC],0,LEVELDRAIN)
+        CheckStatGT([PC],0,)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 
     THEN
@@ -1418,6 +1402,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(CLERIC_DISPEL_MAGIC)  // 1303 (CLERIC_DISPEL_MAGIC)
+    !Range([ENEMY],10)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -1587,13 +1572,16 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
+    //See an enemy then check if the enemy is any spellcaster type or that they cast a spell 
+    See([ENEMY])
+    OR(7)
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.BARD_ALL])
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
+        SpellCast([ENEMY],0)
     HaveSpell(CLERIC_MISCAST_MAGIC)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
@@ -1611,6 +1599,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ETHER_GATE)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckSpellState(Myself,PROTECTION_FROM_EVIL)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1625,6 +1614,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_SUMMON_DEVA)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1636,7 +1626,8 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    HaveSpell(PALADIN_SUMMON_DEVA)  // 4923 (PALADIN_SUMMON_DEVA)
+    HaveSpell(PALADIN_SUMMON_DEVA) 
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 
@@ -1651,6 +1642,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_SUMMON_FALLEN_DEVA)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1664,6 +1656,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_FIRE_ELEMENTAL)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1677,6 +1670,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_EARTH_ELEMENTAL)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1690,6 +1684,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     CheckSpellState(Myself,PROTECTION_FROM_EVIL)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     HaveSpell(CLERIC_GATE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1703,6 +1698,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1716,6 +1712,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMATE_DEAD)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1729,6 +1726,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_1)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1742,6 +1740,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CALL_WOODLAND_BEINGS)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1755,6 +1754,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_2)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1768,6 +1768,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_AERIAL_SERVANT)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1781,6 +1782,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ANIMAL_SUMMONING_3)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1794,6 +1796,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_CONJURE_ANIMALS)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1807,6 +1810,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(CLERIC_ELEMENTAL_SWARM)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -1819,6 +1823,7 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     HaveSpell(CLERIC_GREATER_ELEMENTAL_SWARM)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -1837,7 +1842,7 @@ IF
     HaveSpell(WIZARD_SUMMON_PLANATAR_EVIL)  // SPWI615.SPL (Summon Hakeashar)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2095,7 +2100,7 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(WIZARD_MONSTER_SUMMONING_3) 
     NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2109,7 +2114,7 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(WIZARD_SPIDER_SPAWN)  
     NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -2123,8 +2128,9 @@ END
 
 IF
     ActionListEmpty()
-    GlobalTimerNotExpired("SUMMON","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(WIZARD_MONSTER_SUMMONING_2)  // SPWI511.SPL (Monster Summoning II)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2138,6 +2144,7 @@ IF
     ActionListEmpty()
     GlobalTimerNotExpired("SUMMON","LOCALS")
     HaveSpell(WIZARD_MONSTER_SUMMONING_1)  // SPWI103.SPL (Summon Monster I)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2667,6 +2674,7 @@ IF
     ActionListEmpty()
     HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
     HitBy([ANYONE],FIRE)
+    !CheckStatLT(Myself,100,RESISTFIRE)
     GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -2848,19 +2856,6 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    HaveSpell(CLERIC_SANCTUARY)  // SPPR109.SPL (Sanctuary)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    HPPercentLT([PC],50)  // Party member's HP is below 25%
-THEN
-    RESPONSE #100
-        Spell([PC],CLERIC_SANCTUARY)  // Cast Sanctuary on the party member with low HP
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
 
 
 IF
@@ -2870,6 +2865,7 @@ IF
     HaveSpell(CLERIC_PROTECT_FROM_EVIL)  // SPPR107.SPL (Protection from Evil)
     !CheckSpellState(Myself,PROTECTION_FROM_EVIL)  // Correct spell state for Protection from Evil
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2883,6 +2879,7 @@ IF
     ActuallyInCombat()
     HaveSpellRES("OHTMPS2")  
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     Delay(30)
 THEN
@@ -2898,6 +2895,7 @@ IF
     HaveSpell(LATHANDER_BOON)  
     !CheckSpellState(Myself,LATHANDER_BOON) 
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2911,10 +2909,39 @@ IF
     HaveSpell(CLERIC_HOLY_POWER)  
     !CheckSpellState(Myself,HOLY_POWER)  // State 9 for Holy Power
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell(Myself,CLERIC_HOLY_POWER)  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Strength of One
+(Alteration)
+
+Level: 3
+Sphere: Law
+Range: 0 
+Duration: 1 turn 
+Casting Time: 3 
+Area of Effect: 15-ft. radius
+Saving Throw: None
+
+When this spell is cast, party members within the area of effect are given a Strength score of 18/75. If a party member has a Strength score higher than this (either naturally, or through a magical item), then <PRO_HISHER> Strength is lowered to 18/75. The spell lasts for 1 turn, whereupon everyone's Strength returns to normal.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_STRENGTH_OF_ONE)  
+    CheckStatLT(Myself,18,STR)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_STRENGTH_OF_ONE)  // Cast Holy Power for increased strength
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2939,6 +2966,7 @@ IF
     !CheckSpellState(Myself,HOLY_POWER)  // State 9 for Holy Power
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     Delay(20)
 THEN
     RESPONSE #100
@@ -2952,6 +2980,7 @@ IF
     HaveSpell(CLERIC_RIGHTEOUS_MAGIC)  
     !CheckSpellState(Myself,ALLIED_RIGHTEOUS_WRATH_OF_THE_FAITHFUL)  // State 16 for Righteous Wrath of the Faithful (closest match)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2965,6 +2994,7 @@ IF
     HaveSpell(CLERIC_DEATH_WARD)  
     !CheckSpellState(Myself,DEATH_WARD)  // State 8 for Death Ward
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -3495,6 +3525,57 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Rigid Thinking 
+(Enchantment/Charm)
+
+Level: 3
+Sphere: Law
+Range: Visual range of the caster
+Duration: 1 turn
+Casting Time: 5 
+Area of Effect: 1 person or mammal 
+Saving Throw: Neg. 
+
+The target of this spell must make a Saving Throw vs. Spell or come under its effects. 
+When under the effects of the Rigid Thinking spell, the victim will randomly wander, attack the nearest person, or stand confused.
+*/
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)
+    HaveSpell(CLERIC_RIGID_THINKING) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_RIGID_THINKING) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    General(LastSeenBy(Myself),ANIMAL)
+    HaveSpell(CLERIC_HOLD_ANIMAL) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_HOLD_ANIMAL)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     See(NearestEnemyOf(Myself))
@@ -3907,6 +3988,34 @@ THEN
         Continue()
 END
 
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_GLYPH_OF_WARDING)  
+    !Range(FarthestEnemyOf(Myself),24)
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_GLYPH_OF_WARDING)  // Cast Web on any visible enemies
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_ENTANGLE)  
+    !Range(FarthestEnemyOf(Myself),24)
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_ENTANGLE)  // Cast Web on any visible enemies
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
 // ======================================================
@@ -4344,14 +4453,24 @@ END
 IF
     ActionListEmpty()
     HPGT([ENEMY],30)
-    HaveSpell(CLERIC_FLAME_STRIKE)  // SPPR009.SPL (Flame Strike)
+    HaveSpell(CLERIC_FLAME_STRIKE)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell([ENEMY],CLERIC_FLAME_STRIKE)  // Cast Flame Strike for vertical fire damage
+        Spell([ENEMY],CLERIC_FLAME_STRIKE) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
-
+IF
+    ActionListEmpty()
+    HPGT([ENEMY],30)
+    CheckStatLT([ENEMY],100,RESISTELECTRICITY)
+    HaveSpell(CLERIC_CALL_LIGHTNING) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_CALL_LIGHTNING) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
 IF
     ActionListEmpty()
     ActuallyInCombat()
