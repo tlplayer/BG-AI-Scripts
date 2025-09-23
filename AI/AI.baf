@@ -849,7 +849,7 @@ IF
     OR(3)
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
-        CheckStatGT([PC],0,HELPLESS)
+        StateCheck([PC],STATE_HELPLESS)
     HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
 THEN
     RESPONSE #100
@@ -956,7 +956,6 @@ IF
         StateCheck([PC],STATE_STUNNED)
         CheckStatGT([PC],0,HELD)
         CheckStatGT([PC],0,LEVELDRAIN)
-        CheckStatGT([PC],0,)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 
     THEN
@@ -3500,7 +3499,6 @@ IF
     LevelGT([ENEMY],10)
     General([ENEMY],UNDEAD)
     HaveSpell(CLERIC_NEGATIVE_PLANE_PROTECTION)  
-    !CheckSpellState([PC],LEVEL_DRAIN_IMMUNITY) 
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4713,6 +4711,22 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_BIGBYS_CRUSHING_HAND)  // SPWI304.SPL (Flame Arrow)
+    CheckStatLT([ENEMY],100,RESISTFIRE)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    LevelGT([ENEMY],3)
+    !HasBounceEffects([ENEMY])
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_BIGBYS_CRUSHING_HAND)  // SPWI304.SPL (Flame Arrow)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 /* Magic Missile for enemies with more than 20 HP and no bounce effects */
 IF
     ActionListEmpty()
@@ -5403,7 +5417,7 @@ END
 
 IF
     ActionListEmpty()
-    CheckStatLT([ENEMY],100,POISON)
+    CheckStatLT([ENEMY],100,RESISTPOISON)
     HaveSpell(CLERIC_POISON)  // SPPR010.SPL (Harm)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
