@@ -302,11 +302,12 @@ This effect lasts for the duration of the spell or until dispelled.
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_PROTECTION_FROM_MAGIC_ENERGY)
-    OR(6)
+    OR(5)
         HitBy([ANYONE],ACID)
         HitBy([ANYONE],COLD)
         HitBy([ANYONE],ELECTRICITY)
         HitBy([ANYONE],FIRE)
+        HitBy([ANYONE],MAGIC)
     !CheckStat(Myself,1,WIZARD_PROTECTION_FROM_MAGIC_ENERGY)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -658,6 +659,53 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
+/*
+Regeneration
+(Necromancy)
+
+Level: 7
+Sphere: Healing
+Range: Touch
+Duration: 1 round/2 levels
+Casting Time: 7
+Area of Effect: 1 creature
+Saving Throw: None 
+
+This powerful spell enables the priest to imbue one creature with the ability to regenerate. This regeneration will heal any wounds and even regenerate lost limbs. The creature affected will regain 3 Hit Points per second. The effect lasts for 1 round per 2 levels of the caster or until dispelled. For example, a 14th-level priest would regenerate 18 Hit Points per round for 7 rounds.
+*/
+IF
+    ActionListEmpty()
+    HPPercentLT([PC],60) // Heal when HP is below 20
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_REGENERATE)
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_REGENERATE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+IF
+    ActionListEmpty()
+    StateCheck([PC],STATE_REALLY_DEAD)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_RESURRECTION)
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_RESURRECTION)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+IF
+    ActionListEmpty()
+    StateCheck([PC],STATE_REALLY_DEAD)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_MASS_RAISE_DEAD)
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_MASS_RAISE_DEAD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
 IF
     ActionListEmpty()
     StateCheck([PC],STATE_POISONED)
@@ -666,6 +714,39 @@ IF
 THEN
     RESPONSE #100
         Spell([PC],CLERIC_SLOW_POISON)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
+END
+
+/*
+Neutralize Poison
+(Necromancy)
+
+Level: 4
+Sphere: Healing 
+Range: Touch 
+Duration: Instant 
+Casting Time: 1 
+Area of Effect: 1 creature 
+Saving Throw: None 
+
+This spell removes all toxins from the body, both natural and magical in nature. 
+When this spell is cast upon a poisoned individual, it immediately neutralizes any poison 
+and restores 10 lost Hit Points. This spell will also cure any diseases that the target might
+be suffering from, as well as blindness and deafness.
+*/
+IF
+    ActionListEmpty()
+    OR(5)
+        StateCheck([PC],STATE_DISEASED)
+        StateCheck([PC],STATE_BLIND)
+        StateCheck([PC],STATE_FEEBLEMINDED)
+        CheckSpellState([PC],DEAFENED)
+        StateCheck([PC],STATE_POISONED)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    HaveSpell(CLERIC_NEUTRALIZE_POISON)
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_NEUTRALIZE_POISON)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
@@ -688,7 +769,7 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],60) // Heal when HP is below 70
+    HPPercentLT([PC],70) // Heal when HP is below 70
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_MASS_CURE)
 THEN
@@ -705,7 +786,7 @@ IF
     HaveSpell(CLERIC_CURE_MEDIUM_WOUNDS)
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CURE_MEDIUM_WOUNDS)
+        Spell([PC],CLERIC_CURE_MEDIUM_WOUNDS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer (adjust as needed)
 END
 
@@ -713,12 +794,12 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],50) // Heal when HP is below 50%
+    HPPercentLT([PC],60) // Heal when HP is below 50%
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_CURE_SERIOUS_WOUNDS)
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_CURE_SERIOUS_WOUNDS)
+        Spell([PC],CLERIC_CURE_SERIOUS_WOUNDS)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND) // Set a 2-minute timer
 END
 
@@ -836,6 +917,37 @@ IF
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Cure Disease
+(Abjuration)
+
+Level: 3
+Sphere: Necromantic
+Range: Touch
+Duration: Permanent
+Casting Time: 1
+Area of Effect: 1 creature
+Saving Throw: None
+
+By laying <PRO_HISHER> hands upon a sickly person, the caster can cure almost any disease with this spell. 
+The cure is permanent, but does not grant the recipient of the spell immunity from further afflictions. 
+Blindness, deafness, and feeblemind are also cured with this spell. Some magically created diseases may not be curable by this spell.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_CURE_DISEASE)
+    OR(4)
+        StateCheck([PC],STATE_DISEASED)
+        StateCheck([PC],STATE_BLIND)
+        StateCheck([PC],STATE_FEEBLEMINDED)
+        CheckSpellState([PC],DEAFENED)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell([PC],CLERIC_CURE_DISEASE)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     See([PC])
@@ -857,7 +969,7 @@ END
 IF
     ActionListEmpty()
     See([PC])
-    HPPercentLT([PC],50) // Heal when HP is below 20
+    HPPercentLT([PC],60) // Heal when HP is below 20
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     HaveSpell(CLERIC_CURE_CRITICAL_WOUNDS)
 THEN
@@ -1282,6 +1394,8 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         SetInterrupt(TRUE)
 END
+
+
 IF
 
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -1304,6 +1418,31 @@ THEN
     RESPONSE #100
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
         Spell(LastSeenBy(Myself),WIZARD_POWER_WORD_SILENCE)  // SPWI612.SPL (Power Word, Silence)
+END
+
+
+IF
+
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
+    !Difficulty(EASIEST)
+    OR(3)
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.MAGE_ALL])
+    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
+    !CheckStat(LastSeenBy(Myself),1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    !HasItemEquiped("AMUL21",LastSeenBy(Myself))  // Amulet of Power
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell(LastSeenBy(Myself),WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
 END
 
 IF
@@ -1347,6 +1486,45 @@ IF
         RESPONSE #100
         Spell(LastSeenBy(Myself),WIZARD_PIERCE_MAGIC)  
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    OR(7)
+        Gender(LastSeenBy(Myself),ILLUSIONARY)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE) 
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)  
+        SpellCast([ENEMY],WIZARD_MISLEAD)  
+        StateCheck(LastSeenBy(Myself),STATE_BLUR)
+        StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
+        Class([ENEMY],THIEF_ALL)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    Delay(30)
+    HaveSpell(WIZARD_TRUE_SIGHT) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(Myself,WIZARD_TRUE_SIGHT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+IF
+    ActionListEmpty()
+    OR(7)
+        Gender(LastSeenBy(Myself),ILLUSIONARY)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE) 
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)  
+        SpellCast([ENEMY],WIZARD_MISLEAD)  
+        StateCheck(LastSeenBy(Myself),STATE_BLUR)
+        StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
+        Class([ENEMY],THIEF_ALL)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    Delay(30)
+    HaveSpell(WIZARD_DETECT_INVISIBILITY) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(Myself,WIZARD_DETECT_INVISIBILITY)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
@@ -1488,6 +1666,26 @@ END
 
 IF
     ActionListEmpty()
+    OR(7)
+        Gender(LastSeenBy(Myself),ILLUSIONARY)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE) 
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)  
+        SpellCast([ENEMY],WIZARD_MISLEAD)  
+        StateCheck(LastSeenBy(Myself),STATE_BLUR)
+        StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
+        Class([ENEMY],THIEF_ALL)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    Delay(30)
+    HaveSpell(CLERIC_TRUE_SIGHT) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(Myself,CLERIC_TRUE_SIGHT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     ActuallyInCombat()
     OR(6)
         SpellCast([ENEMY],WIZARD_PROJECT_IMAGE)  // SPWI703.SPL (Project Image)
@@ -1520,6 +1718,62 @@ IF
         Spell(LastSeenBy(Myself),CLERIC_CREEPING_DOOM) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
+
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_EARTHQUAKE) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_EARTHQUAKE) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_SYMBOL_DEATH) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_SYMBOL_DEATH) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HaveSpell(CLERIC_SYMBOL_STUN) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_SYMBOL_STUN) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 
 IF
     ActionListEmpty()
@@ -2547,10 +2801,10 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    See(NearestEnemyOf(Myself))
     HaveSpell(CLERIC_ARMOR_OF_FAITH)  // SPPR111.SPL (Armor of Faith)
     !CheckSpellState(Myself,ARMOR_OF_FAITH)  // Correct spell state for Armor of Faith
     CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -2560,8 +2814,22 @@ END
 
 IF
     ActionListEmpty()
-    HaveSpell(CLERIC_DEFENSIVE_HARMONY)  
+    ActuallyInCombat()
+    HaveSpell(CLERIC_SHIELD_OF_THE_ARCHONS)  // SPPR111.SPL (Armor of Faith)
+    !CheckSpellState(Myself,ARMOR_OF_FAITH)  // Correct spell state for Armor of Faith
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SHIELD_OF_THE_ARCHONS)  // Cast Armor of Faith
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
 
+
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_DEFENSIVE_HARMONY)  
     !CheckStatLT([PC],1,CLERIC_DEFENSIVE_HARMONY)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
@@ -2670,17 +2938,60 @@ THEN
         Continue()
 END
 
+
 IF
     ActionListEmpty()
-    HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
-    HitBy([ANYONE],FIRE)
-    !CheckStatLT(Myself,100,RESISTFIRE)
+    HaveSpell(CLERIC_PROTECTION_FROM_LIGHTNING)  
+    !CheckStatLT([PC],100,RESISTELECTRICITY)
+    HitBy([ANYONE],ELECTRICITY)
     GlobalTimerNotExpired("FIRE_ENEMIES","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_PROTECTION_FROM_FIRE)  // Cast Protection from Fire on yourself
+        Spell([PC],CLERIC_PROTECTION_FROM_LIGHTNING)  // Cast Protection from Fire on yourself
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Magic Resistance
+(Alteration)
+
+Level: 5
+Sphere: Protection
+Range: Touch
+Duration: 3 rounds + 1 round/level
+Casting Time: 9
+Area of Effect: 1 creature
+Saving Throw: None 
+
+When this spell is cast, the recipient receives a resistance to all magic. The resistance conferred is 2% per level of the caster, up to a maximum of 40% at 20th level. This resistance is set so that if the target already has more Magic Resistance than the priest would confer, it will actually lower it to the set value. This effect will last for the duration of the spell or until dispelled.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_MAGIC_RESISTANCE)  
+    HitBy([ANYONE],MAGIC)
+    !CheckStatLT([PC],20,RESISTMAGIC)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_MAGIC_RESISTANCE)  // Cast Protection from Fire on yourself
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_PROTECTION_FROM_FIRE)  
+    HitBy([ANYONE],FIRE)
+    !CheckStatLT([PC],100,RESISTFIRE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)  
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_PROTECTION_FROM_FIRE)  // Cast Protection from Fire on yourself
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -2727,6 +3038,7 @@ IF
     ActionListEmpty()
     HaveSpell(CLERIC_PIXIE_DUST)  
     See([PC])
+    !StateCheck([PC],STATE_INVISIBLE)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -2793,6 +3105,129 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Blade Barrier
+(Evocation)
+
+Level: 6 
+Sphere: Guardian, Creation
+Range: 0
+Duration: 1 turn
+Casting Time: 9
+Area of Effect: Special
+Saving Throw: Special
+
+The priest employs this spell to set up a wall of circling, razor-sharp blades. These whirl and flash around the caster, creating an impenetrable barrier. Any creature attempting to pass through the Blade Barrier suffers 8d8 points of damage. Creatures within the area of the barrier when it is invoked are entitled to a Saving Throw vs. Spell to negate the damage. The barrier remains for 1 turn.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_BLADE_BARRIER)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
+    !Range([PC],6)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_BLADE_BARRIER)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_AURA_OF_FLAMING_DEATH)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
+    !Range([PC],6)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_AURA_OF_FLAMING_DEATH)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_GLOBE_OF_BLADES)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
+    !Range([PC],6)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_GLOBE_OF_BLADES)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+/*
+Physical Mirror
+(Alteration)
+
+Level: 6
+Sphere: Numbers
+Range: 90 ft.
+Duration: 9 rounds
+Casting Time: 6
+Area of Effect: Special
+Saving Throw: None
+
+This spell causes a localized folding of space. The folded space takes the form of an invisible disk that protects the caster. Any missile weapon that intersects this disk is instantaneously reversed in direction. Melee factors such as speed, range, and damage are unaffected; the direction of the object or force is simply rotated through a 180-degree arc. The sender of the missile finds <PRO_HIMHER>self the target of <PRO_HISHER> own attack. The caster of the mirror may direct missile attacks normally through the space occupied by the mirror.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_PHYSICAL_MIRROR)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_PHYSICAL_MIRROR)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Nature's Beauty
+(Illusion/Phantasm)
+
+Level: 7
+Sphere: Elemental
+Range: 0
+Duration: Instant
+Casting Time: 6
+Area of Effect: 15-ft. radius
+Saving Throw: Neg.
+
+When this spell is cast, the caster appears to undergo a remarkable transformation. The caster becomes the very ideal of beauty: For a male, this is usually a nymph; for a female, it varies. As with a nymph, anyone viewing the disguised caster must make a Saving Throw vs. Spell with +3 bonus or die of longing for the denied illusion. Even if the Saving Throw is successful, hapless viewers of the transformed Druid are all instantly smitten with permanent blindness (until dispelled). The transformation is instantaneous, but lasts only seconds, affecting those near the caster (excluding fellow party members).
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_NATURE_BEAUTY)  
+    OR(2)
+        LevelGT([ENEMY],2)
+        NumCreatureGT([ENEMY],1)
+    Range([ENEMY],10)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    Delay(10)
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_NATURE_BEAUTY)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -2824,6 +3259,62 @@ THEN
         Spell(Myself,CLERIC_SPIRITUAL_HAMMER)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
+
+/*
+Fire Seeds
+(Conjuration/Summoning)
+
+Level: 6
+Sphere: Elemental
+Range: 0
+Duration: 3 turns
+Casting Time: 9
+Area of Effect: The caster
+Saving Throw: 1/2
+
+Casting the Fire Seed spell creates 4 fire seeds that will appear in the caster's inventory. The seeds will remain in existence for 3 turns after the spell is cast. If they are thrown at an enemy, a fireball will ensue, causing 2d8 points of damage to all within a 7-ft. radius unless they make a Saving Throw vs. Spell for half damage.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_FIRE_SEEDS)  
+    !InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_FIRE_SEEDS)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Sol's Searing Orb
+(Invocation)
+
+Level: 6
+Sphere: Sun
+Range: 90 ft.
+Duration: Instant
+Casting Time: 6
+Area of Effect: 1 creature
+Saving Throw: Special
+
+When the spell is completed, it creates a glowing stone. This gem must be immediately thrown at an opponent, for it quickly becomes too hot to hold. It is not possible for the priest to give the stone to another character to throw. The priest must make an attack roll with +3 bonus and no penalty for lack of weapon proficiency. In addition, the glowing gem can be used to strike any creature, even those hit only by magical weapons, although there is no damage bonus.
+
+When it hits, the gem bursts with a brilliant, searing flash that causes 6d6 points of fire damage to the target and blinds <PRO_HIMHER> for 1d6 rounds. The victim is allowed a Saving Throw vs. Spell for half damage and to avoid being blinded. Undead creatures suffer 12d6 points of fire damage and are blinded for 12 rounds (if applicable) upon a failed Saving Throw; otherwise, they receive 9d6 points of damage and are blinded for 6 rounds.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_SOL_SEARING_ORB)  
+    !Range([ENEMY],20)
+    Range([PC],7)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_SOL_SEARING_ORB)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 
 IF
     ActionListEmpty()
@@ -2934,6 +3425,20 @@ When this spell is cast, party members within the area of effect are given a Str
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    HaveSpell(CLERIC_CHAMPIONS_STRENGTH)  
+    CheckStatLT(Myself,18,STR)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_CHAMPIONS_STRENGTH)  // Cast Holy Power for increased strength
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
     HaveSpell(CLERIC_STRENGTH_OF_ONE)  
     CheckStatLT(Myself,18,STR)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -2988,6 +3493,23 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    LevelGT([ENEMY],10)
+    General([ENEMY],UNDEAD)
+    HaveSpell(CLERIC_NEGATIVE_PLANE_PROTECTION)  
+    !CheckSpellState([PC],LEVEL_DRAIN_IMMUNITY) 
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_NEGATIVE_PLANE_PROTECTION)  // Cast Death Ward to protect from death magic
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -3002,28 +3524,13 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    HaveSpell(CLERIC_CHAOTIC_COMMANDS)  
-    OR(2)
-        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
-        GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
-    !CheckSpellState(Myself,CHAOTIC_COMMANDS)  // State 41 for Chaotic Commands
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,CLERIC_CHAOTIC_COMMANDS)  // Cast Chaotic Commands to protect from mind control
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
+
 
 IF
     ActionListEmpty()
     See([PC])
     HaveSpell(CLERIC_CHAOTIC_COMMANDS)  
-    OR(2)
-        GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
-        GlobalTimerNotExpired("PSYCHIC_ENEMIES","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  // Timer expired
     !CheckSpellState(LastSeenBy(Myself),CHAOTIC_COMMANDS)  // State 41 for Chaotic Commands
     CheckStatLT(LastSeenBy(Myself),1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -3101,6 +3608,38 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Power Word, Sleep
+(Conjuration/Summoning)
+
+Level: 2
+Range: 90 ft.
+Duration: 5 rounds
+Casting Time: 1
+Area of Effect: 1 creature
+Saving Throw: None
+
+When a wizard calls upon a Power Word, Sleep spell, <PRO_HESHE> causes a comatose slumber to come upon 1 creature (other than undead and certain other creatures specifically excluded from the spell's effects). The creature targeted must have less than 20 Hit Points and gets no Saving Throw. Magically sleeping opponents can be attacked with substantial bonuses. The Sleep effect will last for 5 rounds. This spell has no effect on creatures with more than 20 Hit Points.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_POWER_WORD_SLEEP)  // SPWI101.SPL (Sleep)
+    LevelLT([ENEMY],3)
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    !Race([ENEMY],ELF)  // Exclude elves
+    !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
+    !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
+    !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
+    !CheckSpellState([ENEMY],BERSERKER_RAGE)
+    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    Delay(12)
+    THEN
+        RESPONSE #100
+        Spell([ENEMY],WIZARD_POWER_WORD_SLEEP)  // Cast Sleep
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 IF
     ActuallyInCombat()
@@ -3504,137 +4043,26 @@ END
 // IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
 // ======================================================
 
-// Cast Hold Person
-// Casts Hold Person to paralyze a humanoid target, rendering them immobile and unable to act.
-// Lasts for 1 turn.
+
 IF
+    ActuallyInCombat()
     ActionListEmpty()
     See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
-    HPPercentGT(LastSeenBy(Myself),70)
-    !HasBounceEffects(LastSeenBy(Myself))
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(CLERIC_CONFUSION)  
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
-    General(LastSeenBy(Myself),HUMANOID)
-    HaveSpell(CLERIC_HOLD_PERSON)  // SPPR012.SPL (Hold Person)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
+    !Race(LastSeenBy(Myself),SWORD)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_HOLD_PERSON)  // Cast Hold Person to incapacitate the enemy
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-/*
-Rigid Thinking 
-(Enchantment/Charm)
-
-Level: 3
-Sphere: Law
-Range: Visual range of the caster
-Duration: 1 turn
-Casting Time: 5 
-Area of Effect: 1 person or mammal 
-Saving Throw: Neg. 
-
-The target of this spell must make a Saving Throw vs. Spell or come under its effects. 
-When under the effects of the Rigid Thinking spell, the victim will randomly wander, attack the nearest person, or stand confused.
-*/
-IF
-    ActionListEmpty()
-    See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
-    HPPercentGT(LastSeenBy(Myself),70)
-    !HasBounceEffects(LastSeenBy(Myself))
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
-    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
-    !General(LastSeenBy(Myself),UNDEAD)
-    HaveSpell(CLERIC_RIGID_THINKING) 
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_RIGID_THINKING) 
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
-    HPPercentGT(LastSeenBy(Myself),70)
-    !HasBounceEffects(LastSeenBy(Myself))
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
-    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
-    General(LastSeenBy(Myself),ANIMAL)
-    HaveSpell(CLERIC_HOLD_ANIMAL) 
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_HOLD_ANIMAL)  
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HPGT(NearestEnemyOf(Myself),30)
-    HPPercentGT(NearestEnemyOf(Myself),90)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    General(NearestEnemyOf(Myself),HUMANOID)
-    HaveSpell(RANGER_CHARM_ANIMAL)  // SPPR012.SPL (Hold Person)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(NearestEnemyOf(Myself),RANGER_CHARM_ANIMAL)  // Cast Hold Person to incapacitate the enemy
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    See([ENEMY])
-    HPPercentGT(LastSeenBy(Myself),90)
-    !HasBounceEffects(LastSeenBy(Myself))
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    General(LastSeenBy(Myself),HUMANOID)
-    HaveSpell(CLERIC_CHARM_PERSON)  // SPPR012.SPL (Hold Person)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_CHARM_PERSON)  // Cast Hold Person to incapacitate the enemy
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    See([ENEMY])
-    HPGT(LastSeenBy(Myself),20)
-    LevelLT([ENEMY],6)
-    !HasBounceEffects(LastSeenBy(Myself))
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    General(LastSeenBy(Myself),HUMANOID)
-    HaveSpell(CLERIC_COMMAND)  // SPPR012.SPL (Hold Person)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_COMMAND)  // Cast Hold Person to incapacitate the enemy
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    See([ENEMY])
-    General(LastSeenBy(Myself),UNDEAD)
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
-    HaveSpell(LATHANDER_HOLD_UNDEAD)  // SPPR012.SPL (Hold Person)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),LATHANDER_HOLD_UNDEAD)  // Cast Hold Person to incapacitate the enemy
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Spell(LastSeenBy(Myself),CLERIC_CONFUSION)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
@@ -3660,13 +4088,15 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
+    See([ENEMY])
+    OR(7)
         See([ENEMY.0.0.MAGE_ALL])
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.BARD_ALL])
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
+        SpellCast([ENEMY],CLERIC_SUMMON_INSECTS)
     HaveSpell(CLERIC_SUMMON_INSECTS)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -3961,15 +4391,125 @@ END
 // ======================================================
 // SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
+
 IF
     ActionListEmpty()
     Range([ENEMY],25)
-    !General([ENEMY],UNDEAD)  // Exclude undead
-    HaveSpell(CLERIC_FALSE_DAWN)  // SPPR009.SPL (Flame Strike)
+    General([ENEMY],UNDEAD)
+    HaveSpell(CLERIC_FALSE_DAWN) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(Myself,CLERIC_FALSE_DAWN)  // Cast Flame Strike for vertical fire damage
+        Spell(Myself,CLERIC_FALSE_DAWN) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
+IF
+    ActionListEmpty()
+    Range([ENEMY],25)
+    General([ENEMY],UNDEAD)
+    HaveSpell(CLERIC_SUNRAY) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SUNRAY) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
+/*
+Unholy Blight
+(Necromancy)
+
+Level: 3
+Sphere: Healing 
+Range: Visual range of the caster
+Duration: Instant
+Casting Time: 3 
+Area of Effect: 15-ft. radius
+Saving Throw: Special 
+
+This spell calls upon energy from the Negative Energy Plane in order to open a channel 
+between it and the targets. The result is that any good creatures within the spell's area
+of effect take 1d4 points of damage per level of the caster, or half damage upon a successful Saving Throw vs. Spell. 
+If the victims fail their Saving Throw, they also receive a -2 penalty to all their rolls for 4 rounds.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    Allegiance([ENEMY],GOODCUTOFF)
+    !Range([ENEMY],22)
+    Range(NearestEnemyOf([ENEMY]),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_UNHOLY_BLIGHT) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_UNHOLY_BLIGHT) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Holy Word
+(Conjuration/Summoning)
+
+Level: 7
+Sphere: Combat
+Range: 0
+Duration: Special
+Casting Time: 1
+Area of Effect: 15-ft. radius
+Saving Throw: None
+
+Uttering a Holy Word spell creates magic of tremendous power. The priest acts as a bridge between <PRO_HISHER> god and the Prime Material Plane, causing a small explosion centered on the priest and reaching up to a 15-ft. radius. It affects only enemy evil creatures and undead of any alignment that are caught in the area of effect. The effects vary depending on the target's Hit Dice:
+
+Hit Dice / Levels  —  Effects of Holy Word
+Less than 4  —  Death
+4 to 7  —  Stunned for 1 turn
+8 to 11  —  Slowed for 1 turn with a 75% chance of spell failure
+12 and up  —  Deafened for 1 turn with a 50% chance of spell failure
+
+There is no Saving Throw. The effects are instantaneous and last for the duration of the spell or until dispelled. Note that this spell may not be cast by any priest of evil alignment.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    Allegiance([ENEMY],EVILCUTOFF)
+    Range([ENEMY],15)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_HOLY_WORD) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_HOLY_WORD) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    !Range(FarthestEnemyOf(Myself),22)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_FIRE_STORM)  // SPPR009.SPL (Flame Strike)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_FIRE_STORM)  // Cast Flame Strike for vertical fire damage
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
+IF
+    ActionListEmpty()
+    !Range(FarthestEnemyOf(Myself),22)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HaveSpell(CLERIC_STORM_OF_VENGEANCE)  // SPPR009.SPL (Flame Strike)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_STORM_OF_VENGEANCE)  // Cast Flame Strike for vertical fire damage
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
         Continue()
 END
@@ -3988,6 +4528,20 @@ THEN
         Continue()
 END
 
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_SYMBOL_FEAR)  
+    !Range(FarthestEnemyOf(Myself),24)
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_SYMBOL_FEAR)  // Cast Web on any visible enemies
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 IF
     ActuallyInCombat()
@@ -4016,6 +4570,7 @@ THEN
         Spell(FarthestEnemyOf(Myself),CLERIC_ENTANGLE)  // Cast Web on any visible enemies
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
+
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
 // ======================================================
@@ -4371,6 +4926,8 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+
 IF
     ActuallyInCombat()
     ActionListEmpty()
@@ -4389,6 +4946,41 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+/*
+Dire Charm
+(Enchantment/Charm)
+
+Level: 3
+Range: 60 ft.
+Duration: 5 rounds
+Casting Time: 3
+Area of Effect: 1 creature
+Saving Throw: Neg. 
+
+This spell works in the exact same manner as Charm Person, with one difference: There is no Saving Throw bonus. Dire Charm affects any single person it is cast upon. The term person includes any bipedal human, demihuman, or humanoid of man-size or smaller, such as brownies, dryads, dwarves, elves, gnolls, gnomes, goblins, half-elves, halflings, half-orcs, hobgoblins, humans, kobolds, lizard men, nixies, orcs, pixies, sprites, troglodytes, and others. Thus, a 10th-level fighter could be charmed, but an ogre could not. The person is allowed a Saving Throw vs. Spell to negate the effect.
+
+If the spell's recipient fails <PRO_HISHER> Saving Throw, <PRO_HESHE> regards the caster as a trusted friend and ally to be heeded and protected. The caster may give <PRO_HIMHER> orders, and the charmed individual will carry them out as quickly as possible.
+
+If the caster harms—or attempts to harm—the charmed person by some overt action, or if a Dispel Magic spell is cast upon the charmed person, the Dire Charm spell is broken. If two or more Charms simultaneously affect a creature, the most recent Charm takes precedence. Note that the subject has full memory of the events that took place while <PRO_HESHE> was charmed. Also note that you cannot have a charmed creature leave the area where <PRO_HESHE> is charmed.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    General(LastSeenBy(Myself),HUMANOID)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    HaveSpell(WIZARD_DIRE_CHARM) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_DIRE_CHARM) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 //Safana's charm
 IF
@@ -4441,6 +5033,227 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+// ======================================================
+// IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
+// ======================================================
+
+// Cast Hold Person
+// Casts Hold Person to paralyze a humanoid target, rendering them immobile and unable to act.
+// Lasts for 1 turn.
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    General(LastSeenBy(Myself),HUMANOID)
+    HaveSpell(CLERIC_HOLD_PERSON)  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_HOLD_PERSON) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+    LevelGT([ENEMY],6)
+    !HasBounceEffects([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),7)
+    CheckStatGT(LastSeenBy(Myself),7,SAVEVSSPELL) //50% chance that they get got
+    !CheckSpellState([ENEMY],SI_NECROMANCY)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),UNDEAD)
+    HaveSpell(CLERIC_REPULSE_UNDEAD)  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_REPULSE_UNDEAD) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Rigid Thinking 
+(Enchantment/Charm)
+
+Level: 3
+Sphere: Law
+Range: Visual range of the caster
+Duration: 1 turn
+Casting Time: 5 
+Area of Effect: 1 person or mammal 
+Saving Throw: Neg. 
+
+The target of this spell must make a Saving Throw vs. Spell or come under its effects. 
+When under the effects of the Rigid Thinking spell, the victim will randomly wander, attack the nearest person, or stand confused.
+*/
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)
+    HaveSpell(CLERIC_RIGID_THINKING) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_RIGID_THINKING) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    HPPercentGT(LastSeenBy(Myself),70)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    General(LastSeenBy(Myself),ANIMAL)
+    HaveSpell(CLERIC_HOLD_ANIMAL) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_HOLD_ANIMAL)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HPGT(NearestEnemyOf(Myself),30)
+    HPPercentGT(NearestEnemyOf(Myself),90)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    General(NearestEnemyOf(Myself),HUMANOID)
+    HaveSpell(RANGER_CHARM_ANIMAL)  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),RANGER_CHARM_ANIMAL)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Mental Domination 
+(Enchantment/Charm)
+
+Level: 4
+Sphere: Thought 
+Range: Visual range of the caster
+Duration: 8 rounds
+Casting Time: 4
+Area of Effect: 1 creature 
+Saving Throw: Neg.
+
+When cast upon a subject, the subject must make a Saving Throw vs. Spell with a -2 
+in order to avoid the priest entering <PRO_HISHER> mind. The effects of this spell are
+similar to those of the wizard spell Domination, with a few minor differences.
+Most notably, this spell gives the priest no access to the subject's thoughts, memory, or sensory apparatus.
+The priest simply is able to command the subject to perform certain tasks or functions during the spell's duration. 
+To control the subject, the priest must be within range and must be able to see the subject. 
+This control will last until dispelled or for the duration of the spell.
+*/
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !General(LastSeenBy(Myself),UNDEAD)
+    HaveSpell(CLERIC_MENTAL_DOMINATION)  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_MENTAL_DOMINATION)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPPercentGT(LastSeenBy(Myself),90)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),HUMANOID)
+    HaveSpell(CLERIC_CHARM_PERSON)  
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_CHARM_PERSON)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    LevelLT([ENEMY],6)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    General(LastSeenBy(Myself),HUMANOID)
+    HaveSpell(CLERIC_COMMAND)  // SPPR012.SPL (Hold Person)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_COMMAND) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),20)
+    LevelLT([ENEMY],6)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !General(LastSeenBy(Myself),UNDEAD)
+    HaveSpell(CLERIC_GREATER_COMMAND)  // SPPR012.SPL (Hold Person)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_GREATER_COMMAND) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    See([ENEMY])
+    General(LastSeenBy(Myself),UNDEAD)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    HaveSpell(LATHANDER_HOLD_UNDEAD) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),LATHANDER_HOLD_UNDEAD)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
 
 // ======================================================
 // IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
@@ -4460,6 +5273,18 @@ THEN
         Spell([ENEMY],CLERIC_FLAME_STRIKE) 
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
+
+IF
+    ActionListEmpty()
+    HPGT([ENEMY],30)
+    HaveSpell(CLERIC_BOLT_OF_GLORY)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_BOLT_OF_GLORY) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 IF
     ActionListEmpty()
     HPGT([ENEMY],30)
@@ -4488,17 +5313,102 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Slay Living
+(Necromancy)
+
+Level: 5
+Sphere: Combat
+Range: Touch 
+Duration: Special
+Casting Time: 1 
+Area of Effect: 1 creature
+Saving Throw: Special
+
+Upon casting this spell, the priest has to touch an opponent in order to visit the effect upon them. An item is created upon casting. The next attack the priest makes, which must happen in the next 3 rounds, will use this item. If the first attack misses, the item disappears and the spell is wasted; however, if the attack succeeds, the victim automatically takes 2d6+9 damage. Also, <PRO_HESHE> must make a Save vs. Spell or be instantly killed. Slay Living can be dispelled if cast between the casting of this spell and the necessary attack.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    LevelGT([ENEMY],5)
+    HaveSpell(CLERIC_SLAY_LIVING)  // SPPR010.SPL (Harm)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SLAY_LIVING)  // Cast Harm to significantly reduce enemy's HP
+        AttackOneRound([ENEMY])
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    LevelGT([ENEMY],5)
+    HaveSpell(CLERIC_CAUSE_SERIOUS_WOUNDS)  // SPPR010.SPL (Harm)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_CAUSE_SERIOUS_WOUNDS)  // Cast Harm to significantly reduce enemy's HP
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    LevelGT([ENEMY],15)
+    HaveSpell(CLERIC_IMPLOSION) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_IMPLOSION)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 // Cast Harm
 // Casts Harm to deal a large amount of damage to the target, reducing their HP to 1.
 // Lasts for 1 turn.
 IF
     ActionListEmpty()
     LevelGT([ENEMY],5)
-    HaveSpell(CLERIC_HARM)  // SPPR010.SPL (Harm)
+    HaveSpell(CLERIC_HARM) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell([ENEMY],CLERIC_HARM)  // Cast Harm to significantly reduce enemy's HP
+        Spell([ENEMY],CLERIC_HARM)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Dolorous Decay
+(Alteration, Necromancy)
+
+Sphere: Combat, Necromantic
+Level: 6
+Range: 30 ft.
+Duration: Special
+Casting Time: 1
+Area of Effect: 1 creature
+Saving Throw: Special
+
+This spell affects a single living creature. Dolorous Decay is a rotting and withering of the body that spreads throughout the afflicted creature quickly. The target creature will automatically be slowed for 2 rounds. Furthermore, if the target fails a Saving Throw vs. Poison with a -2 penalty, <PRO_HESHE> will suffer 1 point of damage per second until a total of 50 points of damage are inflicted.
+*/
+IF
+    ActionListEmpty()
+    LevelGT([ENEMY],5)
+    HaveSpell(CLERIC_DOLOROUS_DECAY)  // SPPR010.SPL (Harm)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_DOLOROUS_DECAY)  // Cast Harm to significantly reduce enemy's HP
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    CheckStatLT([ENEMY],100,POISON)
+    HaveSpell(CLERIC_POISON)  // SPPR010.SPL (Harm)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_POISON)  // Cast Harm to significantly reduce enemy's HP
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
