@@ -6133,7 +6133,7 @@ This ability allows the warrior to temporarily tap a great inner strength and fi
 IF
     ActionListEmpty()
     HaveSpell(WARRIOR_RESIST_MAGIC)
-    CheckStatLT(Myself,50,MAGIC)
+    CheckStatLT(Myself,50,RESISTMAGIC)
     ActuallyInCombat()
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     Delay(30)
