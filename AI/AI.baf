@@ -1202,23 +1202,70 @@ END
 // SECTION: Heal ITEMS 
 // ======================================================
 
-// potion of superior healing
+/*
+When consumed, this potion restores 40 Hit Points to the imbiber. The effect is instantaneous, and the potion is destroyed in the process.
+
+STATISTICS:
+
+Special: Restores 40 Hit Points
+
+Weight: 1
+*/
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HPPercentLT(Myself,25)
+    OR(2)
+        HPPercentLT(Myself,60)
+        DamageTakenGT(40)
     PartyHasItem("POTN55")  
+    Delay(16)
 THEN
     RESPONSE #100
         TakePartyItemNum("POTN55",1)
         UseItem("POTN55",Myself)  
 END
 
+/*
+When wholly consumed, this potion restores 9 Hit Points to the person. The effect is instantaneous and the potion is destroyed in the process.
+
+STATISTICS:
+
+Special: Restores 9 Hit Points.
+
+Weight: 1
+*/
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    HPPercentLT(Myself,50)
+    OR(2)
+        DamageTakenGT(9)
+        HPPercentLT(Myself,60)
+    PartyHasItem("IPOTN08")  
+    Delay(16)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("IPOTN08",1)
+        UseItem("IPOTN08",Myself)  
+END
+
+/*
+When wholly consumed, this potion restores 27 Hit Points to the person. The effect is instantaneous, and the potion is destroyed in the process.
+
+STATISTICS:
+
+Special: Restores 27 Hit Points
+
+Weight: 1
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(2)
+        DamageTakenGT(27)
+        HPPercentLT(Myself,60)
     PartyHasItem("POTN52")  
+    Delay(16)
+
 THEN
     RESPONSE #100
         TakePartyItemNum("POTN52")
@@ -1230,6 +1277,7 @@ IF
     ActuallyInCombat()
     HPPercentLT(Myself,50)
     PartyHasItem("POTN08") 
+    Delay(16)
 THEN
     RESPONSE #100
         TakePartyItemNum("POTN08",1)
@@ -1369,6 +1417,7 @@ END
 
 //Poison Management
 IF
+    ActionListEmpty()
     StateCheck(Myself,STATE_POISONED)
     PartyHasItem("POTN20") // Antidote
 THEN
@@ -1420,13 +1469,24 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+The elixir of health is a powerful healing mixture designed to cleanse the body of all impurities. First, it cures all poisons and diseases; then, once the system has been purged, the imbibed is cured by 10 Hit Points to speed the recovery process.
+
+STATISTICS:
+
+Special: Cures poison and disease and heals 10 Hit Points
+
+Weight: 1
+*/
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(2)
+    OR(3)
         HPPercentLT(Myself,60)
         StateCheck(Myself,STATE_POISONED)
-    PartyHasItem("POTN17") // Elixir of Health
+        StateCheck(Myself,STATE_DISEASED)
+    PartyHasItem("POTN17") // Elixir of Health 
+    Delay(16)
 THEN
     RESPONSE #100
         TakePartyItemNum("POTN17",1)
@@ -1632,7 +1692,7 @@ END
 
 
 IF
-
+    ActionListEmpty()
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     HaveSpell(WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
     !Difficulty(EASIEST)
@@ -2076,6 +2136,7 @@ IF
         See([ENEMY.0.0.DRUID_ALL])
         See([ENEMY.0.0.SORCERER])
         See([ENEMY.0.0.RAKSHASA])
+    !Range([ENEMY],10)
     HaveSpell(CLERIC_SILENCE_15_FOOT)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
@@ -2882,6 +2943,7 @@ IF
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
 THEN
     RESPONSE #100
         Spell(Myself,WIZARD_SPELL_IMMUNITY)  // Cast Minor Spell Turning
@@ -5278,6 +5340,7 @@ IF
     ActionListEmpty()
     HaveSpell(WIZARD_MAGIC_MISSILE)  // SPWI112.SPL (Magic Missile)
     LevelGT([ENEMY],2)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
     !HasBounceEffects([ENEMY])
     CheckStatLT([ENEMY],100,RESISTMAGIC)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -6628,7 +6691,31 @@ END
 // SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
 
+//Flesh Golem Manual
+/*
+This amazing tome contains theoretical musings on the construction and control of golems. It also explains how to use the manual to temporarily conjure a servant of assembled flesh which will obey the creator without question. One must have a minimum Intelligence of 16 to understand the contents.
 
+STATISTICS:
+
+Charge abilities:
+– Summon Flesh Golem once per day
+  Range: 30 ft.
+  Duration: 1 turn
+
+Requires:
+ 16 Intelligence
+
+Weight: 5
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HasItemEquiped("TOME01",Myself)  
+    Delay(20)
+THEN
+    RESPONSE #100
+      UseItem("TOME01",Myself) 
+END
 
 //Algernon's Cloak
 IF
