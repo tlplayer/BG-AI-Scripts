@@ -15,6 +15,7 @@ THEN
         SetGlobal("USED_clck08","LOCALS",0)
         SetGlobal("USED_BOOT12","LOCALS",0)
         SetGlobal("USED_ohbrew06","LOCALS",0)
+        SetGlobal("USED_TOME01","LOCALS",0)
         SetGlobalTimer("FIRE_ENEMIES","LOCALS",0)
         SetGlobalTimer("CASTER_ENEMY","LOCALS",0)
         SetGlobalTimer("TROLL_ENEMIES","LOCALS",0)
@@ -467,6 +468,7 @@ THEN
         Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
         RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        Wait(4)
         SetInterrupt(TRUE)
 END
 
@@ -484,6 +486,7 @@ THEN
         Spell(Myself,WIZARD_TELEPORT_FIELD)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
         RunAwayFromNoInterruptNoLeaveArea([ANYONE],45)
+        Wait(4)
         Continue()
         SetInterrupt(TRUE)
 END
@@ -503,6 +506,7 @@ THEN
         Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
         RunAwayFromNoInterruptNoLeaveArea([ANYONE],60)
+        Wait(4)
         SetInterrupt(TRUE)
 END
 
@@ -516,7 +520,8 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
-        RunAwayFrom(NearestEnemyOf(Myself),30)
+        RunAwayFrom(NearestEnemyOf(Myself),45)
+        Wait(3)
 END
 
 IF
@@ -531,10 +536,12 @@ IF
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
 THEN
     RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),30)
+        RunAwayFrom(NearestEnemyOf(Myself),45)
+        Wait(3)
         Hide()
         EquipMostDamagingMelee()
         AttackOneRound(NearestEnemyOf(Myself))
+        Wait(4)
 END
 
 
@@ -1268,7 +1275,7 @@ IF
 
 THEN
     RESPONSE #100
-        TakePartyItemNum("POTN52")
+        TakePartyItemNum("POTN52",1)
         UseItem("POTN52",Myself) 
 END
 
@@ -4291,9 +4298,10 @@ IF
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     !Range(FarthestEnemyOf(Myself),24)
     // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),6)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
@@ -6099,6 +6107,7 @@ THEN
         Spell(Myself,CLERIC_SLAY_LIVING)  // Cast Harm to significantly reduce enemy's HP
         AttackOneRound([ENEMY])
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Wait(4)
 END
 
 IF
@@ -6369,6 +6378,7 @@ THEN
     RESPONSE #100
         Spell(Myself,WARRIOR_POWER_ATTACK) 
         AttackOneRound(LastSeenBy(Myself))
+        Wait(5)
 END
 
 /*
@@ -6386,6 +6396,7 @@ THEN
     RESPONSE #100
         Spell(Myself,WARRIOR_CRITICAL_STRIKE)  
         AttackOneRound([ENEMY])
+        Wait(5)
 END
 
 IF
@@ -6726,10 +6737,12 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     HasItemEquiped("TOME01",Myself)  
+    GlobalLT("USED_TOME01","LOCALS",1)
     Delay(20)
 THEN
     RESPONSE #100
       UseItem("TOME01",Myself) 
+      IncrementGlobal("USED_TOME01","LOCALS",1)
 END
 
 //Algernon's Cloak
@@ -6743,12 +6756,12 @@ IF
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)
-    GlobalLT("USED_clck08","GLOBAL",1)
+    GlobalLT("USED_clck08","LOCALS",1)
     HasItemEquiped("clck08",Myself)  
 THEN
     RESPONSE #100
         UseItem("clck08",LastSeenBy(Myself)) 
-        IncrementGlobal("USED_clck08","GLOBAL",1)
+        IncrementGlobal("USED_clck08","LOCALS",1)
 END
 
 // Ilbratha +1
@@ -6756,14 +6769,14 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     !StateCheck(Myself,STATE_MIRRORIMAGE)
-    GlobalLT("USED_SW1H26","GLOBAL",1)
+    GlobalLT("USED_SW1H26","LOCALS",1)
     HasItemEquiped("SW1H26",Myself)  
 THEN
     RESPONSE #100
       SetInterrupt(FALSE)
       UseItem("SW1H26",Myself) 
       SetInterrupt(TRUE)
-      IncrementGlobal("USED_SW1H26","GLOBAL",1)
+      IncrementGlobal("USED_SW1H26","LOCALS",1)
 END
 
 //Ring of Ram
@@ -6945,6 +6958,7 @@ THEN
     RESPONSE #100
         EquipRanged()
         AttackOneRound(LastSeenBy(Myself))
+        Wait(4)
         Continue()
 END
 
@@ -6996,6 +7010,7 @@ THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
         AttackOneRound(LastSeenBy(Myself))
+        Wait(4)
         Continue()
 END
 
