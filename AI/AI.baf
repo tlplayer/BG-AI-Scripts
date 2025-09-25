@@ -1693,9 +1693,9 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     HaveSpell(WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
-    !Difficulty(EASIEST)
     OR(3)
         See([ENEMY.0.0.CLERIC_ALL])
         See([ENEMY.0.0.BARD_ALL])
@@ -2876,6 +2876,9 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+
+*/
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_MINOR_SPELL_DEFLECTION) 
@@ -2913,11 +2916,25 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Minor Spell Turning
+(Abjuration)
+
+Level: 5
+Range: 0
+Duration: 3 rounds/level
+Casting Time: 5
+Area of Effect: The caster
+Saving Throw: None
+
+This spell is similar to the 7th-level Spell Turning, which causes the spells cast against the wizard to rebound upon the original caster. This affects a total of 4 spell levels—including spells cast from scrolls and innate spell-like abilities—but excludes the following: area effects that are not centered directly upon the wizard, as well as area effects that are stationary, such as Cloudkill and Stinking Cloud. As long as the spell is cast directly at the wizard, it will be reflected back upon the caster. This spell will only affect up to 4th-level spells, but as long as there are levels remaining, a spell will be reflected. For example, if there is only 1 level left and a 3rd-level spell is cast at the wizard, the spell will be reflected while canceling the Spell Turning.
+
+This spell will not protect the caster from Dispel Magic, but will not be dispelled by Dispel Magic either.
+*/
 IF
     ActionListEmpty()
     HaveSpell(WIZARD_MINOR_SPELL_TURNING)  // SPWI522.SPL (Minor Spell Turning)
-    !HasBounceEffects(Myself)
-    !HasImmunityEffects(Myself)
+    CheckStatLT(Myself,1,WIZARD_SPELL_TURNING)
     //If any spell is cast by an enemy then this is useful
     OR(2)
         SpellCast([ENEMY],0)
@@ -3022,19 +3039,7 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_INVISIBILITY)  // SPWI206.SPL (Invisibility)
-    !StateCheck(Myself,STATE_INVISIBLE)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,WIZARD_INVISIBILITY)  // Cast Invisibility if not already invisible
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
+
 
 IF
     ActionListEmpty()
@@ -4205,6 +4210,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(WIZARD_CONTAGION)  // SPWI104.SPL (Contagion)
+    !HasBounceEffects(LastSeenBy(Myself))
     HPGT([ENEMY],50)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
@@ -4218,6 +4224,7 @@ IF
     ActionListEmpty()
     See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_CONFUSION)  
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
@@ -4238,6 +4245,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     See([ENEMY])
+    !HasBounceEffects(LastSeenBy(Myself))
     !ImmuneToSpellLevel(LastSeenBy(Myself),5)
     HaveSpell(WIZARD_CHAOS)  
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
@@ -4260,6 +4268,7 @@ IF
     ActionListEmpty()
     See([ENEMY])
     !ImmuneToSpellLevel(LastSeenBy(Myself),2)
+    !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_HORROR) 
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
@@ -4279,6 +4288,7 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
+    !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
     !Range(FarthestEnemyOf(Myself),24)
@@ -4295,6 +4305,7 @@ IF
     ActuallyInCombat()
     ActionListEmpty()
     HaveSpell(WIZARD_STINKING_CLOUD)  
+    !HasBounceEffects(LastSeenBy(Myself))
     !Range(FarthestEnemyOf(Myself),20)
     !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),15)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -4308,6 +4319,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    !HasBounceEffects(LastSeenBy(Myself))
     !Range(FarthestEnemyOf(Myself),18)
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     HaveSpell(WIZARD_GREASE) 
@@ -4321,10 +4333,9 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    LevelGT([ENEMY],7)
     See([ENEMY])
-    HPGT([ENEMY],50)
-    HPPercentGT([ENEMY],80)
+    HPGT([ENEMY],30)
+    !HasBounceEffects(LastSeenBy(Myself))
     !HasBounceEffects([ENEMY])
     !HasImmunityEffects([ENEMY])
     !StateCheck([ENEMY],STATE_HELPLESS)
@@ -4345,6 +4356,7 @@ IF
     HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(Myself,STATE_SILENCED)
     HPLT([ENEMY],90)
     See([ENEMY])
@@ -4372,6 +4384,7 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
+    !HasBounceEffects(LastSeenBy(Myself))
     See(NearestEnemyOf(Myself))
     HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI108.SPL (Power Word: Stun)
     Range(NearestEnemyOf(Myself),30)
@@ -5855,6 +5868,7 @@ When under the effects of the Rigid Thinking spell, the victim will randomly wan
 */
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
     HPPercentGT(LastSeenBy(Myself),70)
@@ -5873,6 +5887,7 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
     HPPercentGT(LastSeenBy(Myself),70)
@@ -6353,7 +6368,7 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,WARRIOR_POWER_ATTACK) 
-        AttackReevaluate(LastSeenBy(Myself),45)
+        AttackOneRound(LastSeenBy(Myself))
 END
 
 /*
@@ -6929,7 +6944,7 @@ IF
 THEN
     RESPONSE #100
         EquipRanged()
-        AttackReevaluate(LastSeenBy(Myself),60)
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
@@ -6980,7 +6995,7 @@ IF
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackReevaluate(LastSeenBy(Myself),60)
+        AttackOneRound(LastSeenBy(Myself))
         Continue()
 END
 
