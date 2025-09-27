@@ -478,7 +478,7 @@ IF
     Range([ENEMY],8)
     AttackedBy([ENEMY],DEFAULT)
     HPPercentLT(Myself,70)
-    HaveSpell(WIZARD_SHADOW_DOOR)
+    HaveSpell(WIZARD_TELEPORT_FIELD)
 THEN
     RESPONSE #100
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
@@ -4808,16 +4808,32 @@ END
 
 IF
     ActionListEmpty()
+    HaveSpell(WIZARD_DELAYED_BLAST_FIREBALL)  // SPWI303.SPL (Fireball)
+    CheckStatLT([ENEMY],99,RESISTFIRE)
+    CheckStatLT([ENEMY],99,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),22)
+    // How close is the closest ally 
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),7)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #99
+        Spell(FarthestEnemyOf(Myself),WIZARD_DELAYED_BLAST_FIREBALL)  // SPWI303.SPL (Fireball)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     ActuallyInCombat()
     HaveSpell(WIZARD_SKULL_TRAP)
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),16)  // Ensure the enemy is within medium range
+    !Range([ENEMY],22)  
     // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    Range(NearestEnemyOf([ENEMY]),8)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_SKULL_TRAP)  // Cast Dragon's Breath
+        Spell([ENEMY],WIZARD_SKULL_TRAP)  // Cast Dragon's Breath
 END
 
 IF
@@ -4835,22 +4851,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND) 
 END
 
-
-IF
-    ActionListEmpty()
-    HaveSpell(WIZARD_DELAYED_BLAST_FIREBALL)  // SPWI304.SPL (Fireball)
-    CheckStatLT([ENEMY],100,RESISTFIRE)
-    CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),16)
-    // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
-    !HasBounceEffects(FarthestEnemyOf(Myself))
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_DELAYED_BLAST_FIREBALL)  // SPWI304.SPL (Fireball)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
 
 
 IF
@@ -4919,6 +4919,20 @@ THEN
 END
 
 
+IF
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_PRISMATIC_SPRAY)  // SPWI105.SPL (Color Spray)
+    Range(NearestEnemyOf(Myself),10)  // Ensure the enemy is close enough
+    !Range(NearestEnemyOf(NearestEnemyOf(Myself)),10)  // Ensure the enemy is close enough
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),WIZARD_PRISMATIC_SPRAY)  // SPWI105.SPL (Color Spray)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
 
 /* Burning Hands for nearby enemies with more than 20 HP */
 IF
@@ -4938,21 +4952,6 @@ THEN
         Continue()
 END
 
-/* Color Spray for nearby enemies with more than 20 HP */
-IF
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    !HasBounceEffects(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_PRISMATIC_SPRAY)  // SPWI105.SPL (Color Spray)
-    Range(NearestEnemyOf(Myself),10)  // Ensure the enemy is close enough
-    !Range(NearestEnemyOf(NearestEnemyOf(Myself)),10)  // Ensure the enemy is close enough
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_PRISMATIC_SPRAY)  // SPWI105.SPL (Color Spray)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        Continue()
-END
 
 /* Color Spray for nearby enemies with more than 20 HP */
 IF
@@ -4995,6 +4994,19 @@ IF
     ActionListEmpty()
     Range([ENEMY],25)
     General([ENEMY],UNDEAD)
+    HaveSpell(CLERIC_SUNRAY) 
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SUNRAY) 
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
+END
+
+IF
+    ActionListEmpty()
+    Range([ENEMY],25)
+    General([ENEMY],UNDEAD)
     HaveSpell(CLERIC_FALSE_DAWN) 
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -5004,18 +5016,7 @@ THEN
         Continue()
 END
 
-IF
-    ActionListEmpty()
-    Range([ENEMY],25)
-    General([ENEMY],UNDEAD)
-    HaveSpell(CLERIC_SUNRAY) 
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,CLERIC_SUNRAY) 
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        Continue()
-END
+
 
 /*
 Unholy Blight
@@ -5801,6 +5802,7 @@ IF
     See([ENEMY])
     HPGT(LastSeenBy(Myself),20)
     HPPercentGT(LastSeenBy(Myself),70)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
     !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
@@ -6029,6 +6031,8 @@ END
 IF
     ActionListEmpty()
     HPGT([ENEMY],30)
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    CheckStatLT([ENEMY],100,RESISTFIRE)
     HaveSpell(CLERIC_FLAME_STRIKE)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
