@@ -1726,25 +1726,20 @@ IF
     ActuallyInCombat()
     ActionListEmpty()  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    HaveSpell(WIZARD_GLITTERDUST)  // SPWI224.SPL (Glitterdust)
-    !See([ENEMY])
-    Detect([ENEMY])
-    Range(LastSeenBy(Myself),12)
-    CheckStatLT(LastSeenBy(Myself),60,STEALTH)
-    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
-    !StateCheck(LastSeenBy(Myself),STATE_NONDETECTION)
+    HaveSpell(WIZARD_GLITTERDUST) 
+    See([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
     !StateCheck(Myself,STATE_SILENCED)
-    CheckStatGT(LastSeenBy(Myself),0,SAVEVSSPELL)
+    CheckStatGT(LastSeenBy(Myself),7,SAVEVSSPELL)
     CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
     CheckStat(LastSeenBy(Myself),0,MINORGLOBE)
-    !CheckStat(LastSeenBy(Myself),2,WIZARD_SPELL_IMMUNITY)
     !HasItemEquiped("NPMISC1",LastSeenBy(Myself))  // Jansen Spectroscopes
 THEN
     RESPONSE #100
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        Spell(Myself,WIZARD_GLITTERDUST)  // SPWI224.SPL (Glitterdust)
+        Spell(Myself,WIZARD_GLITTERDUST) 
 END
 
 IF
@@ -4096,27 +4091,68 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - Crowd Control (WIZARD)
+// IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
 // ======================================================
+
+IF
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !HasBounceEffects(LastSeenBy(Myself))
+    !StateCheck(Myself,STATE_SILENCED)
+    HPLT([ENEMY],90)
+    See([ENEMY])
+    !StateCheck([ENEMY],STATE_REALLY_DEAD)
+    !StateCheck([ENEMY],STATE_NOT_TARGETABLE)
+    !StateCheck([ENEMY],STATE_HARMLESS)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_DEFLECTION)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TURNING)
+    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TRAP)
+    !CheckStatGT([ENEMY],0,CLERIC_CHAOTIC_COMMANDS)
+    !CheckStatGT([ENEMY],0,CLERIC_FREE_ACTION)
+    !CheckStat([ENEMY],2,WIZARD_SPELL_IMMUNITY)
+    !CheckStat([ENEMY],1,OFFENSIVE_MODIFIER)
+    !CheckStat([ENEMY],1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    !HasItemEquipedReal("NPSW01",[ENEMY])  // Sword of Arvoreen +2
+    !HasItemEquipedReal("SW1H27",[ENEMY])  // Arbane's Sword of Agility +2
+    !HasItemEquiped("RING09",[ENEMY])  // Edventar's Gift
+    !HasItemEquipedReal("SW2H06",[ENEMY])  // Spider's Bane +2
+    CheckStatLT([ENEMY],50,RESISTMAGIC)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        Spell([ENEMY],WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
+END
 
 
 IF
-    ActionListEmpty()
     ActuallyInCombat()
-    LevelGT([ENEMY],4)
-    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
-    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
-    !HasBounceEffects([ENEMY])
-    HaveSpell(WIZARD_GREATER_MALISON) 
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    ActionListEmpty()
+    See([ENEMY])
+    HaveSpell(WIZARD_SYMBOL_FEAR)  // SPWI109.SPL (Symbol of Fear)
+    !CheckSpellState([ENEMY],BERSERKER_RAGE)
+    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],WIZARD_GREATER_MALISON)  
+    THEN
+        RESPONSE #100
+        Spell([ENEMY],WIZARD_SYMBOL_FEAR)  // Cast Symbol of Fear
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_SYMBOL_STUN)  // SPWI110.SPL (Symbol of Stun)
+    Range(NearestEnemyOf(Myself),30)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(NearestEnemyOf(Myself),WIZARD_SYMBOL_STUN)  // Cast Symbol of Stun
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 IF
     ActuallyInCombat()
@@ -4191,18 +4227,6 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
-    HaveSpell(WIZARD_RAY_OF_ENFEEBLEMENT) 
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],WIZARD_RAY_OF_ENFEEBLEMENT) 
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
     See([ENEMY])
     HaveSpell(WIZARD_SLOW)  
     StateCheck([ENEMY],STATE_SLOWED)
@@ -4210,63 +4234,6 @@ IF
     THEN
         RESPONSE #100
         Spell([ENEMY],WIZARD_SLOW)  
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    HaveSpell(WIZARD_CONTAGION)  // SPWI104.SPL (Contagion)
-    !HasBounceEffects(LastSeenBy(Myself))
-    HPGT([ENEMY],50)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell([ENEMY],WIZARD_CONTAGION)  // Cast Contagion
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    See([ENEMY])
-    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
-    !HasBounceEffects(LastSeenBy(Myself))
-    HaveSpell(WIZARD_CONFUSION)  
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
-    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
-    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
-    !Race(LastSeenBy(Myself),GOLEM)
-    !Race(LastSeenBy(Myself),SWORD)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_CONFUSION)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    See([ENEMY])
-    !HasBounceEffects(LastSeenBy(Myself))
-    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
-    HaveSpell(WIZARD_CHAOS)  
-    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
-    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
-    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
-    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
-    !Race(LastSeenBy(Myself),GOLEM)
-    !Race(LastSeenBy(Myself),SWORD)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),WIZARD_CHAOS) 
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -4291,6 +4258,28 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    !HasBounceEffects(LastSeenBy(Myself))
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(WIZARD_CHAOS)  
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
+    !Race(LastSeenBy(Myself),SWORD)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_CHAOS) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 IF
     ActuallyInCombat()
@@ -4325,6 +4314,28 @@ END
 
 
 IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    !HasBounceEffects(LastSeenBy(Myself))
+    HaveSpell(WIZARD_CONFUSION)  
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
+    !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
+    !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),GOLEM)
+    !Race(LastSeenBy(Myself),SWORD)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_CONFUSION)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
     ActionListEmpty()
     ActuallyInCombat()
     !HasBounceEffects(LastSeenBy(Myself))
@@ -4335,6 +4346,54 @@ IF
 THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),WIZARD_GREASE) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+// ======================================================
+// IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
+// ======================================================
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    LevelGT([ENEMY],4)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    !HasBounceEffects([ENEMY])
+    HaveSpell(WIZARD_GREATER_MALISON) 
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_GREATER_MALISON)  
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_RAY_OF_ENFEEBLEMENT) 
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],WIZARD_RAY_OF_ENFEEBLEMENT) 
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_CONTAGION)  // SPWI104.SPL (Contagion)
+    !HasBounceEffects(LastSeenBy(Myself))
+    HPGT([ENEMY],50)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell([ENEMY],WIZARD_CONTAGION)  // Cast Contagion
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -4350,85 +4409,13 @@ IF
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     HaveSpell(WIZARD_HOLD_MONSTER)  // SPWI507.SPL (Hold Monster)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell([ENEMY],WIZARD_HOLD_MONSTER)  // Cast Hold Monster
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
-    !HasBounceEffects(LastSeenBy(Myself))
-    !StateCheck(Myself,STATE_SILENCED)
-    HPLT([ENEMY],90)
-    See([ENEMY])
-    !StateCheck([ENEMY],STATE_REALLY_DEAD)
-    !StateCheck([ENEMY],STATE_NOT_TARGETABLE)
-    !StateCheck([ENEMY],STATE_HARMLESS)
-    !CheckStatGT([ENEMY],0,WIZARD_SPELL_DEFLECTION)
-    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TURNING)
-    !CheckStatGT([ENEMY],0,WIZARD_SPELL_TRAP)
-    !CheckStatGT([ENEMY],0,CLERIC_CHAOTIC_COMMANDS)
-    !CheckStatGT([ENEMY],0,CLERIC_FREE_ACTION)
-    !CheckStat([ENEMY],2,WIZARD_SPELL_IMMUNITY)
-    !CheckStat([ENEMY],1,OFFENSIVE_MODIFIER)
-    !CheckStat([ENEMY],1,CLERIC_SHIELD_OF_THE_ARCHONS)
-    !HasItemEquipedReal("NPSW01",[ENEMY])  // Sword of Arvoreen +2
-    !HasItemEquipedReal("SW1H27",[ENEMY])  // Arbane's Sword of Agility +2
-    !HasItemEquiped("RING09",[ENEMY])  // Edventar's Gift
-    !HasItemEquipedReal("SW2H06",[ENEMY])  // Spider's Bane +2
-    CheckStatLT([ENEMY],50,RESISTMAGIC)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        Spell([ENEMY],WIZARD_POWER_WORD_STUN)  // SPWI715.SPL (Power Word, Stun)
-END
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    !HasBounceEffects(LastSeenBy(Myself))
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_POWER_WORD_STUN)  // SPWI108.SPL (Power Word: Stun)
-    Range(NearestEnemyOf(Myself),30)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_POWER_WORD_STUN)  // Cast Power Word: Stun
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_SYMBOL_FEAR)  // SPWI109.SPL (Symbol of Fear)
-    !CheckSpellState([ENEMY],BERSERKER_RAGE)
-    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
-    Range(NearestEnemyOf(Myself),30)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-
-    THEN
-        RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_SYMBOL_FEAR)  // Cast Symbol of Fear
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActuallyInCombat()
-    ActionListEmpty()
-    See(NearestEnemyOf(Myself))
-    HaveSpell(WIZARD_SYMBOL_STUN)  // SPWI110.SPL (Symbol of Stun)
-    Range(NearestEnemyOf(Myself),30)
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(NearestEnemyOf(Myself),WIZARD_SYMBOL_STUN)  // Cast Symbol of Stun
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -5786,6 +5773,26 @@ END
 // IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
 // ======================================================
 
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+    LevelGT([ENEMY],6)
+    !HasBounceEffects([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),7)
+    CheckStatGT(LastSeenBy(Myself),7,SAVEVSSPELL) //50% chance that they get got
+    !CheckSpellState([ENEMY],SI_NECROMANCY)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+
 // Cast Hold Person
 // Casts Hold Person to paralyze a humanoid target, rendering them immobile and unable to act.
 // Lasts for 1 turn.
@@ -5799,6 +5806,8 @@ IF
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     General(LastSeenBy(Myself),HUMANOID)
+    !Race(LastSeenBy(Myself),GOLEM)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
     HaveSpell(CLERIC_HOLD_PERSON)  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -5807,23 +5816,6 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    HaveSpell(CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
-    LevelGT([ENEMY],6)
-    !HasBounceEffects([ENEMY])
-    !ImmuneToSpellLevel(LastSeenBy(Myself),7)
-    CheckStatGT(LastSeenBy(Myself),7,SAVEVSSPELL) //50% chance that they get got
-    !CheckSpellState([ENEMY],SI_NECROMANCY)
-    !HasBounceEffects(LastSeenBy(Myself))
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell([ENEMY],CLERIC_FINGER_OF_DEATH)  // SPWI704.SPL (Finger of Death)
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-END
 
 IF
     ActionListEmpty()
@@ -5833,6 +5825,7 @@ IF
     !ImmuneToSpellLevel(LastSeenBy(Myself),7)
     CheckStatGT(LastSeenBy(Myself),9,SAVEVSSPELL) //50% chance that they get got
     !CheckSpellState([ENEMY],SI_NECROMANCY)
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
     !HasBounceEffects(LastSeenBy(Myself))
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -5955,6 +5948,7 @@ IF
     !HasBounceEffects(LastSeenBy(Myself))
     !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
     !General(LastSeenBy(Myself),UNDEAD)
+    !Race(LastSeenBy(Myself),GOLEM)
     HaveSpell(CLERIC_MENTAL_DOMINATION)  
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
@@ -6405,8 +6399,8 @@ IF
     See(NearestEnemyOf(Myself))
     HaveSpell(MINSC_BERSERK)  // 3117 (MINSC_BERSERK)
     Range(NearestEnemyOf(Myself),30)
+    HPPercentLT(Myself,60)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-
     THEN
         RESPONSE #100
         Spell(Myself,MINSC_BERSERK)  // Cast MINSC_BERSERK

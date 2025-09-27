@@ -19,6 +19,7 @@ C:StartStore("BPXITH03")
 C:StartStore("BPDEVL03")
 C:StartStore("BPCONC03")
 C:StartStore("BPELAN03")
+C:Exec("addspells.txt") 
 
 TODO:
 Handle insect plague bricking my characters lol
