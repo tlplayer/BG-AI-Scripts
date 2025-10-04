@@ -536,7 +536,7 @@ THEN
         RunAwayFrom(NearestEnemyOf(Myself),100)
         Hide()
         EquipMostDamagingMelee()
-        AttackOneRound(NearestEnemyOf(Myself))
+        AttackOneRound([ENEMY])
 END
 
 
@@ -6696,6 +6696,17 @@ THEN
       IncrementGlobal("USED_TOME01","LOCALS",1)
 END
 
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    GlobalLT("USED_CLCK08","LOCALS",1)
+    HasItemEquiped("CLCK08",Myself)  
+THEN
+    RESPONSE #100
+        UseItem("CLCK08",LastSeenBy(Myself)) 
+        IncrementGlobal("USED_CLCK08","LOCALS",1)
+END
+
 //Algernon's Cloak
 IF
     ActuallyInCombat()
@@ -6979,8 +6990,7 @@ IF
 THEN
     RESPONSE #100
         EquipMostDamagingMelee()  // Equip the most damaging melee weapon
-        AttackOneRound(LastSeenBy(Myself))
-        Wait(1)
+        AttackOneRound([ENEMY])
         Continue()
 END
 
