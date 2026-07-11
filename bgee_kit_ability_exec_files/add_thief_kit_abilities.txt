@@ -1,0 +1,4 @@
+C:Eval('AddSpecialAbility("SPCL414")') 
+C:Eval('AddSpecialAbility("SPCL423")') 
+C:Eval('AddSpecialAbility("SPSD02")')  
+C:Eval('AddSpecialAbility("SPCL412")') 

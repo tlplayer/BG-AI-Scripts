@@ -1,0 +1,2 @@
+C:Eval('AddSpecialAbility("SPWI206")')
+C:Eval('AddSpecialAbility("BGIN115")')
