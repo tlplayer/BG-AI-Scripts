@@ -1974,6 +1974,26 @@ IF
     ActionListEmpty()
     OR(7)
         Gender(LastSeenBy(Myself),ILLUSIONARY)
+        SpellCast([ENEMY],WIZARD_PROJECT_IMAGE)
+        SpellCast([ENEMY],WIZARD_SIMULACRUM)
+        SpellCast([ENEMY],WIZARD_MISLEAD)
+        StateCheck(LastSeenBy(Myself),STATE_BLUR)
+        StateCheck(LastSeenBy(Myself),STATE_MIRRORIMAGE)
+        Class([ENEMY],THIEF_ALL)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    Delay(30)
+    HaveSpell(HELM_TRUE_SIGHT)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+        Spell(Myself,HELM_TRUE_SIGHT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    OR(7)
+        Gender(LastSeenBy(Myself),ILLUSIONARY)
         SpellCast([ENEMY],WIZARD_PROJECT_IMAGE) 
         SpellCast([ENEMY],WIZARD_SIMULACRUM)  
         SpellCast([ENEMY],WIZARD_MISLEAD)  
@@ -2198,6 +2218,19 @@ IF
         SetGlobalTimer("UNKNOWN_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(BLACKGUARD_ANIMATE_DEAD)
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,BLACKGUARD_ANIMATE_DEAD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 // CLERIC_SUMMON_FALLEN_DEVA
 IF
     ActionListEmpty()
@@ -2266,6 +2299,19 @@ THEN
     RESPONSE #100
         Spell(Myself,TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpellRES("BGIN115")
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("BGIN115",Myself)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
 
@@ -3529,6 +3575,16 @@ END
 
 IF
     ActionListEmpty()
+    HaveSpell(CAVALIER_REMOVE_FEAR)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CAVALIER_REMOVE_FEAR)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     HaveSpell(CLERIC_PIXIE_DUST)  
     See([PC])
     !StateCheck([PC],STATE_INVISIBLE)
@@ -3869,6 +3925,59 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("OHTMPS1")
+    !CheckSpellState(Myself,HOLY_POWER)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("OHTMPS1",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("OHTYR2")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("OHTYR2",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(TALOS_STORMSHIELD)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,TALOS_STORMSHIELD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(HELM_SEEKING_SWORD)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,HELM_SEEKING_SWORD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 //BOON OF LATHANDER: This spell lasts 1 round per level of the caster. It gives the caster a +1 bonus to attack and damage rolls, a +1 bonus to all Saving Throws, and 1 extra attack per round. It also protects the recipient from level drain.
 IF
     ActionListEmpty()
@@ -3881,6 +3990,111 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,LATHANDER_BOON)  
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(AVENGER_SHAPESHIFT_FIRESALAMANDER)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,AVENGER_SHAPESHIFT_FIRESALAMANDER)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(AVENGER_SHAPESHIFT_BABYWYVERN)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,AVENGER_SHAPESHIFT_BABYWYVERN)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(AVENGER_SHAPESHIFT_SWORDSPIDER)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,AVENGER_SHAPESHIFT_SWORDSPIDER)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(DRUID_SHAPESHIFT_BLACKBEAR)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,DRUID_SHAPESHIFT_BLACKBEAR)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(DRUID_SHAPESHIFT_BROWNBEAR)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,DRUID_SHAPESHIFT_BROWNBEAR)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(DRUID_SHAPESHIFT_WOLF)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,DRUID_SHAPESHIFT_WOLF)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -4255,7 +4469,7 @@ IF
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),24)
+    !Range(FarthestEnemyOf(Myself),28)
     // How close is the closest ally 
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),6)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -4617,6 +4831,19 @@ IF
 THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),WIZARD_DRAGONS_BREATH)  // Cast Dragon's Breath
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    CheckStatLT([ENEMY],100,RESISTELECTRICITY)
+    HaveSpell(TALOS_LIGHTNING_BOLT)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([ENEMY],TALOS_LIGHTNING_BOLT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 /*
@@ -6430,6 +6657,18 @@ END
 
 IF
     ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpellRES("SPSD02")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        SpellRES("SPSD02",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
     Delay(9)
     HaveSpell(ROGUE_SET_SPIKE_TRAP) 
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
@@ -6520,9 +6759,13 @@ END
 IF
     General([ENEMY],UNDEAD)
     CanTurn([Enemy],4)
-    OR(2)
+    OR(6)
         Class(Myself,PALADIN_ALL)
         Class(Myself,CLERIC_ALL)
+        Class(Myself,CLERIC_MAGE)
+        Class(Myself,CLERIC_THIEF)
+        Class(Myself,FIGHTER_MAGE_CLERIC)
+        Class(Myself,CLERIC_RANGER)
   THEN
     RESPONSE #100
       Turn()

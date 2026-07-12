@@ -7,6 +7,7 @@ Open the console, select or hover the intended character according to your conso
 C:Exec("add_priest_kit_abilities.txt")
 C:Exec("add_thief_kit_abilities.txt")
 C:Exec("add_druid_kit_abilities.txt")
+C:Exec("add_paladin_kit_abilities.txt")
 
 Each AddSpecialAbility call grants one use. Running a file again adds another use.
 
