@@ -21,6 +21,8 @@ THEN
         SetGlobalTimer("CASTER_ENEMY","LOCALS",0)
         SetGlobalTimer("TROLL_ENEMIES","LOCALS",0)
         SetGlobalTimer("USE_RANGE","LOCALS",0)
+        SetGlobalTimer("FORCE_RANGE","LOCALS",0)
+        SetGlobalTimer("FORCE_MELEE","LOCALS",0)
         SetGlobalTimer("PSYCHIC_ENEMIES","LOCALS",0)
         Continue()
 END
@@ -52,6 +54,30 @@ IF
 THEN
     RESPONSE #100
         SetGlobalTimer("SHORT_BUFF","LOCALS",ONE_TURN)  // Set the timer to one round
+        Continue()
+END
+
+IF
+    HotKey(Y)
+    CanEquipRanged()
+    !OutOfAmmo()
+THEN
+    RESPONSE #100
+        SetGlobalTimer("FORCE_RANGE","LOCALS",ONE_TURN)
+        SetGlobalTimer("USE_RANGE","LOCALS",ONE_TURN)
+        SetGlobalTimer("FORCE_MELEE","LOCALS",0)
+        EquipRanged()
+        Continue()
+END
+
+IF
+    HotKey(U)
+THEN
+    RESPONSE #100
+        SetGlobalTimer("FORCE_MELEE","LOCALS",ONE_TURN)
+        SetGlobalTimer("USE_RANGE","LOCALS",0)
+        SetGlobalTimer("FORCE_RANGE","LOCALS",0)
+        EquipMostDamagingMelee()
         Continue()
 END
 
@@ -531,6 +557,7 @@ IF
         Class(Myself,BARD_ALL)
     !StateCheck(Myself,STATE_INVISIBLE)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
+    !GlobalTimerNotExpired("FORCE_RANGE","LOCALS")
 THEN
     RESPONSE #100
         RunAwayFrom(NearestEnemyOf(Myself),100)
@@ -3975,7 +4002,7 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,HELM_SEEKING_SWORD)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
 END
 
 //BOON OF LATHANDER: This spell lasts 1 round per level of the caster. It gives the caster a +1 bonus to attack and damage rolls, a +1 bonus to all Saving Throws, and 1 extra attack per round. It also protects the recipient from level drain.
@@ -4469,7 +4496,7 @@ IF
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),28)
+    !Range(FarthestEnemyOf(Myself),45)
     // How close is the closest ally 
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),6)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -7141,6 +7168,7 @@ IF
         !IsWeaponRanged(Myself)
     !OutOfAmmo()
     CanEquipRanged()
+    !GlobalTimerNotExpired("FORCE_MELEE","LOCALS")
     LevelLT(LastSeenBy(Myself),18)
     Class(Myself,RANGER)
     !Range(LastSeenBy(Myself),4)
@@ -7169,6 +7197,7 @@ IF
         WeaponCanDamage(LastSeenBy(Myself),MAINHAND)
         !IsWeaponRanged(Myself)
     CanEquipRanged()
+    !GlobalTimerNotExpired("FORCE_MELEE","LOCALS")
     !Range(LastSeenBy(Myself),6)  // If the enemy is within melee range (4 search squares)
     CheckStatLT(LastSeenBy(Myself),1,WIZARD_PROTECTION_FROM_NORMAL_MISSILES)  // Check if Protection from Normal Missiles is already active
     CheckStatLT(LastSeenBy(Myself),100,RESISTMISSILE)
@@ -7222,6 +7251,7 @@ IF
         CheckStatGT(Myself,0,SHIELDGLOBE)
         Range([ENEMY],4)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
+    !GlobalTimerNotExpired("FORCE_RANGE","LOCALS")
     HPPercentGT(Myself,35)
     OR(2)
         !TookDamage()
