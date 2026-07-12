@@ -4018,13 +4018,17 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    See(NearestEnemyOf(Myself))
+    Range(NearestEnemyOf(Myself),8)
     HaveSpell(HELM_SEEKING_SWORD)
     CheckStatLT(Myself,1,DEAD_MAGIC)
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
         Spell(Myself,HELM_SEEKING_SWORD)
+        SetGlobalTimer("FORCE_MELEE","LOCALS",FIVE_ROUNDS)
+        SetGlobalTimer("USE_RANGE","LOCALS",0)
+        SetGlobalTimer("FORCE_RANGE","LOCALS",0)
         SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
 END
 
@@ -4518,6 +4522,9 @@ IF
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
+    !Race([ENEMY],ETTERCAP)  // Exclude spiders
+    !Race([ENEMY],GOLEM)  // Exclude Golems 100% magic resist 
+    !Race([ENEMY],WYVERN)  // Exclude wyverns they fly so immune to web.
     CheckStatLT([ENEMY],100,RESISTMAGIC)
     !Range(FarthestEnemyOf(Myself),45)
     // How close is the closest ally 
