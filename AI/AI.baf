@@ -3070,7 +3070,14 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,WIZARD_SPELL_IMMUNITY)  // Cast Minor Spell Turning
-        Spell(Myself,WIZARD_SPELL_IMMUNITY_ABJURATION)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_ABJURATION)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_CONJURATION)
+        Spell(Myself,WIZARD_SPELL_IMMUNITY_DIVINATION)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_ENCHANTMENT)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_ILLUSIONIST)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_INVOCATION)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_NECROMANCY)
+        // Spell(Myself,WIZARD_SPELL_IMMUNITY_ALTERATION)
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -6930,12 +6937,10 @@ IF
     OR(2)
         Class(Myself,THIEF_ALL)
         Class(Myself,MONK)
-    Delay(12)
+    Delay(6)
 THEN
     RESPONSE #100
         FindTraps()  // Detect Traps if hidden and not in combat
-        Wait(5)
-        Continue()
 END
 
 
