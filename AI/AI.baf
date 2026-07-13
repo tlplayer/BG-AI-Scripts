@@ -4519,6 +4519,7 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
+    See([ENEMY])
     !HasBounceEffects(LastSeenBy(Myself))
     HaveSpell(WIZARD_WEB)  // SPWI206.SPL (Web)
     !Race([ENEMY],SPIDER)  // Exclude spiders
@@ -4526,13 +4527,13 @@ IF
     !Race([ENEMY],GOLEM)  // Exclude Golems 100% magic resist 
     !Race([ENEMY],WYVERN)  // Exclude wyverns they fly so immune to web.
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !Range(FarthestEnemyOf(Myself),45)
-    // How close is the closest ally 
-    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),6)
+    !Range(LastSeenBy(Myself),45)
+    // How close is the nearest enemy of the enemy (the ally) 
+    Range(NearestEnemyOf(LastSeenBy(Myself)),10)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
 THEN
     RESPONSE #100
-        Spell(FarthestEnemyOf(Myself),WIZARD_WEB)  // Cast Web on any visible enemies
+        Spell(LastSeenBy(Myself),WIZARD_WEB)  // Cast Web on any visible enemies
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
