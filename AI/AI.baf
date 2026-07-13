@@ -573,17 +573,16 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    Delay(18)
-    OR(3)
+    Delay(30)
+    OR(2)
         Class(Myself,THIEF_ALL)
         Class(Myself,MONK)
-        Class(Myself,BARD_ALL)
     !StateCheck(Myself,STATE_INVISIBLE)
     !GlobalTimerNotExpired("USE_RANGE","LOCALS")
     !GlobalTimerNotExpired("FORCE_RANGE","LOCALS")
 THEN
     RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),100)
+        RunAwayFrom(NearestEnemyOf(Myself),200)
         Hide()
         EquipMostDamagingMelee()
         AttackOneRound([ENEMY])
@@ -6697,25 +6696,35 @@ END
 
 IF
     ActionListEmpty()
-    Delay(9)
-    HaveSpell(SET_SNARE_TRAP) 
+    Delay(30)
+    HaveSpell(SET_SNARE_TRAP)
+    !See([ENEMY])
+    !AreaType(CITY)
+    OR(2)
+        AreaType(DUNGEON)
+        !AreaType(OUTDOOR)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,SET_SNARE_TRAP) 
+        Spell(Myself,SET_SNARE_TRAP)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
-    Delay(9)
-    HaveSpell(SET_SPECIAL_SNARE_TRAP) 
+    Delay(30)
+    HaveSpell(SET_SPECIAL_SNARE_TRAP)
+    !See([ENEMY])
+    !AreaType(CITY)
+    OR(2)
+        AreaType(DUNGEON)
+        !AreaType(OUTDOOR)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,SET_SPECIAL_SNARE_TRAP) 
+        Spell(Myself,SET_SPECIAL_SNARE_TRAP)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
@@ -6733,20 +6742,30 @@ END
 
 IF
     ActionListEmpty()
-    Delay(9)
-    HaveSpell(ROGUE_SET_SPIKE_TRAP) 
+    Delay(30)
+    HaveSpell(ROGUE_SET_SPIKE_TRAP)
+    !See([ENEMY])
+    !AreaType(CITY)
+    OR(2)
+        AreaType(DUNGEON)
+        !AreaType(OUTDOOR)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
         RESPONSE #100
-        Spell(Myself,ROGUE_SET_SPIKE_TRAP) 
+        Spell(Myself,ROGUE_SET_SPIKE_TRAP)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 IF
     ActionListEmpty()
-    Delay(9)
-    HaveSpell(ROGUE_SET_EXPLODING_TRAP)  
+    Delay(30)
+    HaveSpell(ROGUE_SET_EXPLODING_TRAP)
+    !See([ENEMY])
+    !AreaType(CITY)
+    OR(2)
+        AreaType(DUNGEON)
+        !AreaType(OUTDOOR)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
@@ -6757,8 +6776,13 @@ END
 
 IF
     ActionListEmpty()
-    Delay(9)
-    HaveSpell(ROGUE_SET_EXPLODING_TRAP)  
+    Delay(30)
+    HaveSpell(ROGUE_SET_EXPLODING_TRAP)
+    !See([ENEMY])
+    !AreaType(CITY)
+    OR(2)
+        AreaType(DUNGEON)
+        !AreaType(OUTDOOR)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
     THEN
