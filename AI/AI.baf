@@ -2340,6 +2340,32 @@ END
 IF
     ActionListEmpty()
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
+    OR(4)
+        HaveSpellRES("SPCL622") // Snake
+        HaveSpellRES("SPCL623") // Bear
+        HaveSpellRES("SPCL624") // Lion
+        HaveSpellRES("SPCL625") // Wolf
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    CheckStatLT(Myself,1,DEAD_MAGIC)    
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #1
+        SpellRES("SPCL622",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+    RESPONSE #1
+        SpellRES("SPCL623",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+    RESPONSE #1
+        SpellRES("SPCL624",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+    RESPONSE #1
+        SpellRES("SPCL625",Myself)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")  
     HaveSpell(TOTEMIC_DRUID_SUMMON_SPIRIT_ANIMAL)
     NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -3177,12 +3203,98 @@ END
 IF
     ActuallyInCombat()
     ActionListEmpty()
+    OR(6)
+        HaveSpell(SHAPECHANGE_MIND_FLAYER)
+        HaveSpell(SHAPECHANGE_IRON_GOLEM)
+        HaveSpell(SHAPECHANGE_GIANT_TROLL)
+        HaveSpell(SHAPECHANGE_GREATER_WOLFWERE)
+        HaveSpell(SHAPECHANGE_FIRE_ELEMENTAL)
+        HaveSpell(SHAPECHANGE_EARTH_ELEMENTAL)
+    CheckStatLT(Myself,1,POLYMORPHED)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_MIND_FLAYER)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_IRON_GOLEM)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_GIANT_TROLL)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_GREATER_WOLFWERE)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_FIRE_ELEMENTAL)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,SHAPECHANGE_EARTH_ELEMENTAL)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
     HaveSpell(WIZARD_SHAPECHANGE)  // 2916 (WIZARD_SHAPECHANGE)
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
             Spell(Myself,WIZARD_SHAPECHANGE)  // Cast WIZARD_SHAPECHANGE
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    OR(7)
+        HaveSpell(WIZARD_POLYMORPH_FLIND)
+        HaveSpell(WIZARD_POLYMORPH_OGRE)
+        HaveSpell(WIZARD_POLYMORPH_SPIDER)
+        HaveSpell(WIZARD_POLYMORPH_MUSTARD_JELLY)
+        HaveSpell(WIZARD_POLYMORPH_BROWN_BEAR)
+        HaveSpell(WIZARD_POLYMORPH_BLACK_BEAR)
+        HaveSpell(WIZARD_POLYMORPH_WOLF)
+    CheckStatLT(Myself,1,POLYMORPHED)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_FLIND)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_OGRE)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_SPIDER)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_MUSTARD_JELLY)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_BROWN_BEAR)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_BLACK_BEAR)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+        RESPONSE #1
+            Spell(Myself,WIZARD_POLYMORPH_WOLF)
+            SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    InWeaponRange(NearestEnemyOf(Myself))
+    HaveSpell(WIZARD_POLYMORPH_SELF)  // 2416 (WIZARD_POLYMORPH_SELF)
+    CheckStatLT(Myself,1,POLYMORPHED)
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS") 
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+    THEN
+        RESPONSE #100
+            Spell(Myself,WIZARD_POLYMORPH_SELF)
             SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
