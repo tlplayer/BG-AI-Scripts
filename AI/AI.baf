@@ -5013,6 +5013,8 @@ IF
     ActionListEmpty()
     ActuallyInCombat()
     See([ENEMY])
+    AreaType(OUTDOOR)
+    !Range([GOODCUTOFF],45)
     CheckStatLT([ENEMY],100,RESISTELECTRICITY)
     HaveSpell(TALOS_LIGHTNING_BOLT)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -6850,13 +6852,22 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    See([ENEMY])
+    Range(LastSeenBy(Myself),8)
+    HPPercentLT(Myself,75)
     HaveSpellRES("SPSD02")
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    !StateCheck(Myself,STATE_INVISIBLE)
+    !StateCheck(Myself,STATE_IMPROVEDINVISIBILITY)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
 THEN
     RESPONSE #100
         SpellRES("SPSD02",Myself)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        SetInterrupt(FALSE)
+        RunAwayFromNoInterruptNoLeaveArea(LastSeenBy(Myself),120)
+        SetInterrupt(TRUE)
+        Hide()
 END
 
 IF
@@ -6941,6 +6952,8 @@ IF
 THEN
     RESPONSE #100
         FindTraps()  // Detect Traps if hidden and not in combat
+        Wait(6)
+        Continue()
 END
 
 
