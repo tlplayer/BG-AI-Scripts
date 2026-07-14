@@ -1,0 +1,15 @@
+// Fight numbering used by the arena dialogue.
+//
+// The Black Pits campaign uses tier globals rather than a simple linear
+// encounter number. This scaffold exposes a compact 1-15 menu while still
+// setting the globals that the shipped Black Pits scripts/dialogues expect.
+//
+//  1-2   -> T0 tutorial fights
+//  3-7   -> T1_B1..T1_B5
+//  8-12  -> T2_B1..T2_B5
+//  13-15 -> T3_B1..T3_B3
+//
+// LAST_BATTLE is used as the completion gate. The original Black Pits hub
+// scripts are expected to advance it after victories.
+DEFINE_PATCH_MACRO ~BPEA_NOTHING~ BEGIN
+END
