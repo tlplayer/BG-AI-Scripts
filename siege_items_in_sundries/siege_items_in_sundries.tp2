@@ -1,0 +1,11 @@
+BACKUP ~siege_items_in_sundries/backup~
+AUTHOR ~tplayer~
+VERSION ~v0.1~
+README ~siege_items_in_sundries/README.md~
+
+BEGIN ~Add curated SoD and EE companion items to Sorcerous Sundries~
+
+REQUIRE_PREDICATE (GAME_IS ~bgee bg2ee eet~)
+  ~Siege Items in Sundries requires an Enhanced Edition BG engine.~
+
+INCLUDE ~siege_items_in_sundries/lib/sundries_items.tpa~

@@ -265,14 +265,14 @@ IF
         SpellCast([ANYONE.0.0.0],WIZARD_DEATH_FOG)  // SPWI614.SPL (Death Fog)
         SpellCast([ANYONE.0.0.0],WIZARD_ABI_DALZIMS_HORRID_WILTING)
     Range([ANYONE],45)
-    Delay(18)
+    Delay(12)
 THEN
     RESPONSE #100
         GlobalShout(125)
         SetGlobalTimer("FORCE_RANGE","LOCALS",FIVE_ROUNDS)
         SetGlobalTimer("USE_RANGE","LOCALS",FIVE_ROUNDS)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],120)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],80)
         SetInterrupt(TRUE)
 END
 
@@ -295,7 +295,7 @@ IF
         SetGlobalTimer("FORCE_RANGE","LOCALS",FIVE_ROUNDS)
         SetGlobalTimer("USE_RANGE","LOCALS",FIVE_ROUNDS)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],120)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],80)
         SetInterrupt(TRUE)
         Continue()
 END
@@ -315,7 +315,7 @@ IF
         SetGlobalTimer("FORCE_RANGE","LOCALS",FIVE_ROUNDS)
         SetGlobalTimer("USE_RANGE","LOCALS",FIVE_ROUNDS)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea(LastHeardBy(Myself),120)
+        RunAwayFromNoInterruptNoLeaveArea(LastHeardBy(Myself),80)
         SetInterrupt(TRUE)
 END
 
@@ -517,7 +517,7 @@ THEN
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_SHADOW_DOOR)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],120)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],80)
         SetInterrupt(TRUE)
 END
 
@@ -534,7 +534,7 @@ THEN
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_TELEPORT_FIELD)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],120)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],80)
         Continue()
         SetInterrupt(TRUE)
 END
@@ -553,7 +553,7 @@ THEN
         FaceObject(LastSeenBy(Myself))
         Spell(Myself,WIZARD_MISLEAD)  // SPWI505.SPL (Shadow Door)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea([ANYONE],120)
+        RunAwayFromNoInterruptNoLeaveArea([ANYONE],80)
         SetInterrupt(TRUE)
 END
 
@@ -567,7 +567,7 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,WIZARD_INVISIBILITY)  // Turn invisible to retreat
-        RunAwayFrom(NearestEnemyOf(Myself),120)
+        RunAwayFrom(NearestEnemyOf(Myself),80)
 END
 
 IF
@@ -582,7 +582,7 @@ IF
     !GlobalTimerNotExpired("FORCE_RANGE","LOCALS")
 THEN
     RESPONSE #100
-        RunAwayFrom(NearestEnemyOf(Myself),200)
+        RunAwayFrom(NearestEnemyOf(Myself),75)
         Hide()
         EquipMostDamagingMelee()
         AttackOneRound([ENEMY])
@@ -602,7 +602,7 @@ IF
     HPPercentLT(Myself,80)
 THEN
     RESPONSE #100
-        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),120)
+        RunAwayFromNoLeaveArea(LastAttackerOf(Myself),75)
         Continue()
 END
 
@@ -4163,6 +4163,7 @@ THEN
     RESPONSE #100
         Spell(Myself,LATHANDER_BOON)  
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -4177,7 +4178,8 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
+        Continue()
 END
 
 IF
@@ -4192,7 +4194,8 @@ IF
 THEN
     RESPONSE #100
         Spell(Myself,AVENGER_SHAPESHIFT_FIRESALAMANDER)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
+        Continue()
 END
 
 IF
@@ -4208,6 +4211,7 @@ THEN
     RESPONSE #100
         Spell(Myself,AVENGER_SHAPESHIFT_BABYWYVERN)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -4223,6 +4227,7 @@ THEN
     RESPONSE #100
         Spell(Myself,AVENGER_SHAPESHIFT_SWORDSPIDER)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -4238,6 +4243,7 @@ THEN
     RESPONSE #100
         Spell(Myself,DRUID_SHAPESHIFT_BLACKBEAR)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -4253,6 +4259,7 @@ THEN
     RESPONSE #100
         Spell(Myself,DRUID_SHAPESHIFT_BROWNBEAR)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -4268,6 +4275,7 @@ THEN
     RESPONSE #100
         Spell(Myself,DRUID_SHAPESHIFT_WOLF)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Continue()
 END
 
 IF
@@ -5014,7 +5022,7 @@ IF
     ActuallyInCombat()
     See([ENEMY])
     AreaType(OUTDOOR)
-    !Range([GOODCUTOFF],45)
+    !Range([GOODCUTOFF],40)
     CheckStatLT([ENEMY],100,RESISTELECTRICITY)
     HaveSpell(TALOS_LIGHTNING_BOLT)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -6865,7 +6873,7 @@ THEN
         SpellRES("SPSD02",Myself)
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
         SetInterrupt(FALSE)
-        RunAwayFromNoInterruptNoLeaveArea(LastSeenBy(Myself),120)
+        RunAwayFromNoInterruptNoLeaveArea(LastSeenBy(Myself),80)
         SetInterrupt(TRUE)
         Hide()
 END
