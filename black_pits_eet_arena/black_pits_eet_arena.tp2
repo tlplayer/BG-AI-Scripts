@@ -6,16 +6,17 @@ README ~black_pits_eet_arena/README.md~
 BEGIN ~Black Pits Arena Loop for EET~
 
 REQUIRE_PREDICATE GAME_IS ~eet bg2ee~ ~This scaffold expects an Enhanced Edition Trilogy/BG2EE-style game.~
-REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~BPBAELOT.CRE~ ~Black Pits resources are not present in this game.~
-REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~BPBAELOT.DLG~ ~Black Pits Baeloth dialogue is not present in this game.~
-REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~OH9360.ARE~ ~The EET Black Pits hub area OH9360 is not present.~
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~BPBAELOT.CRE~ OR FILE_EXISTS ~override/BPBAELOT.CRE~) ~Black Pits resources are not present in this game.~
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~BPBAELOT.DLG~ OR FILE_EXISTS ~override/BPBAELOT.dlg~) ~Black Pits Baeloth dialogue is not present in this game.~
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~OH9360.ARE~ OR FILE_EXISTS ~override/OH9360.ARE~) ~The EET Black Pits hub area OH9360 is not present.~
+REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~BPHUB.BCS~ OR FILE_EXISTS ~override/BPHUB.bcs~) ~The Black Pits hub script BPHUB is not present.~
 
 INCLUDE ~black_pits_eet_arena/lib/bpea_fights.tpa~
 
-ACTION_IF FILE_EXISTS_IN_GAME ~BAELOTH.DLG~ BEGIN
+ACTION_IF (FILE_EXISTS_IN_GAME ~BAELOTH.DLG~ OR FILE_EXISTS ~override/BAELOTH.DLG~ OR FILE_EXISTS ~override/baeloth.dlg~) BEGIN
   COMPILE ~black_pits_eet_arena/dialogue/bpea_campaign_baeloth.d~
 END
 
 COMPILE ~black_pits_eet_arena/dialogue/bpea_bpbaeloth.d~
 
-EXTEND_TOP ~OH9360.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9360.baf~
+EXTEND_TOP ~BPHUB.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9360.baf~

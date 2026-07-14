@@ -8,7 +8,7 @@ Scaffold WeiDU mod for exposing the BGEE Black Pits loop inside an EET-style gam
 - Adds a Black Pits Baeloth reply to manage the arena loop.
 - Adds a fight picker for fights 1-15 using the shipped Black Pits globals.
 - Adds shop menus for the existing Black Pits tiered stores.
-- Extends `OH9360.BCS` with a tiny tier synchronizer based on `LAST_BATTLE`.
+- Extends `BPHUB.BCS` with a tiny tier synchronizer based on `LAST_BATTLE`.
 
 ## Fight mapping
 
