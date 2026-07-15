@@ -22,7 +22,7 @@ COPY ~override/bg2301.bcs~ ~override/BG2301.bcs~
 
 COPY ~override/BENTLY.dlg~ ~override/bently.dlg~
 COMPILE ~black_pits_eet_arena/dialogue/bpea_bently.d~
-EXTEND_TOP ~OH9310.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9310_intro.baf~
+COMPILE ~black_pits_eet_arena/scripts/oh9310.baf~
 COMPILE ~black_pits_eet_arena/scripts/CUTBP00.baf~
 
 // Linux/case-sensitive install cleanup for this EET override. WeiDU writes the
