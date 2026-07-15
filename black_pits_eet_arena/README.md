@@ -4,7 +4,7 @@ Scaffold WeiDU mod for exposing the BGEE Black Pits loop inside an EET-style gam
 
 ## What it does
 
-- Adds a campaign Baeloth reply, when `BAELOTH.DLG` exists, to move the party to the EET Black Pits hub `OH9360`.
+- Adds a Smoky Brass Lamp to a Friendly Arm Inn container; using it in the inn sends the party to `OH9360`.
 - Adds a Black Pits Baeloth reply to manage the arena loop.
 - Adds a fight picker for fights 1-15 using the shipped Black Pits globals.
 - Adds shop menus for the existing Black Pits tiered stores.
@@ -50,6 +50,6 @@ The menus open these existing stores:
 
 ## Notes
 
-This is scaffolding, not a tested release. It assumes EET exposes the Black Pits hub as `OH9360` and that the shipped Black Pits scripts still handle victory, reward, and transition logic after `CUTBP02` begins.
+This is scaffolding, not a tested release. It assumes EET exposes the Black Pits hub as `OH9360` and that the shipped Black Pits scripts still handle victory, reward, and transition logic after `CUTBP02` begins. Arena entry intentionally uses the same simple transition form seen in Baeloth's original dialogue: `LeaveAreaLUA("OH9360","",[742.520],S)`.
 
 Uninstall should be clean because this only appends dialogue and extends a script through WeiDU.

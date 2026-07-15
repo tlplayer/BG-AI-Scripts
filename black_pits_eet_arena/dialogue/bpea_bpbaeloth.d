@@ -10,14 +10,14 @@ IF ~~ THEN BEGIN BPEA_MENU
   SAY ~Choose, then. Blood, commerce, or the nearest exit from magnificence?~
   IF ~~ THEN REPLY ~Pick an arena fight.~ GOTO BPEA_FIGHTS
   IF ~~ THEN REPLY ~Open the Black Pits shops.~ GOTO BPEA_STORES
-  IF ~~ THEN REPLY ~Return me to the Sword Coast.~ DO ~LeaveAreaLUA("AR0700","",[3350.2850],0)~ EXIT
+  IF ~~ THEN REPLY ~Return me to the Sword Coast.~ DO ~LeaveAreaLUA("AR0700","",[3350.2850],S)~ EXIT
   IF ~~ THEN REPLY ~Never mind.~ EXIT
 END
 
 IF ~~ THEN BEGIN BPEA_FIGHTS
   SAY ~I can arrange any sanctioned bout you have earned. Win one, then the next becomes available.~
-  IF ~~ THEN REPLY ~Fight 1: Opening bout.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T0_B1","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
-  IF ~GlobalGT("LAST_BATTLE","GLOBAL",0)~ THEN REPLY ~Fight 2: Second opening bout.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T0_B2","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
+  IF ~GlobalLT("LAST_BATTLE","GLOBAL",1)~ THEN REPLY ~Fight 1: Opening bout.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T0_B1","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
+  IF ~Global("LAST_BATTLE","GLOBAL",1)~ THEN REPLY ~Fight 2: Second opening bout.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T0_B2","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
   IF ~GlobalGT("LAST_BATTLE","GLOBAL",1)~ THEN REPLY ~Fight 3: Tier 1, bout 1.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("TIER","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T1_B1","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
   IF ~GlobalGT("LAST_BATTLE","GLOBAL",100)~ THEN REPLY ~Fight 4: Tier 1, bout 2.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("TIER","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T1_B2","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT
   IF ~GlobalGT("LAST_BATTLE","GLOBAL",101)~ THEN REPLY ~Fight 5: Tier 1, bout 3.~ DO ~SetGlobal("BLACK_PITS","GLOBAL",1) SetGlobal("TIER","GLOBAL",1) SetGlobal("BATTLE_COMPLETE","GLOBAL",0) SetGlobal("T1_B3","GLOBAL",1) SetGlobal("START_BATTLE","GLOBAL",1) StartCutScene("CUTBP02")~ EXIT

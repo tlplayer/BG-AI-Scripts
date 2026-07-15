@@ -13,10 +13,22 @@ REQUIRE_PREDICATE (FILE_EXISTS_IN_GAME ~BPHUB.BCS~ OR FILE_EXISTS ~override/BPHU
 
 INCLUDE ~black_pits_eet_arena/lib/bpea_fights.tpa~
 
-ACTION_IF (FILE_EXISTS_IN_GAME ~BAELOTH.DLG~ OR FILE_EXISTS ~override/BAELOTH.DLG~ OR FILE_EXISTS ~override/baeloth.dlg~) BEGIN
-  COMPILE ~black_pits_eet_arena/dialogue/bpea_campaign_baeloth.d~
-END
+COPY ~override/bg2301.are~ ~override/BG2301.ARE~
+  REPLACE_TEXTUALLY ~BPEALMP~ ~POTN08~
 
+EXTEND_TOP ~bg2301.bcs~ ~black_pits_eet_arena/scripts/bpea_bg2301.baf~
+
+COPY ~override/bg2301.bcs~ ~override/BG2301.bcs~
+
+COPY ~override/BENTLY.dlg~ ~override/bently.dlg~
+COMPILE ~black_pits_eet_arena/dialogue/bpea_bently.d~
 COMPILE ~black_pits_eet_arena/dialogue/bpea_bpbaeloth.d~
 
 EXTEND_TOP ~BPHUB.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9360.baf~
+
+// Linux/case-sensitive install cleanup for this EET override. WeiDU writes the
+// patched resources in lowercase; the existing override resources use mixed case.
+AT_NOW ~cp -a override/bg2301.bcs override/BG2301.bcs~
+AT_NOW ~cp -a override/bently.dlg override/BENTLY.dlg~
+AT_NOW ~cp -a override/bpbaelot.dlg override/BPBAELOT.dlg~
+AT_NOW ~perl -0pi -e 's/BPEALMP/POTN08/g' override/BG2301.ARE override/bg2301.are~
