@@ -22,15 +22,13 @@ COPY ~override/bg2301.bcs~ ~override/BG2301.bcs~
 
 COPY ~override/BENTLY.dlg~ ~override/bently.dlg~
 COMPILE ~black_pits_eet_arena/dialogue/bpea_bently.d~
-COMPILE ~black_pits_eet_arena/dialogue/bpea_bpbaeloth.d~
-
-EXTEND_TOP ~BPHUB.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9360.baf~
-EXTEND_TOP ~BPHUB.BCS~ ~black_pits_eet_arena/scripts/bpea_bphub_transfer.baf~
+EXTEND_TOP ~OH9310.BCS~ ~black_pits_eet_arena/scripts/bpea_oh9310_intro.baf~
+COMPILE ~black_pits_eet_arena/scripts/CUTBP00.baf~
 
 // Linux/case-sensitive install cleanup for this EET override. WeiDU writes the
 // patched resources in lowercase; the existing override resources use mixed case.
 AT_NOW ~cp --remove-destination -a override/bg2301.bcs override/BG2301.bcs~
-AT_NOW ~cp --remove-destination -a override/bphub.bcs override/BPHUB.bcs~
+AT_NOW ~cp --remove-destination -a override/oh9310.bcs override/OH9310.bcs~
+AT_NOW ~cp --remove-destination -a override/cutbp00.bcs override/CUTBP00.bcs~
 AT_NOW ~cp --remove-destination -a override/bently.dlg override/BENTLY.dlg~
-AT_NOW ~cp --remove-destination -a override/bpbaelot.dlg override/BPBAELOT.dlg~
 AT_NOW ~perl -0pi -e 's/BPEALMP/POTN08/g' override/BG2301.ARE override/bg2301.are~
