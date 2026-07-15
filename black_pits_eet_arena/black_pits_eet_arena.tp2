@@ -22,6 +22,8 @@ COPY ~override/bg2301.bcs~ ~override/BG2301.bcs~
 
 COPY ~override/BENTLY.dlg~ ~override/bently.dlg~
 COMPILE ~black_pits_eet_arena/dialogue/bpea_bently.d~
+COPY ~black_pits_eet_arena/base/bpghlour.dlg~ ~override/bpghlour.dlg~
+COMPILE ~black_pits_eet_arena/dialogue/bpea_bpghlour.d~
 COMPILE ~black_pits_eet_arena/scripts/oh9310.baf~
 COMPILE ~black_pits_eet_arena/scripts/CUTBP00.baf~
 
@@ -31,4 +33,5 @@ AT_NOW ~cp --remove-destination -a override/bg2301.bcs override/BG2301.bcs~
 AT_NOW ~cp --remove-destination -a override/oh9310.bcs override/OH9310.bcs~
 AT_NOW ~cp --remove-destination -a override/cutbp00.bcs override/CUTBP00.bcs~
 AT_NOW ~cp --remove-destination -a override/bently.dlg override/BENTLY.dlg~
+AT_NOW ~cp --remove-destination -a override/bpghlour.dlg override/BPGHLOUR.dlg~
 AT_NOW ~perl -0pi -e 's/BPEALMP/POTN08/g' override/BG2301.ARE override/bg2301.are~
