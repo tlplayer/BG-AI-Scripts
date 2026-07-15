@@ -27,6 +27,43 @@ THEN
         Continue()
 END
 
+// Druids stay in humanoid form at the opening of an encounter.  Once combat has
+// lasted long enough to justify melee shapeshifting, this timer permits one form
+// change; it is reset when the encounter ends.
+IF
+    !ActuallyInCombat()
+    GlobalGT("DRUID_SHIFT_COMBAT","LOCALS",0)
+THEN
+    RESPONSE #100
+        SetGlobal("DRUID_SHIFT_COMBAT","LOCALS",0)
+        SetGlobalTimer("DRUID_SHIFT_READY","LOCALS",0)
+        Continue()
+END
+
+IF
+    ActuallyInCombat()
+    Global("DRUID_SHIFT_COMBAT","LOCALS",0)
+THEN
+    RESPONSE #100
+        SetGlobal("DRUID_SHIFT_COMBAT","LOCALS",1)
+        SetGlobalTimer("DRUID_SHIFT_READY","LOCALS",FIVE_ROUNDS)
+        Continue()
+END
+
+// Return to humanoid form only after the fight has genuinely ended.  Waiting for
+// enemies to leave sight avoids a rapid switch when combat briefly drops.
+IF
+    ActionListEmpty()
+    !ActuallyInCombat()
+    !See([ENEMY])
+    CheckStatGT(Myself,0,POLYMORPHED)
+    HaveSpell(DRUID_HUMAN_FORM)
+THEN
+    RESPONSE #100
+        Spell(Myself,DRUID_HUMAN_FORM)
+        Continue()
+END
+
 // Set a timer for short-duration buffs
 // This section sets a global timer to track the duration of short-duration buffs.
 // The timer is set to two rounds initially and updated to one round when a hotkey is pressed.
@@ -4172,6 +4209,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4188,6 +4226,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(AVENGER_SHAPESHIFT_FIRESALAMANDER)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4204,6 +4243,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(AVENGER_SHAPESHIFT_BABYWYVERN)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4220,6 +4260,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(AVENGER_SHAPESHIFT_SWORDSPIDER)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4236,6 +4277,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_BLACKBEAR)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4252,6 +4294,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_BROWNBEAR)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -4268,6 +4311,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_WOLF)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
