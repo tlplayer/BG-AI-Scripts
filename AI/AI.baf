@@ -10,35 +10,36 @@
 //  03. SECTION 03: ENEMY DETECTION
 //  04. SECTION 04: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
 //  05. SECTION 05: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
-//  06. SECTION 06: IMMUNITIES (WIZARD)
-//  07. SECTION 07: RETREAT CONDITION
-//  08. SECTION 08: PRE-COMBAT BUFFING (WIZARD)
-//  09. SECTION 09: Heal SPELLS (CLERIC)
-//  10. SECTION 10: Heal (WIZARD)
-//  11. SECTION 11: Heal ITEMS
-//  12. SECTION 12: PENETRATION SPELLS (WIZARD)
-//  13. SECTION 13: PENETRATION SPELLS (CLERIC)
-//  14. SECTION 14: SUMMONING SPELLS (CLERIC)
-//  15. SECTION 15: SUMMONING SPELLS (WIZARD)
-//  16. SECTION 16: Short Duration BUFFS (WIZARD)
-//  17. SECTION 17: Short Duration BUFFS (CLERIC)
-//  18. SECTION 18: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
-//  19. SECTION 19: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
-//  20. SECTION 20: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
-//  21. SECTION 21: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
-//  22. SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
-//  23. SECTION 23: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
-//  24. SECTION 24: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
-//  25. SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
-//  26. SECTION 26: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
-//  27. SECTION 27: BUFFS (FIGHTER)
-//  28. SECTION 28: SETTING TRAPS
-//  29. SECTION 29: STEALTH AND THIEVING
-//  30. SECTION 30: TURN UNDEAD (CLERIC)
-//  31. SECTION 31: Wands
-//  32. SECTION 32: Combat Items (Ring of Ram, Staff of Ram Etc.)
-//  33. SECTION 33: COMBAT ACTIONS - RANGED ATTACKS
-//  34. SECTION 34: COMBAT ACTIONS - MELEE ATTACKS
+//  06. SECTION 06: ANTI-WIZARD
+//  07. SECTION 07: IMMUNITIES (WIZARD)
+//  08. SECTION 08: RETREAT CONDITION
+//  09. SECTION 09: PRE-COMBAT BUFFING (WIZARD)
+//  10. SECTION 10: Heal SPELLS (CLERIC)
+//  11. SECTION 11: Heal (WIZARD)
+//  12. SECTION 12: Heal ITEMS
+//  13. SECTION 13: PENETRATION SPELLS (WIZARD)
+//  14. SECTION 14: PENETRATION SPELLS (CLERIC)
+//  15. SECTION 15: SUMMONING SPELLS (CLERIC)
+//  16. SECTION 16: SUMMONING SPELLS (WIZARD)
+//  17. SECTION 17: Short Duration BUFFS (WIZARD)
+//  18. SECTION 18: Short Duration BUFFS (CLERIC)
+//  19. SECTION 19: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
+//  20. SECTION 20: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
+//  21. SECTION 21: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
+//  22. SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
+//  23. SECTION 23: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+//  24. SECTION 24: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
+//  25. SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
+//  26. SECTION 26: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
+//  27. SECTION 27: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
+//  28. SECTION 28: BUFFS (FIGHTER)
+//  29. SECTION 29: SETTING TRAPS
+//  30. SECTION 30: STEALTH AND THIEVING
+//  31. SECTION 31: TURN UNDEAD (CLERIC)
+//  32. SECTION 32: Wands
+//  33. SECTION 33: Combat Items (Ring of Ram, Staff of Ram Etc.)
+//  34. SECTION 34: COMBAT ACTIONS - RANGED ATTACKS
+//  35. SECTION 35: COMBAT ACTIONS - MELEE ATTACKS
 //
 // ======================================================
 // END APPENDIX A
@@ -419,7 +420,141 @@ THEN
 END
 
 // ======================================================
-// SECTION 06: IMMUNITIES (WIZARD)
+// SECTION 06: ANTI-WIZARD
+// ======================================================
+//
+// Target caster classes and known innate-spellcaster creatures.
+// ImmuneToSpellLevel also excludes Minor Globe
+// targets for levels 1-3, because the globe blocks outside spells of those levels.
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(16)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.PALADIN_ALL])
+        See([ENEMY.0.0.SHAMAN])
+        See([ENEMY.0.0.RAKSHASA])
+        See([ENEMY.0.0.OGRE_MAGE])
+        See([ENEMY.0.0.FAIRY_SIRINE])
+        See([ENEMY.0.0.MEPHIT])
+        See([ENEMY.0.GITHYANKI])
+        See([ENEMY.0.DEMONIC])
+        See([ENEMY.0.0.TANARI])
+        See([ENEMY.0.LICH])
+        See([ENEMY.0.DEMILICH])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(CLERIC_MISCAST_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_MISCAST_MAGIC)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(16)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.PALADIN_ALL])
+        See([ENEMY.0.0.SHAMAN])
+        See([ENEMY.0.0.RAKSHASA])
+        See([ENEMY.0.0.OGRE_MAGE])
+        See([ENEMY.0.0.FAIRY_SIRINE])
+        See([ENEMY.0.0.MEPHIT])
+        See([ENEMY.0.GITHYANKI])
+        See([ENEMY.0.DEMONIC])
+        See([ENEMY.0.0.TANARI])
+        See([ENEMY.0.LICH])
+        See([ENEMY.0.DEMILICH])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
+    HaveSpell(WIZARD_DEAFNESS)
+    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
+    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
+    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
+    !CheckStat(LastSeenBy(Myself),1,CLERIC_SHIELD_OF_THE_ARCHONS)
+    !HasItemEquiped("AMUL21",LastSeenBy(Myself))  // Amulet of Power
+    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_DEAFNESS)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(16)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.PALADIN_ALL])
+        See([ENEMY.0.0.SHAMAN])
+        See([ENEMY.0.0.RAKSHASA])
+        See([ENEMY.0.0.OGRE_MAGE])
+        See([ENEMY.0.0.FAIRY_SIRINE])
+        See([ENEMY.0.0.MEPHIT])
+        See([ENEMY.0.GITHYANKI])
+        See([ENEMY.0.DEMONIC])
+        See([ENEMY.0.0.TANARI])
+        See([ENEMY.0.LICH])
+        See([ENEMY.0.DEMILICH])
+    !Range(LastSeenBy(Myself),40)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),2)
+    HaveSpell(CLERIC_SILENCE_15_FOOT)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(16)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.PALADIN_ALL])
+        See([ENEMY.0.0.SHAMAN])
+        See([ENEMY.0.0.RAKSHASA])
+        See([ENEMY.0.0.OGRE_MAGE])
+        See([ENEMY.0.0.FAIRY_SIRINE])
+        See([ENEMY.0.0.MEPHIT])
+        See([ENEMY.0.GITHYANKI])
+        See([ENEMY.0.DEMONIC])
+        See([ENEMY.0.0.TANARI])
+        See([ENEMY.0.LICH])
+        See([ENEMY.0.DEMILICH])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),5)
+    HaveSpell(CLERIC_INSECT_PLAGUE)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+// ======================================================
+// SECTION 07: IMMUNITIES (WIZARD)
 // ======================================================
 
 /*
@@ -581,7 +716,7 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 // ======================================================
-// SECTION 07: RETREAT CONDITION
+// SECTION 08: RETREAT CONDITION
 // ======================================================
 
 
@@ -690,7 +825,7 @@ END
 
 
 // ======================================================
-// SECTION 08: PRE-COMBAT BUFFING (WIZARD)
+// SECTION 09: PRE-COMBAT BUFFING (WIZARD)
 // ======================================================
 // Cast Spirit Armor
 // Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
@@ -894,7 +1029,7 @@ END
 
 
 // ======================================================
-// SECTION 09: Heal SPELLS (CLERIC)
+// SECTION 10: Heal SPELLS (CLERIC)
 // ======================================================
 
 
@@ -1298,7 +1433,7 @@ IF
 END
 
 // ======================================================
-// SECTION 10: Heal (WIZARD)
+// SECTION 11: Heal (WIZARD)
 // ======================================================
 
 IF
@@ -1320,7 +1455,7 @@ END
 
 
 // ======================================================
-// SECTION 11: Heal ITEMS
+// SECTION 12: Heal ITEMS
 // ======================================================
 
 /*
@@ -1616,7 +1751,7 @@ END
 
 
 // ======================================================
-// SECTION 12: PENETRATION SPELLS (WIZARD)
+// SECTION 13: PENETRATION SPELLS (WIZARD)
 // ======================================================
 
 IF
@@ -1813,30 +1948,6 @@ END
 
 
 IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
-    HaveSpell(WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
-    OR(3)
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.MAGE_ALL])
-    !StateCheck(LastSeenBy(Myself),STATE_SILENCED)
-    !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
-    !CheckStatGT(LastSeenBy(Myself),0,WIZARD_SPELL_TURNING)
-    !CheckStat(LastSeenBy(Myself),1,CLERIC_SHIELD_OF_THE_ARCHONS)
-    !HasItemEquiped("AMUL21",LastSeenBy(Myself))  // Amulet of Power
-    CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
-    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
-    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
-    !StateCheck(Myself,STATE_SILENCED)
-THEN
-    RESPONSE #100
-        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
-        Spell(LastSeenBy(Myself),WIZARD_DEAFNESS)  // SPWI612.SPL (Power Word, Silence)
-END
-
-IF
     ActuallyInCombat()
     ActionListEmpty()  
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
@@ -2002,7 +2113,7 @@ END
 
 
 // ======================================================
-// SECTION 13: PENETRATION SPELLS (CLERIC)
+// SECTION 14: PENETRATION SPELLS (CLERIC)
 // ======================================================
 
 IF
@@ -2235,24 +2346,6 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    OR(6)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_INSECT_PLAGUE) 
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)  
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
     HaveSpell(CLERIC_DOOM)  
     CheckSpellState([ENEMY],DOOM)
     !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
@@ -2262,48 +2355,8 @@ IF
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    OR(6)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])
-    !Range([ENEMY],10)
-    HaveSpell(CLERIC_SILENCE_15_FOOT)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_SILENCE_15_FOOT)  
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    //See an enemy then check if the enemy is any spellcaster type or that they cast a spell 
-    See([ENEMY])
-    OR(7)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])
-        SpellCast([ENEMY],0)
-    HaveSpell(CLERIC_MISCAST_MAGIC)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    THEN
-        RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_MISCAST_MAGIC)  
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
 // ======================================================
-// SECTION 14: SUMMONING SPELLS (CLERIC)
+// SECTION 15: SUMMONING SPELLS (CLERIC)
 // ======================================================
 
 // CLERIC_ETHER_GATE
@@ -2598,7 +2651,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 15: SUMMONING SPELLS (WIZARD)
+// SECTION 16: SUMMONING SPELLS (WIZARD)
 // ======================================================
 
 IF
@@ -2991,7 +3044,7 @@ END
 
 
 // ======================================================
-// SECTION 16: Short Duration BUFFS (WIZARD)
+// SECTION 17: Short Duration BUFFS (WIZARD)
 // ======================================================
 IF
     ActionListEmpty()
@@ -3592,7 +3645,7 @@ END
 
 
 // ======================================================
-// SECTION 17: Short Duration BUFFS (CLERIC)
+// SECTION 18: Short Duration BUFFS (CLERIC)
 // ======================================================
 
 
@@ -4541,7 +4594,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 18: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
+// SECTION 19: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
 // ======================================================
 
 IF
@@ -4817,7 +4870,7 @@ END
 
 
 // ======================================================
-// SECTION 19: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
+// SECTION 20: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
 // ======================================================
 
 IF
@@ -5030,7 +5083,7 @@ IF
 END
 
 // ======================================================
-// SECTION 20: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
+// SECTION 21: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
 // ======================================================
 
 
@@ -5058,25 +5111,6 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    OR(6)
-        See([ENEMY.0.0.MAGE_ALL])
-        See([ENEMY.0.0.CLERIC_ALL])
-        See([ENEMY.0.0.BARD_ALL])
-        See([ENEMY.0.0.DRUID_ALL])
-        See([ENEMY.0.0.SORCERER])
-        See([ENEMY.0.0.RAKSHASA])
-    HaveSpell(CLERIC_INSECT_PLAGUE)
-    CheckStatLT(Myself,1,DEAD_MAGIC)    
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(LastSeenBy(Myself),CLERIC_INSECT_PLAGUE)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-END
-
 // CLERIC_SUMMON_INSECTS
 IF
     ActionListEmpty()
@@ -5100,7 +5134,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 21: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
+// SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
 // ======================================================
 /* Comet for high damage and knockback */
 IF
@@ -5461,7 +5495,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+// SECTION 23: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
 
 IF
@@ -5646,7 +5680,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 23: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
+// SECTION 24: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
 // ======================================================
 
 
@@ -5851,7 +5885,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 24: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
+// SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
 // ======================================================
 
 /*
@@ -6249,7 +6283,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
+// SECTION 26: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
 // ======================================================
 
 IF
@@ -6501,7 +6535,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 26: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
+// SECTION 27: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
 // ======================================================
 
 
@@ -6661,7 +6695,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 27: BUFFS (FIGHTER)
+// SECTION 28: BUFFS (FIGHTER)
 // ======================================================
 
 IF
@@ -6927,7 +6961,7 @@ IF
 END
 
 // ======================================================
-// SECTION 28: SETTING TRAPS
+// SECTION 29: SETTING TRAPS
 // ======================================================
 
 IF
@@ -7037,7 +7071,7 @@ IF
 END
 
 // ======================================================
-// SECTION 29: STEALTH AND THIEVING
+// SECTION 30: STEALTH AND THIEVING
 // ======================================================
 
 IF
@@ -7086,7 +7120,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 30: TURN UNDEAD (CLERIC)
+// SECTION 31: TURN UNDEAD (CLERIC)
 // ======================================================
 
 IF
@@ -7108,7 +7142,7 @@ IF
 
 
 // ======================================================
-// SECTION 31: Wands
+// SECTION 32: Wands
 // ======================================================
 
 
@@ -7165,7 +7199,7 @@ END
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    !Range(FarthestEnemyOf(Myself),16)
+    !Range(FarthestEnemyOf(Myself),40)
     Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
     !HasBounceEffects(FarthestEnemyOf(Myself))
     CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
@@ -7241,7 +7275,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 32: Combat Items (Ring of Ram, Staff of Ram Etc.)
+// SECTION 33: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
 
 //Flesh Golem Manual
@@ -7451,7 +7485,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 33: COMBAT ACTIONS - RANGED ATTACKS
+// SECTION 34: COMBAT ACTIONS - RANGED ATTACKS
 // ======================================================
 
 //AMMO TYPE SELECTION
@@ -7524,7 +7558,7 @@ THEN
 END
 
 // ======================================================
-// SECTION 34: COMBAT ACTIONS - MELEE ATTACKS
+// SECTION 35: COMBAT ACTIONS - MELEE ATTACKS
 // ======================================================
 
 IF
