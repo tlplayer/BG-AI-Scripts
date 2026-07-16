@@ -1,6 +1,51 @@
+// ======================================================
+// APPENDIX A: SCRIPT FLOW AND SECTION INDEX
+// ======================================================
+//
+// This script is evaluated from top to bottom.  The numbered sections below
+// are an organizational index only; they do not change AI behavior.
+//
+//  01. SECTION 01: GLOBALS
+//  02. SECTION 02: Area Check
+//  03. SECTION 03: ENEMY DETECTION
+//  04. SECTION 04: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
+//  05. SECTION 05: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
+//  06. SECTION 06: IMMUNITIES (WIZARD)
+//  07. SECTION 07: RETREAT CONDITION
+//  08. SECTION 08: PRE-COMBAT BUFFING (WIZARD)
+//  09. SECTION 09: Heal SPELLS (CLERIC)
+//  10. SECTION 10: Heal (WIZARD)
+//  11. SECTION 11: Heal ITEMS
+//  12. SECTION 12: PENETRATION SPELLS (WIZARD)
+//  13. SECTION 13: PENETRATION SPELLS (CLERIC)
+//  14. SECTION 14: SUMMONING SPELLS (CLERIC)
+//  15. SECTION 15: SUMMONING SPELLS (WIZARD)
+//  16. SECTION 16: Short Duration BUFFS (WIZARD)
+//  17. SECTION 17: Short Duration BUFFS (CLERIC)
+//  18. SECTION 18: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
+//  19. SECTION 19: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
+//  20. SECTION 20: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
+//  21. SECTION 21: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
+//  22. SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+//  23. SECTION 23: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
+//  24. SECTION 24: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
+//  25. SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
+//  26. SECTION 26: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
+//  27. SECTION 27: BUFFS (FIGHTER)
+//  28. SECTION 28: SETTING TRAPS
+//  29. SECTION 29: STEALTH AND THIEVING
+//  30. SECTION 30: TURN UNDEAD (CLERIC)
+//  31. SECTION 31: Wands
+//  32. SECTION 32: Combat Items (Ring of Ram, Staff of Ram Etc.)
+//  33. SECTION 33: COMBAT ACTIONS - RANGED ATTACKS
+//  34. SECTION 34: COMBAT ACTIONS - MELEE ATTACKS
+//
+// ======================================================
+// END APPENDIX A
+// ======================================================
 
 // ======================================================
-// SECTION:GLOBALS
+// SECTION 01: GLOBALS
 // ======================================================
 
 // Reset daily use items and timers to 0 because when first AI first turned on the timer's 
@@ -120,7 +165,7 @@ END
 
 
 // ======================================================
-// SECTION: Area Check
+// SECTION 02: Area Check
 // ======================================================
 
 //If I'm in the blackpits area, I cannot cast buffs/spells so just continue.
@@ -134,7 +179,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: ENEMY DETECTION
+// SECTION 03: ENEMY DETECTION
 // ======================================================
 
 /*
@@ -234,7 +279,7 @@ END
 
 
 // ======================================================
-// SECTION: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
+// SECTION 04: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
 // ======================================================
 IF
     ActionListEmpty()
@@ -273,7 +318,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
+// SECTION 05: CHECK FOR CROWD CONTROLLED PARTY MEMBERS To USE RANGE
 // ======================================================
 
 // Check for crowd-controlled party members
@@ -374,7 +419,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: IMMUNITIES (WIZARD)
+// SECTION 06: IMMUNITIES (WIZARD)
 // ======================================================
 
 /*
@@ -536,7 +581,7 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 // ======================================================
-// SECTION: RETREAT CONDITION
+// SECTION 07: RETREAT CONDITION
 // ======================================================
 
 
@@ -645,7 +690,7 @@ END
 
 
 // ======================================================
-// SECTION: PRE-COMBAT BUFFING (WIZARD)
+// SECTION 08: PRE-COMBAT BUFFING (WIZARD)
 // ======================================================
 // Cast Spirit Armor
 // Casts Spirit Armor to provide a magical shield that improves the wizard's armor class.
@@ -849,7 +894,7 @@ END
 
 
 // ======================================================
-// SECTION: Heal SPELLS (CLERIC)
+// SECTION 09: Heal SPELLS (CLERIC)
 // ======================================================
 
 
@@ -1253,7 +1298,7 @@ IF
 END
 
 // ======================================================
-//  SECTIONL: Heal (WIZARD)
+// SECTION 10: Heal (WIZARD)
 // ======================================================
 
 IF
@@ -1275,7 +1320,7 @@ END
 
 
 // ======================================================
-// SECTION: Heal ITEMS 
+// SECTION 11: Heal ITEMS
 // ======================================================
 
 /*
@@ -1571,7 +1616,7 @@ END
 
 
 // ======================================================
-// SECTION: PENETRATION SPELLS (WIZARD)
+// SECTION 12: PENETRATION SPELLS (WIZARD)
 // ======================================================
 
 IF
@@ -1957,7 +2002,7 @@ END
 
 
 // ======================================================
-// SECTION PENETRATION SPELLS (CLERIC)
+// SECTION 13: PENETRATION SPELLS (CLERIC)
 // ======================================================
 
 IF
@@ -2258,7 +2303,7 @@ IF
 END
 
 // ======================================================
-// SECTION: SUMMONING SPELLS (CLERIC)
+// SECTION 14: SUMMONING SPELLS (CLERIC)
 // ======================================================
 
 // CLERIC_ETHER_GATE
@@ -2553,7 +2598,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: SUMMONING SPELLS (WIZARD)
+// SECTION 15: SUMMONING SPELLS (WIZARD)
 // ======================================================
 
 IF
@@ -2946,7 +2991,7 @@ END
 
 
 // ======================================================
-// SECTION: Short Duration BUFFS (WIZARD)
+// SECTION 16: Short Duration BUFFS (WIZARD)
 // ======================================================
 IF
     ActionListEmpty()
@@ -3547,7 +3592,7 @@ END
 
 
 // ======================================================
-// SECTION: Short Duration BUFFS (CLERIC)
+// SECTION 17: Short Duration BUFFS (CLERIC)
 // ======================================================
 
 
@@ -4496,7 +4541,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
+// SECTION 18: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
 // ======================================================
 
 IF
@@ -4597,6 +4642,9 @@ IF
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
     !Race([ENEMY],ELF)  // Exclude elves
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
+    !Race([ENEMY],SLIME)
+    !Race([ENEMY],ZOMBIE)
+    !Race([ENEMY],UNDEAD)
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !CheckSpellState([ENEMY],BERSERKER_RAGE)
@@ -4617,6 +4665,9 @@ IF
     !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
     !Race([ENEMY],ELF)  // Exclude elves
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
+    !Race([ENEMY],SLIME)
+    !Race([ENEMY],ZOMBIE)
+    !Race([ENEMY],UNDEAD)
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !CheckSpellState([ENEMY],BERSERKER_RAGE)
@@ -4653,6 +4704,9 @@ IF
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),SLIME)
+    !Race(LastSeenBy(Myself),ZOMBIE)
+    !Race(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -4733,6 +4787,9 @@ IF
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),SLIME)
+    !Race(LastSeenBy(Myself),ZOMBIE)
+    !Race(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     !Race(LastSeenBy(Myself),SWORD)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -4760,7 +4817,7 @@ END
 
 
 // ======================================================
-// IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
+// SECTION 19: IN COMBAT SPELLCASTING - Crowd Control Single Target (WIZARD)
 // ======================================================
 
 IF
@@ -4908,6 +4965,9 @@ IF
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     HaveSpell(WIZARD_FEEBLEMIND)  // SPWI509.SPL (Feeblemind)
     See([ENEMY])
+    !Race(LastSeenBy(Myself),SLIME)
+    !Race(LastSeenBy(Myself),ZOMBIE)
+    !Race(LastSeenBy(Myself),UNDEAD)
     !StateCheck(LastSeenBy(Myself),STATE_NOT_TARGETABLE)
     !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
     CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
@@ -4970,7 +5030,7 @@ IF
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
+// SECTION 20: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
 // ======================================================
 
 
@@ -4984,6 +5044,9 @@ IF
     !CheckSpellState(LastSeenBy(Myself),BERSERKER_RAGE)
     !CheckSpellState(LastSeenBy(Myself),BARBARIAN_RAGE)
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
+    !Race(LastSeenBy(Myself),SLIME)
+    !Race(LastSeenBy(Myself),ZOMBIE)
+    !Race(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     !Race(LastSeenBy(Myself),SWORD)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -5037,7 +5100,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
+// SECTION 21: IN COMBAT SPELLCASTING - AOE OFFENSIVE (WIZARD)
 // ======================================================
 /* Comet for high damage and knockback */
 IF
@@ -5398,7 +5461,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
+// SECTION 22: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
 
 IF
@@ -5583,7 +5646,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
+// SECTION 23: IN COMBAT SPELLCASTING - OFFENSIVE Single Target (WIZARD)
 // ======================================================
 
 
@@ -5788,7 +5851,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
+// SECTION 24: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (WIZARD)
 // ======================================================
 
 /*
@@ -6186,7 +6249,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
+// SECTION 25: IN COMBAT SPELLCASTING - CURSE SINGLE TARGET (CLERIC)
 // ======================================================
 
 IF
@@ -6438,7 +6501,7 @@ THEN
 END
 
 // ======================================================
-// IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
+// SECTION 26: IN COMBAT SPELLCASTING - OFFENSIVE SINGLE TARGET (CLERIC)
 // ======================================================
 
 
@@ -6598,7 +6661,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: BUFFS (FIGHTER)
+// SECTION 27: BUFFS (FIGHTER)
 // ======================================================
 
 IF
@@ -6864,7 +6927,7 @@ IF
 END
 
 // ======================================================
-// SECTION: SETTING TRAPS
+// SECTION 28: SETTING TRAPS
 // ======================================================
 
 IF
@@ -6974,7 +7037,7 @@ IF
 END
 
 // ======================================================
-// SECTION: STEALTH AND THIEVING
+// SECTION 29: STEALTH AND THIEVING
 // ======================================================
 
 IF
@@ -7023,7 +7086,7 @@ THEN
 END
 
 // ======================================================
-//  TURN UNDEAD (CLERIC)
+// SECTION 30: TURN UNDEAD (CLERIC)
 // ======================================================
 
 IF
@@ -7045,7 +7108,7 @@ IF
 
 
 // ======================================================
-// SECTION: Wands
+// SECTION 31: Wands
 // ======================================================
 
 
@@ -7178,7 +7241,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: Combat Items (Ring of Ram, Staff of Ram Etc.)
+// SECTION 32: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
 
 //Flesh Golem Manual
@@ -7388,7 +7451,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: COMBAT ACTIONS - RANGED ATTACKS
+// SECTION 33: COMBAT ACTIONS - RANGED ATTACKS
 // ======================================================
 
 //AMMO TYPE SELECTION
@@ -7461,7 +7524,7 @@ THEN
 END
 
 // ======================================================
-// SECTION: COMBAT ACTIONS - MELEE ATTACKS
+// SECTION 34: COMBAT ACTIONS - MELEE ATTACKS
 // ======================================================
 
 IF
