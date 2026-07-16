@@ -5163,7 +5163,7 @@ IF
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
     !Race([ENEMY],SLIME)
     !Race([ENEMY],ZOMBIE)
-    !Race([ENEMY],UNDEAD)
+    !General([ENEMY],UNDEAD)
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !CheckSpellState([ENEMY],BERSERKER_RAGE)
@@ -5186,7 +5186,7 @@ IF
     !General(NearestEnemyOf(Myself),UNDEAD)  // Exclude undead
     !Race([ENEMY],SLIME)
     !Race([ENEMY],ZOMBIE)
-    !Race([ENEMY],UNDEAD)
+    !General([ENEMY],UNDEAD)
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !CheckSpellState([ENEMY],BERSERKER_RAGE)
@@ -5225,7 +5225,7 @@ IF
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
     !Race(LastSeenBy(Myself),SLIME)
     !Race(LastSeenBy(Myself),ZOMBIE)
-    !Race(LastSeenBy(Myself),UNDEAD)
+    !General(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
     CheckStatLT(Myself,1,DEAD_MAGIC)    
@@ -5308,7 +5308,7 @@ IF
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
     !Race(LastSeenBy(Myself),SLIME)
     !Race(LastSeenBy(Myself),ZOMBIE)
-    !Race(LastSeenBy(Myself),UNDEAD)
+    !General(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     !Race(LastSeenBy(Myself),SWORD)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -5486,7 +5486,7 @@ IF
     See([ENEMY])
     !Race(LastSeenBy(Myself),SLIME)
     !Race(LastSeenBy(Myself),ZOMBIE)
-    !Race(LastSeenBy(Myself),UNDEAD)
+    !General(LastSeenBy(Myself),UNDEAD)
     !StateCheck(LastSeenBy(Myself),STATE_NOT_TARGETABLE)
     !StateCheck(LastSeenBy(Myself),STATE_HARMLESS)
     CheckStatLT(LastSeenBy(Myself),50,RESISTMAGIC)
@@ -5642,7 +5642,7 @@ IF
     !General(LastSeenBy(Myself),UNDEAD)  // Exclude undead
     !Race(LastSeenBy(Myself),SLIME)
     !Race(LastSeenBy(Myself),ZOMBIE)
-    !Race(LastSeenBy(Myself),UNDEAD)
+    !General(LastSeenBy(Myself),UNDEAD)
     !Race(LastSeenBy(Myself),GOLEM)
     !Race(LastSeenBy(Myself),SWORD)
     CheckStatLT(Myself,50,SPELLFAILUREMAGE)
@@ -7955,7 +7955,7 @@ IF
     !General(NearestEnemyOf(Myself),UNDEAD)
     !Race([ENEMY],SLIME)
     !Race([ENEMY],ZOMBIE)
-    !Race([ENEMY],UNDEAD)
+    !General([ENEMY],UNDEAD)
     !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
     !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
     !CheckSpellState([ENEMY],BERSERKER_RAGE)
