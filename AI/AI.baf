@@ -1432,6 +1432,72 @@ IF
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Raise Dead — DIALOG.TLK #12326
+Level: 5 | Range: visual range | Duration: permanent | Casting Time: 9.
+Restores a dead party member to life.
+*/
+IF
+    ActionListEmpty()
+    StateCheck([PC],STATE_REALLY_DEAD)
+    HaveSpell(CLERIC_RAISE_DEAD)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_RAISE_DEAD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Remove Curse — cleric level 3 support spell. As with its wizard counterpart, the engine does
+not expose a curse-state trigger; set REMOVE_CURSE_REQUEST to 1 to request the cure.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_REMOVE_CURSE)
+    Global("REMOVE_CURSE_REQUEST","LOCALS",1)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_REMOVE_CURSE)
+        SetGlobal("REMOVE_CURSE_REQUEST","LOCALS",0)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Recall Spirit — SPELL.IDS 1550. Shaman support spell with no standalone DIALOG.TLK
+description entry in this install. Use RECALL_SPIRIT_REQUEST to request a self-cast.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_RECALL_SPIRIT)
+    Global("RECALL_SPIRIT_REQUEST","LOCALS",1)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_RECALL_SPIRIT)
+        SetGlobal("RECALL_SPIRIT_REQUEST","LOCALS",0)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Wondrous Recall — DIALOG.TLK #38574
+Level: 6 | Range: self | Duration: instant | Casting Time: 9.
+Recalls two previously cast spells of 5th level or lower; use WONDROUS_RECALL_REQUEST to
+request the self-cast after expending useful spells.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_WONDROUS_RECALL)
+    Global("WONDROUS_RECALL_REQUEST","LOCALS",1)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_WONDROUS_RECALL)
+        SetGlobal("WONDROUS_RECALL_REQUEST","LOCALS",0)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // SECTION 11: Heal (WIZARD)
 // ======================================================
@@ -1453,6 +1519,68 @@ THEN
 END
 
 
+
+/*
+Freedom — level 9, DIALOG.TLK spell description not resolved for this installed variant.
+Releases an imprisoned party member when the imprisonment marker is present.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_FREEDOM)
+    CheckSpellState([PC],IMPRISONMENT_DESTROY)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],WIZARD_FREEDOM)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Stone to Flesh — DIALOG.TLK #32394
+Level: 6 | Range: 40 ft. | Duration: permanent | Casting Time: 6.
+Restores a petrified party member.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_STONE_TO_FLESH)
+    See([PC.0.0.0.PETRIFIED])
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_STONE_TO_FLESH)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Remove Curse — wizard level 4 support spell. Curse state is not exposed through the engine's
+AI triggers, so this block is an explicit local request hook: set REMOVE_CURSE_REQUEST to 1.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_REMOVE_CURSE)
+    Global("REMOVE_CURSE_REQUEST","LOCALS",1)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],WIZARD_REMOVE_CURSE)
+        SetGlobal("REMOVE_CURSE_REQUEST","LOCALS",0)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Knock — DIALOG.TLK #12194, level 2 Alteration. Opens a lock after the party's lock attempt
+has failed; LastTrigger is the locked object that generated the failure.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_KNOCK)
+    PickLockFailed([PC])
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastTrigger,WIZARD_KNOCK)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 // ======================================================
 // SECTION 12: Heal ITEMS
@@ -2111,6 +2239,39 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+
+/*
+Remove Magic — DIALOG.TLK #12145
+Level: 3 | Range: 40 ft. | Duration: instant | Casting Time: 3 | Area: 15-ft. radius.
+The enemy-only version of Dispel Magic, used to strip a protected opposing caster.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    OR(5)
+        CheckStatGT(LastSeenBy(Myself),0,STONESKINS)
+        CheckSpellState(LastSeenBy(Myself),PROTECTION_FROM_MAGICAL_WEAPONS)
+        CheckSpellState(LastSeenBy(Myself),MANTLE)
+        CheckSpellState(LastSeenBy(Myself),IMPROVED_MANTLE)
+        CheckSpellState(LastSeenBy(Myself),ABSOLUTE_IMMUNITY)
+    HaveSpell(WIZARD_REMOVE_MAGIC)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    !CheckStatGT(Myself,0,CLERIC_INSECT_PLAGUE)
+    !StateCheck(Myself,STATE_SILENCED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_REMOVE_MAGIC)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
 
 // ======================================================
 // SECTION 14: PENETRATION SPELLS (CLERIC)
@@ -3643,6 +3804,175 @@ THEN
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Improved Alacrity — DIALOG.TLK #63218
+Level: 10 | Range: self | Duration: 2 rounds | Casting Time: 9.
+Removes the pause between the caster's spells.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_IMPROVED_ALACRITY)
+    CheckStatLT(Myself,1,WIZARD_IMPROVED_ALACRITY)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_IMPROVED_ALACRITY)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Project Image — level 7, self-targeted illusion. The image can cast the caster's spells.
+The installed DIALOG.TLK does not expose a standalone description entry for this variant.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROJECT_IMAGE)
+    !StateCheck(Myself,STATE_INVISIBLE)
+    !GlobalTimerNotExpired("PROJECT_IMAGE","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROJECT_IMAGE)
+        SetGlobalTimer("PROJECT_IMAGE","LOCALS",ONE_TURN)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Spell Trap — level 9, self-targeted abjuration. Absorbs incoming spell levels and restores
+spell slots. It is reserved for detected enemy spellcasting.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_SPELL_TRAP)
+    CheckStatLT(Myself,1,WIZARD_SPELL_TRAP)
+    OR(2)
+        SpellCast([ENEMY],0)
+        GlobalTimerNotExpired("CASTER_ENEMY","LOCALS")
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_SPELL_TRAP)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Protection From Normal Weapons — DIALOG.TLK #7607
+Level: 5 | Range: self | Duration: 1 round/level | Casting Time: 2.
+Grants immunity to non-magical weapons.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_NORMAL_WEAPONS)
+    CheckStatLT(Myself,1,WIZARD_PROTECTION_FROM_NORMAL_WEAPONS)
+    !CheckSpellState(Myself,PROTECTION_FROM_MAGICAL_WEAPONS)
+    Range([ENEMY],8)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_NORMAL_WEAPONS)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Protection From Cold — DIALOG.TLK #7540
+Level: 3 | Range: touch | Duration: 1 turn/level | Casting Time: 3.
+Absorbs half of magical cold damage.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_COLD)
+    HitBy([ANYONE],COLD)
+    CheckStatLT(Myself,100,RESISTCOLD)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_COLD)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Protection From Electricity — DIALOG.TLK #7572
+Level: 5 | Range: touch | Duration: 1 turn/level | Casting Time: 5.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_PROTECTION_FROM_ELECTRICITY)
+    HitBy([ANYONE],ELECTRICITY)
+    CheckStatLT(Myself,100,RESISTELECTRICITY)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_PROTECTION_FROM_ELECTRICITY)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Invisibility, 10' Radius — level 2 party concealment. Used defensively when the caster is
+badly hurt; casting on self centers the radius on the party member under pressure.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_INVISIBILITY_10_FOOT)
+    HPPercentLT(Myself,40)
+    !StateCheck(Myself,STATE_INVISIBLE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_INVISIBILITY_10_FOOT)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Non-Detection — DIALOG.TLK #12147, level 3 Abjuration. Prevents magical detection while
+the caster is invisible.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(WIZARD_NON_DETECTION)
+    StateCheck(Myself,STATE_INVISIBLE)
+    !GlobalTimerNotExpired("NON_DETECTION","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_NON_DETECTION)
+        SetGlobalTimer("NON_DETECTION","LOCALS",ONE_TURN)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Wraithform — DIALOG.TLK #12144
+Level: 3 | Range: self | Duration: 2 rounds/level | Casting Time: 1.
+Protects a threatened caster from non-magical attacks, but prevents spellcasting.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(WIZARD_WRAITH_FORM)
+    HPPercentLT(Myself,50)
+    Range([ENEMY],8)
+    !GlobalTimerNotExpired("WRAITH_FORM","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,WIZARD_WRAITH_FORM)
+        SetGlobalTimer("WRAITH_FORM","LOCALS",ONE_TURN)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 
 // ======================================================
 // SECTION 18: Short Duration BUFFS (CLERIC)
@@ -4593,6 +4923,142 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Draw Upon Holy Might — DIALOG.TLK #12320
+Level: 2 | Range: self | Duration: 1 turn | Casting Time: 2.
+Raises Strength, Dexterity, and Constitution by one point per three caster levels.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_DRAW_UPON_HOLY_MIGHT)
+    Range([ENEMY],8)
+    !CheckSpellState(Myself,DRAW_UPON_HOLY_MIGHT)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_DRAW_UPON_HOLY_MIGHT)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Resist Fire and Cold — DIALOG.TLK #12210
+Level: 2 | Range: touch | Duration: 1 round/level | Casting Time: 5.
+Reduces fire and cold damage by 50%.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_RESIST_FIRE)
+    OR(2)
+        HitBy([ANYONE],FIRE)
+        HitBy([ANYONE],COLD)
+    CheckStatLT(Myself,100,RESISTFIRE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_RESIST_FIRE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Spirit Ward — SPELL.IDS 1150. Shaman defensive ward; the installed DIALOG.TLK has no
+standalone spell-description entry. It is used after magical damage is detected.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_SPIRIT_WARD)
+    HitBy([ANYONE],MAGIC)
+    !CheckSpellState(Myself,SPIRIT_WARD)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_SPIRIT_WARD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Spiritual Clarity — SPELL.IDS 1350. Shaman mental-condition support; no standalone
+DIALOG.TLK description is present. Use it on a confused, stunned, or charmed party member.
+*/
+IF
+    ActionListEmpty()
+    HaveSpell(CLERIC_SPIRITUAL_CLARITY)
+    OR(3)
+        StateCheck([PC],STATE_CHARMED)
+        StateCheck([PC],STATE_CONFUSED)
+        StateCheck([PC],STATE_STUNNED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell([PC],CLERIC_SPIRITUAL_CLARITY)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Energy Blades — DIALOG.TLK #63616
+Level: 10 | Duration: 4 turns | Casting Time: 3.
+Creates energy discs and grants nine attacks per round while they are equipped.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_ENERGY_BLADES)
+    See([ENEMY])
+    !GlobalTimerNotExpired("ENERGY_BLADES","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_ENERGY_BLADES)
+        SetGlobalTimer("ENERGY_BLADES","LOCALS",ONE_TURN)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Fire Elemental Transformation — DIALOG.TLK #63874
+Quest level | Range: self | Duration: 1 hour | Casting Time: 1.
+Transforms the druid into a powerful fire elemental.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_ELEMENTAL_TRANSFORMATION_FIRE)
+    See([ENEMY])
+    !GlobalTimerNotExpired("ELEMENTAL_FORM","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_ELEMENTAL_TRANSFORMATION_FIRE)
+        SetGlobalTimer("ELEMENTAL_FORM","LOCALS",ONE_HOUR)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Earth Elemental Transformation — DIALOG.TLK #63883
+Quest level | Range: self | Duration: 1 hour | Casting Time: 1.
+Transforms the druid into a powerful earth elemental when the fire form is unavailable.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    HaveSpell(CLERIC_ELEMENTAL_TRANSFORMATION_EARTH)
+    See([ENEMY])
+    !GlobalTimerNotExpired("ELEMENTAL_FORM","LOCALS")
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_ELEMENTAL_TRANSFORMATION_EARTH)
+        SetGlobalTimer("ELEMENTAL_FORM","LOCALS",ONE_HOUR)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // SECTION 19: IN COMBAT SPELLCASTING - Crowd Control AOE (WIZARD)
 // ======================================================
@@ -5082,6 +5548,83 @@ IF
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Hold Person — DIALOG.TLK #12170
+Level: 3 | Range: 35 ft. | Duration: 1 turn | Casting Time: 3.
+Holds humanoid enemies that fail a save vs. spell; undead are excluded.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    General(LastSeenBy(Myself),HUMANOID)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),FREE_ACTION)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),3)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),6,SAVEVSSPELL)
+    HaveSpell(WIZARD_HOLD_PERSON)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_HOLD_PERSON)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Hold Undead — DIALOG.TLK #32375
+Level: 3 | Range: 35 ft. | Duration: 1 turn | Casting Time: 3.
+Holds an undead enemy that fails its save.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    General(LastSeenBy(Myself),UNDEAD)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !CheckSpellState(LastSeenBy(Myself),FREE_ACTION)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),3)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),6,SAVEVSSPELL)
+    HaveSpell(WIZARD_HOLD_UNDEAD)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_HOLD_UNDEAD)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Otiluke's Resilient Sphere — DIALOG.TLK #22180
+Level: 4 | Range: 40 ft. | Duration: 1 turn | Casting Time: 4.
+Safely removes a dangerous enemy from combat until Dispel Magic is used.
+*/
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    See([ENEMY])
+    HPGT(LastSeenBy(Myself),50)
+    !StateCheck(LastSeenBy(Myself),STATE_HELPLESS)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),6,SAVEVSSPELL)
+    HaveSpell(WIZARD_OTILUKES_RESILIENT_SPHERE)
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(LastSeenBy(Myself),WIZARD_OTILUKES_RESILIENT_SPHERE)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // SECTION 21: IN COMBAT SPELLCASTING - Crowd Control (CLERIC)
 // ======================================================
@@ -5494,6 +6037,28 @@ THEN
         Continue()
 END
 
+/*
+Lightning Bolt — SPELL.IDS 2308. Wizard level 3 evocation; it rebounds from surfaces,
+so it is used only on a distant enemy cluster to reduce the chance of hitting allies.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(WIZARD_LIGHTNING_BOLT)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTELECTRICITY)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    CheckStatLT(Myself,50,SPELLFAILUREMAGE)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),WIZARD_LIGHTNING_BOLT)
+        SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // SECTION 23: IN COMBAT SPELLCASTING - AOE OFFENSIVE (CLERIC)
 // ======================================================
@@ -5677,6 +6242,83 @@ THEN
     RESPONSE #100
         Spell(FarthestEnemyOf(Myself),CLERIC_ENTANGLE)  // Cast Web on any visible enemies
         SetGlobalTimer("WIZARD_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Faerie Fire — DIALOG.TLK #252369
+Level: 1 | Range: sight | Duration: 4 rounds/level | Casting Time: 4.
+Reveals and penalizes a clustered enemy group.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_FAERIE_FIRE)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_FAERIE_FIRE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Spirit Fire — SPELL.IDS 1450. Shaman area attack; no standalone DIALOG.TLK description
+is present in this install. Aim it at a distant enemy cluster.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_SPIRIT_FIRE)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_SPIRIT_FIRE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Writhing Fog — SPELL.IDS 1250. Shaman area-control spell; no standalone DIALOG.TLK
+description is present in this install. Aim it at a distant enemy cluster.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_WRITHING_FOG)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(FarthestEnemyOf(Myself),CLERIC_WRITHING_FOG)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Unholy Word — DIALOG.TLK #35658
+Level: 7 | Range: self | Area: 15-ft. radius | Casting Time: 1.
+An evil priest's burst against nearby good-aligned enemies.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_UNHOLY_WORD)
+    See([ENEMY])
+    Range([ENEMY],15)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,CLERIC_UNHOLY_WORD)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
 // ======================================================
@@ -6694,6 +7336,48 @@ THEN
         SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
 END
 
+/*
+Cause Critical Wounds — DIALOG.TLK #11194
+Level: 5 | Range: touch | Duration: 2 rounds to strike | Casting Time: 8.
+Deals 27 damage on the caster's next successful touch attack.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_CAUSE_CRITICAL_WOUNDS)
+    HPGT(NearestEnemyOf(Myself),30)
+    Range(NearestEnemyOf(Myself),4)
+    !ImmuneToSpellLevel(NearestEnemyOf(Myself),5)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_CAUSE_CRITICAL_WOUNDS)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
+/*
+Energy Drain — DIALOG.TLK #26357
+Level: 9 | Range: touch | Duration: permanent | Casting Time: 3.
+Used in melee against a durable, non-protected enemy.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HaveSpell(CLERIC_ENERGY_DRAIN)
+    HPGT(NearestEnemyOf(Myself),50)
+    Range(NearestEnemyOf(Myself),4)
+    !ImmuneToSpellLevel(NearestEnemyOf(Myself),9)
+    !HasBounceEffects(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(NearestEnemyOf(Myself),CLERIC_ENERGY_DRAIN)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+END
+
 // ======================================================
 // SECTION 28: BUFFS (FIGHTER)
 // ======================================================
@@ -7165,7 +7849,7 @@ THEN
         UseItem("RODS06",LastSeenBy(Myself))  // Rod of Reversal
 END
 
-// Wand of Frost
+// Wand of Frost (BGEE single-target Column of Ice)
 IF
     ActionListEmpty()
     ActuallyInCombat()
@@ -7176,7 +7860,23 @@ IF
     Delay(20)
 THEN
     RESPONSE #100
-      UseItem("WAND06",[ENEMY]) 
+      UseItem("WAND06",[ENEMY])  // Single-target cold ray
+END
+
+// Wand of Lightning: mirrors the Lightning Bolt spell's distant-cluster targeting.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTELECTRICITY)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    !HasBounceEffects(FarthestEnemyOf(Myself))
+    HasItemEquiped("WAND07",Myself)
+    Delay(20)
+THEN
+    RESPONSE #100
+        UseItem("WAND07",FarthestEnemyOf(Myself))
 END
 
 
@@ -7243,31 +7943,129 @@ THEN
       UseItem("WAND11",[ENEMY]) 
 END
 
+// Wands with a direct wizard-spell counterpart use that spell's target-selection rules.
+
+// Wand of Sleep
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    LevelLT([ENEMY],5)
+    !StateCheck(NearestEnemyOf(Myself),STATE_HELPLESS)
+    !Race([ENEMY],ELF)
+    !General(NearestEnemyOf(Myself),UNDEAD)
+    !Race([ENEMY],SLIME)
+    !Race([ENEMY],ZOMBIE)
+    !Race([ENEMY],UNDEAD)
+    !See(NearestEnemyOfType([ENEMY.0.GOLEM]))
+    !See(NearestEnemyOfType([ENEMY.0.MEPHIT]))
+    !CheckSpellState([ENEMY],BERSERKER_RAGE)
+    !CheckSpellState([ENEMY],BARBARIAN_RAGE)
+    HasItemEquiped("WAND08",Myself)
+    Delay(12)
+THEN
+    RESPONSE #100
+        UseItem("WAND08",[ENEMY])
+END
+
+// Wand of Polymorphing
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    !ImmuneToSpellLevel(LastSeenBy(Myself),4)
+    LevelGT(LastSeenBy(Myself),4)
+    !HasBounceEffects(LastSeenBy(Myself))
+    CheckStatLT(LastSeenBy(Myself),100,RESISTMAGIC)
+    CheckStatGT(LastSeenBy(Myself),6,SAVEVSPOLY)
+    !Race(LastSeenBy(Myself),SWORD)
+    HasItemEquiped("WAND09",Myself)
+    Delay(20)
+THEN
+    RESPONSE #100
+        UseItem("WAND09",LastSeenBy(Myself))
+END
+
+// Wand of Monster Summoning
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    HasItemEquiped("WAND10",Myself)
+    Delay(20)
+THEN
+    RESPONSE #100
+        UseItem("WAND10",Myself)
+END
+
+// Wand of Cloudkill
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTMAGIC)
+    CheckStatLT(FarthestEnemyOf(Myself),100,RESISTPOISON)
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    HasItemEquiped("WAND13",Myself)
+    Delay(20)
+THEN
+    RESPONSE #100
+        UseItem("WAND13",FarthestEnemyOf(Myself))
+END
+
+// Wand of Spell Striking
+IF
+    ActuallyInCombat()
+    ActionListEmpty()
+    OR(6)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+        See([ENEMY.0.0.RAKSHASA])
+    HasItemEquiped("WAND18",Myself)
+    Delay(20)
+THEN
+    RESPONSE #100
+        UseItem("WAND18",LastSeenBy(Myself))
+END
+
 // Wand of Magic Missile
 IF
     ActionListEmpty()
     ActuallyInCombat()
-    CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !CheckSpellState([ENEMY],WIZARD_SHIELD)
-    !HaveSpell(WIZARD_MAGIC_MISSILE)  
-    !ImmuneToSpellLevel([ENEMY],4)
     LevelGT([ENEMY],2)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    !HasBounceEffects([ENEMY])
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
     HasItemEquiped("WAND03",Myself)  
 THEN
     RESPONSE #100
       UseItem("WAND03",[ENEMY]) 
 END
 
+// Alternate Wand of Magic Missile
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    LevelGT([ENEMY],2)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    !HasBounceEffects([ENEMY])
+    CheckStatLT([ENEMY],100,RESISTMAGIC)
+    HasItemEquiped("WAND12_",Myself)
+THEN
+    RESPONSE #100
+      UseItem("WAND12_",[ENEMY])
+END
 
 // Wand of Magic Missile
 IF
     ActionListEmpty()
     ActuallyInCombat()
+    LevelGT([ENEMY],2)
+    !ImmuneToSpellLevel(LastSeenBy(Myself),1)
+    !HasBounceEffects([ENEMY])
     CheckStatLT([ENEMY],100,RESISTMAGIC)
-    !CheckSpellState([ENEMY],WIZARD_SHIELD)
-    !HaveSpell(WIZARD_MAGIC_MISSILE)  
-    !ImmuneToSpellLevel([ENEMY],4)
-    HPGT([ENEMY],20)
     HasItemEquiped("WAND99",Myself)  
 THEN
     RESPONSE #100
