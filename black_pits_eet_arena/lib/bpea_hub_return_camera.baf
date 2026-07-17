@@ -1,0 +1,9 @@
+// Run in the merchant hub after an arena return. EndCutSceneMode must be
+// issued through a party member so EET restores zoom and camera controls.
+IF
+  Global("BPEA_HUB_RETURN_PENDING","GLOBAL",1)
+THEN
+  RESPONSE #100
+    SetGlobal("BPEA_HUB_RETURN_PENDING","GLOBAL",0)
+    ActionOverride(Player1,EndCutSceneMode())
+END

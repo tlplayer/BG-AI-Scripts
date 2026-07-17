@@ -1,0 +1,10 @@
+// Both arena maps set BATTLE_COMPLETE when their victory sequence begins.
+// Leave a marker for BPHUB to consume after it has transferred the party to
+// the OH9360 merchant hub.
+IF
+  Global("BATTLE_COMPLETE","GLOBAL",1)
+  Global("BPEA_HUB_RETURN_PENDING","GLOBAL",0)
+THEN
+  RESPONSE #100
+    SetGlobal("BPEA_HUB_RETURN_PENDING","GLOBAL",1)
+END

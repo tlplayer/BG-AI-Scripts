@@ -9,6 +9,8 @@ Scaffold WeiDU mod for exposing the BGEE Black Pits loop inside an EET-style gam
 - Adds a fight picker for fights 1-15 using the shipped Black Pits globals.
 - Adds shop menus for the existing Black Pits tiered stores.
 - Extends `BPHUB.BCS` with a tiny tier synchronizer based on `LAST_BATTLE`.
+- Restores camera and zoom controls after an arena victory returns the party to
+  the `OH9360` merchant hub.
 
 ## Fight mapping
 

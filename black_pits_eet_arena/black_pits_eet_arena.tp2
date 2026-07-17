@@ -27,9 +27,19 @@ COMPILE ~black_pits_eet_arena/dialogue/bpea_bpghlour.d~
 COMPILE ~black_pits_eet_arena/scripts/oh9310.baf~
 COMPILE ~black_pits_eet_arena/scripts/CUTBP00.baf~
 
+// Arena victories can leave the camera in cutscene mode during the transfer
+// back to the merchant hub. Flag either arena's return, then clear the mode
+// only after BPHUB is running in OH9360. These follow the OH9310 compile so
+// its generated script also retains the return hook.
+EXTEND_TOP ~OH9310.BCS~ ~black_pits_eet_arena/lib/bpea_hub_return_pending.baf~
+EXTEND_TOP ~OH9350.BCS~ ~black_pits_eet_arena/lib/bpea_hub_return_pending.baf~
+EXTEND_TOP ~BPHUB.BCS~ ~black_pits_eet_arena/lib/bpea_hub_return_camera.baf~
+
 // Linux/case-sensitive install cleanup for this EET override. WeiDU writes the
 // patched resources in lowercase; the existing override resources use mixed case.
 AT_NOW ~cp --remove-destination -a override/bg2301.bcs override/BG2301.bcs~
+AT_NOW ~cp --remove-destination -a override/oh9350.bcs override/OH9350.bcs~
+AT_NOW ~cp --remove-destination -a override/bphub.bcs override/BPHUB.bcs~
 AT_NOW ~cp --remove-destination -a override/oh9310.bcs override/OH9310.bcs~
 AT_NOW ~cp --remove-destination -a override/cutbp00.bcs override/CUTBP00.bcs~
 AT_NOW ~cp --remove-destination -a override/bently.dlg override/BENTLY.dlg~

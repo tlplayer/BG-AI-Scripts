@@ -40,7 +40,7 @@ with the EEex console. Close Sorcerous Sundries, open the EEex console, then
 run:
 
 ```
-C:Exec("scripts/BG-AI-Scripts/siege_items_in_sundries/refresh_sundries_store.txt")
+C:Exec("refresh_sundries_store.txt")
 ```
 
 Reopen Sorcerous Sundries afterwards. The helper only adds stock; running it

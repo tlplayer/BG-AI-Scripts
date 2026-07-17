@@ -1090,6 +1090,22 @@ END
 
 IF
     ActionListEmpty()
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+    OR(3)
+        StateCheck([PC],STATE_STUNNED)
+        CheckStatGT([PC],0,HELD)
+        StateCheck([PC],STATE_HELPLESS)
+    HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
+THEN
+    RESPONSE #100
+        SetInterrupt(FALSE)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
+        Spell([PC],CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
+        SetInterrupt(TRUE)
+END
+
+IF
+    ActionListEmpty()
     OR(3)
         HPPercentLT(Myself,60) // Heal when HP is below 20
         StateCheck(Myself,STATE_DISEASED)
@@ -1286,21 +1302,7 @@ THEN
 END
 
 
-IF
-    ActionListEmpty()
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-    OR(3)
-        StateCheck([PC],STATE_STUNNED)
-        CheckStatGT([PC],0,HELD)
-        StateCheck([PC],STATE_HELPLESS)
-    HaveSpell(CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
-THEN
-    RESPONSE #100
-        SetInterrupt(FALSE)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",ONE_ROUND)
-        Spell([PC],CLERIC_REMOVE_PARALYSIS)  // SPPR308.SPL (Remove Paralysis)
-        SetInterrupt(TRUE)
-END
+
 
 IF
     ActionListEmpty()
@@ -1877,6 +1879,234 @@ THEN
         UseItem("POTN17",Myself) // Elixir of Health
 END
 
+
+/* Potion skeletons: DIALOG.TLK references identify each item. These are intentionally
+one-use local guards until their class, duration, and party-priority policies are refined. */
+
+// Potion of Fire Resistance — DIALOG.TLK #6977.
+IF
+    ActionListEmpty()
+    HitBy([ANYONE],FIRE)
+    PartyHasItem("POTN02")
+    GlobalLT("USED_POTN02","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN02",1)
+        UseItem("POTN02",Myself)
+        IncrementGlobal("USED_POTN02","LOCALS",1)
+END
+
+// Potion of Cold Resistance — DIALOG.TLK #7047.
+IF
+    ActionListEmpty()
+    HitBy([ANYONE],COLD)
+    PartyHasItem("POTN22")
+    GlobalLT("USED_POTN22","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN22",1)
+        UseItem("POTN22",Myself)
+        IncrementGlobal("USED_POTN22","LOCALS",1)
+END
+
+// Potion of Insulation — DIALOG.TLK #7056; electrical resistance.
+IF
+    ActionListEmpty()
+    HitBy([ANYONE],ELECTRICITY)
+    PartyHasItem("POTN31")
+    GlobalLT("USED_POTN31","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN31",1)
+        UseItem("POTN31",Myself)
+        IncrementGlobal("USED_POTN31","LOCALS",1)
+END
+
+// Potion of Invulnerability — DIALOG.TLK #6998.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,40)
+    PartyHasItem("POTN11")
+    GlobalLT("USED_POTN11","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN11",1)
+        UseItem("POTN11",Myself)
+        IncrementGlobal("USED_POTN11","LOCALS",1)
+END
+
+// Potion of Invulnerability (alternate resource) — DIALOG.TLK #6998.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,40)
+    PartyHasItem("POTN40")
+    GlobalLT("USED_POTN40","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN40",1)
+        UseItem("POTN40",Myself)
+        IncrementGlobal("USED_POTN40","LOCALS",1)
+END
+
+// Potion of Absorption — DIALOG.TLK #7015; defensive magical-damage response.
+IF
+    ActionListEmpty()
+    HitBy([ANYONE],MAGIC)
+    PartyHasItem("POTN18")
+    GlobalLT("USED_POTN18","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN18",1)
+        UseItem("POTN18",Myself)
+        IncrementGlobal("USED_POTN18","LOCALS",1)
+END
+
+// Potion of Magic Blocking — DIALOG.TLK #7058.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    SpellCast([ENEMY],0)
+    PartyHasItem("POTN33")
+    GlobalLT("USED_POTN33","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN33",1)
+        UseItem("POTN33",Myself)
+        IncrementGlobal("USED_POTN33","LOCALS",1)
+END
+
+// Potion of Magic Protection — DIALOG.TLK #7059.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    SpellCast([ENEMY],0)
+    PartyHasItem("POTN34")
+    GlobalLT("USED_POTN34","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN34",1)
+        UseItem("POTN34",Myself)
+        IncrementGlobal("USED_POTN34","LOCALS",1)
+END
+
+// Potion of Magic Shielding — DIALOG.TLK #7060.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    SpellCast([ENEMY],0)
+    PartyHasItem("POTN35")
+    GlobalLT("USED_POTN35","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN35",1)
+        UseItem("POTN35",Myself)
+        IncrementGlobal("USED_POTN35","LOCALS",1)
+END
+
+// Potion of Mirrored Eyes — DIALOG.TLK #7063; anti-gaze/petrification defense.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(2)
+        SpellCast([ENEMY],WIZARD_FLESH_TO_STONE)
+        SpellCast([ENEMY],WIZARD_FLESH_TO_STONE_IGNORE_RESISTANCE)
+    PartyHasItem("POTN38")
+    GlobalLT("USED_POTN38","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN38",1)
+        UseItem("POTN38",Myself)
+        IncrementGlobal("USED_POTN38","LOCALS",1)
+END
+
+// Potion of Regeneration — DIALOG.TLK #7101.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,60)
+    PartyHasItem("POTN42")
+    GlobalLT("USED_POTN42","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN42",1)
+        UseItem("POTN42",Myself)
+        IncrementGlobal("USED_POTN42","LOCALS",1)
+END
+
+// Antidote — DIALOG.TLK #7029.
+IF
+    ActionListEmpty()
+    StateCheck(Myself,STATE_POISONED)
+    PartyHasItem("POTN32")
+    GlobalLT("USED_POTN32","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN32",1)
+        UseItem("POTN32",Myself)
+        IncrementGlobal("USED_POTN32","LOCALS",1)
+END
+
+// Potion of Stone Form — DIALOG.TLK #7105; emergency physical defense.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,35)
+    Range([ENEMY],8)
+    PartyHasItem("POTN46")
+    GlobalLT("USED_POTN46","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN46",1)
+        UseItem("POTN46",Myself)
+        IncrementGlobal("USED_POTN46","LOCALS",1)
+END
+
+// Oil of Fiery Burning — DIALOG.TLK #7006; hostile cluster projectile.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    PartyHasItem("POTN13")
+    GlobalLT("USED_POTN13","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN13",1)
+        UseItem("POTN13",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_POTN13","LOCALS",1)
+END
+
+// Potion of Explosions — DIALOG.TLK #7051; hostile cluster projectile.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    PartyHasItem("POTN26")
+    GlobalLT("USED_POTN26","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN26",1)
+        UseItem("POTN26",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_POTN26","LOCALS",1)
+END
+
+// Potion of Fire Breath — DIALOG.TLK #7052; hostile cluster projectile.
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Range(FarthestEnemyOf(Myself),16)
+    Range(NearestEnemyOf(FarthestEnemyOf(Myself)),8)
+    PartyHasItem("POTN27")
+    GlobalLT("USED_POTN27","LOCALS",1)
+THEN
+    RESPONSE #100
+        TakePartyItemNum("POTN27",1)
+        UseItem("POTN27",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_POTN27","LOCALS",1)
+END
 
 // ======================================================
 // SECTION 13: PENETRATION SPELLS (WIZARD)
@@ -4637,40 +4867,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
-    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
-    HaveSpell(SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
-        Continue()
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    InWeaponRange(NearestEnemyOf(Myself))
-    CheckStatLT(Myself,1,POLYMORPHED)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
-    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
-    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
-    HaveSpell(AVENGER_SHAPESHIFT_FIRESALAMANDER)
-    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
-THEN
-    RESPONSE #100
-        Spell(Myself,AVENGER_SHAPESHIFT_FIRESALAMANDER)
-        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
-        Continue()
-END
-
-IF
-    ActionListEmpty()
-    ActuallyInCombat()
-    InWeaponRange(NearestEnemyOf(Myself))
-    CheckStatLT(Myself,1,POLYMORPHED)
-    CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelLT(Myself,15)
     GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(AVENGER_SHAPESHIFT_BABYWYVERN)
@@ -4688,6 +4885,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelLT(Myself,15)
     GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(AVENGER_SHAPESHIFT_SWORDSPIDER)
@@ -4705,6 +4903,43 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelGT(Myself,15)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(AVENGER_SHAPESHIFT_FIRESALAMANDER)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,AVENGER_SHAPESHIFT_FIRESALAMANDER)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
+        Continue()
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    Kit(Myself,SHAPESHIFTER)
+    GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
+    GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
+    HaveSpell(SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
+    !GlobalTimerNotExpired("CLERIC_CAST","LOCALS")
+THEN
+    RESPONSE #100
+        Spell(Myself,SHAPESHIFTER_SHAPESHIFT_WEREWOLF)
+        SetGlobalTimer("CLERIC_CAST","LOCALS",FIVE_ROUNDS)
+        Continue()
+END
+
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    InWeaponRange(NearestEnemyOf(Myself))
+    CheckStatLT(Myself,1,POLYMORPHED)
+    CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelLT(Myself,5)
     GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_BLACKBEAR)
@@ -4722,6 +4957,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelLT(Myself,5)
     GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_BROWNBEAR)
@@ -4739,6 +4975,7 @@ IF
     InWeaponRange(NearestEnemyOf(Myself))
     CheckStatLT(Myself,1,POLYMORPHED)
     CheckStatLT(Myself,1,DEAD_MAGIC)
+    LevelLT(Myself,5)
     GlobalTimerExpired("DRUID_SHIFT_READY","LOCALS")
     GlobalTimerNotExpired("SHORT_BUFF","LOCALS")
     HaveSpell(DRUID_SHAPESHIFT_WOLF)
@@ -5204,7 +5441,7 @@ IF
     ActionListEmpty()
     See([ENEMY])
     HaveSpell(WIZARD_SLOW)  
-    StateCheck([ENEMY],STATE_SLOWED)
+    !StateCheck([ENEMY],STATE_SLOWED)
     !GlobalTimerNotExpired("WIZARD_CAST","LOCALS")
     THEN
         RESPONSE #100
@@ -8072,6 +8309,56 @@ THEN
       UseItem("WAND99",[ENEMY]) 
 END
 
+/*
+Wand of Wonder — DIALOG.TLK #38806. Random magical effect; skeleton only until a safe
+policy for its beneficial and harmful outcomes is chosen.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    HasItemEquiped("WAND12",Myself)
+    Global("USE_WAND12","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("WAND12",LastSeenBy(Myself))  // TODO: define random-effect policy
+        SetGlobal("USE_WAND12","LOCALS",0)
+END
+
+/*
+Web Sack — DIALOG.TLK #34020. Charge ability: Web. It follows the safe distant-cluster
+placement used for the Wizard Web spell; refine immunity handling later.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !Range(FarthestEnemyOf(Myself),20)
+    !Range(NearestEnemyOf(FarthestEnemyOf(Myself)),15)
+    HasItemEquiped("WAND14",Myself)
+    GlobalLT("USED_WAND14","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("WAND14",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_WAND14","LOCALS",1)
+END
+
+/*
+Wand of Cursing — DIALOG.TLK #66397. Single-target curse; skeleton awaits the matching
+wizard curse-selection policy.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    See([ENEMY])
+    !HasBounceEffects(LastSeenBy(Myself))
+    HasItemEquiped("WAND19",Myself)
+    GlobalLT("USED_WAND19","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("WAND19",LastSeenBy(Myself))  // TODO: mirror curse spell targeting
+        IncrementGlobal("USED_WAND19","LOCALS",1)
+END
+
 // ======================================================
 // SECTION 33: Combat Items (Ring of Ram, Staff of Ram Etc.)
 // ======================================================
@@ -8280,6 +8567,262 @@ THEN
       UseItem("BOOT11",Myself)  
       SetInterrupt(TRUE)
       IncrementGlobal("USED_BOOT11","LOCALS",1)
+END
+
+/*
+Rod of Absorption — DIALOG.TLK #38841. Defensive anti-magic rod; exact charge and
+absorption priority remains TODO.
+*/
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    SpellCast([ENEMY],0)
+    HasItem("RODS01",Myself)
+    GlobalLT("USED_RODS01","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RODS01",Myself)
+        IncrementGlobal("USED_RODS01","LOCALS",1)
+END
+
+/* Rod of Lordly Might — DIALOG.TLK #38872. Multi-mode weapon; explicit request skeleton. */
+IF
+    ActionListEmpty()
+    HasItem("RODS02",Myself)
+    Global("USE_RODS02","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RODS02",Myself)  // TODO: select weapon mode
+        SetGlobal("USE_RODS02","LOCALS",0)
+END
+
+/* Rod of Resurrection — DIALOG.TLK #38846. Restores a dead party member. */
+IF
+    ActionListEmpty()
+    StateCheck([PC],STATE_REALLY_DEAD)
+    HasItem("RODS03",Myself)
+    GlobalLT("USED_RODS03","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RODS03",[PC])
+        IncrementGlobal("USED_RODS03","LOCALS",1)
+END
+
+/* Rod of Smiting — DIALOG.TLK #38871. Skeleton for a durable nearby enemy. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPGT(NearestEnemyOf(Myself),50)
+    Range(NearestEnemyOf(Myself),8)
+    HasItem("RODS04",Myself)
+    GlobalLT("USED_RODS04","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RODS04",NearestEnemyOf(Myself))
+        IncrementGlobal("USED_RODS04","LOCALS",1)
+END
+
+/* Rod of Terror — DIALOG.TLK #38860. Fear-area skeleton for a hostile cluster. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    NumCreatureGT([ENEMY],2)
+    HasItem("RODS05",Myself)
+    GlobalLT("USED_RODS05","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RODS05",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_RODS05","LOCALS",1)
+END
+
+/* Ring of Spell Turning — DIALOG.TLK #1791. Mirrors Wizard Spell Turning. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    SpellCast([ENEMY],0)
+    !HasBounceEffects(Myself)
+    HasItemEquiped("RING34",Myself)
+    GlobalLT("USED_RING34","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RING34",Myself)
+        IncrementGlobal("USED_RING34","LOCALS",1)
+END
+
+/* Shield Amulet — DIALOG.TLK #6917. Casts Shield on the wearer. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    !CheckSpellState(Myself,WIZARD_SHIELD)
+    HasItemEquiped("AMUL15",Myself)
+    GlobalLT("USED_AMUL15","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("AMUL15",Myself)
+        IncrementGlobal("USED_AMUL15","LOCALS",1)
+END
+
+/* Greenstone Amulet — DIALOG.TLK #22138. Mental-control defense skeleton. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(3)
+        StateCheck(Myself,STATE_CHARMED)
+        StateCheck(Myself,STATE_CONFUSED)
+        StateCheck(Myself,STATE_STUNNED)
+    HasItemEquiped("AMUL17",Myself)
+    GlobalLT("USED_AMUL17","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("AMUL17",Myself)
+        IncrementGlobal("USED_AMUL17","LOCALS",1)
+END
+
+/* Ring of Gaxx — DIALOG.TLK #8640. Multi-power defensive ring; use policy is TODO. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    HPPercentLT(Myself,50)
+    HasItemEquiped("RING39",Myself)
+    GlobalLT("USED_RING39","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RING39",Myself)
+        IncrementGlobal("USED_RING39","LOCALS",1)
+END
+
+/* Efreeti Bottle — DIALOG.TLK #38529. Summon skeleton. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    HasItem("MISC3E",Myself)
+    GlobalLT("USED_MISC3E","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("MISC3E",Myself)
+        IncrementGlobal("USED_MISC3E","LOCALS",1)
+END
+
+/* Horn of Blasting — DIALOG.TLK #38532. Hostile-cluster sonic attack skeleton. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    NumCreatureGT([ENEMY],2)
+    HasItem("MISC3H",Myself)
+    GlobalLT("USED_MISC3H","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("MISC3H",FarthestEnemyOf(Myself))
+        IncrementGlobal("USED_MISC3H","LOCALS",1)
+END
+
+/* Silver Horn of Valhalla — DIALOG.TLK #38533. Summon skeleton. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    NumCreatureLT([GOODCUTOFF.0.0.0.0.SUMMONED],3)
+    HasItem("MISC3I",Myself)
+    GlobalLT("USED_MISC3I","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("MISC3I",Myself)
+        IncrementGlobal("USED_MISC3I","LOCALS",1)
+END
+
+/* Horn of Silence — DIALOG.TLK #38545. Anti-caster silence skeleton. */
+IF
+    ActionListEmpty()
+    ActuallyInCombat()
+    OR(5)
+        See([ENEMY.0.0.MAGE_ALL])
+        See([ENEMY.0.0.CLERIC_ALL])
+        See([ENEMY.0.0.BARD_ALL])
+        See([ENEMY.0.0.DRUID_ALL])
+        See([ENEMY.0.0.SORCERER])
+    HasItem("MISC3L",Myself)
+    GlobalLT("USED_MISC3L","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("MISC3L",LastSeenBy(Myself))
+        IncrementGlobal("USED_MISC3L","LOCALS",1)
+END
+
+/* Book of Infinite Spells — DIALOG.TLK #38793. Random/multi-spell item; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItem("MISC3A",Myself)
+    Global("USE_MISC3A","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("MISC3A",Myself)  // TODO: select page/spell policy
+        SetGlobal("USE_MISC3A","LOCALS",0)
+END
+
+/* Staff of the Magi — DIALOG.TLK #8113. Multi-power staff; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("STAF11",Myself)
+    Global("USE_STAF11","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("STAF11",Myself)  // TODO: select invisibility/fireball/spell-trap use
+        SetGlobal("USE_STAF11","LOCALS",0)
+END
+
+/* Staff of Power — DIALOG.TLK #8121. Multi-power staff; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("STAF12",Myself)
+    Global("USE_STAF12","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("STAF12",Myself)  // TODO: select combat power
+        SetGlobal("USE_STAF12","LOCALS",0)
+END
+
+/* Cloak of the Sewers — DIALOG.TLK #8060. Multi-form cloak; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("CLCK27",Myself)
+    Global("USE_CLCK27","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("CLCK27",Myself)  // TODO: choose form by encounter
+        SetGlobal("USE_CLCK27","LOCALS",0)
+END
+
+/* Ring of Fire Control — DIALOG.TLK #8096. Multi-power elemental ring; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("RING27",Myself)
+    Global("USE_RING27","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RING27",Myself)
+        SetGlobal("USE_RING27","LOCALS",0)
+END
+
+/* Ring of Air Control — DIALOG.TLK #8092. Multi-power elemental ring; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("RING28",Myself)
+    Global("USE_RING28","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RING28",Myself)
+        SetGlobal("USE_RING28","LOCALS",0)
+END
+
+/* Ring of Earth Control — DIALOG.TLK #8095. Multi-power elemental ring; request skeleton. */
+IF
+    ActionListEmpty()
+    HasItemEquiped("RING29",Myself)
+    Global("USE_RING29","LOCALS",1)
+THEN
+    RESPONSE #100
+        UseItem("RING29",Myself)
+        SetGlobal("USE_RING29","LOCALS",0)
 END
 
 // ======================================================
